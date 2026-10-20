@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>如何把vim配置的和vscode一样好用 | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南Vim 刚装好时很轻便，但缺少现代 IDE 常见的代码补全、错误诊断、跳转和项目搜索。好消息是，我们可以通过插件和语言服务器，把这些开发体验接进 Vim。 本文以 Ubuntu 24.04 + 原版 Vim + C&#x2F;C++ 为例，逐步安装并配置：  代码补全：输入代码时显示类型、函">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何把vim配置的和vscode一样好用">
+<meta property="og:url" content="https://crazera-yi.github.io/2026/10/20/blog/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南Vim 刚装好时很轻便，但缺少现代 IDE 常见的代码补全、错误诊断、跳转和项目搜索。好消息是，我们可以通过插件和语言服务器，把这些开发体验接进 Vim。 本文以 Ubuntu 24.04 + 原版 Vim + C&#x2F;C++ 为例，逐步安装并配置：  代码补全：输入代码时显示类型、函">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-20T13:17:00.000Z">
+<meta property="article:modified_time" content="2026-10-20T13:28:58.446Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Vim">
+<meta property="article:tag" content="环境配置">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-blog" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/10/20/blog/" class="article-date">
+  <time class="dt-published" datetime="2026-10-20T13:17:00.000Z" itemprop="datePublished">2026-10-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      如何把vim配置的和vscode一样好用
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="在-Ubuntu-24-04-上把-Vim-配成像-VS-Code-一样好用：C-C-完整指南"><a href="#在-Ubuntu-24-04-上把-Vim-配成像-VS-Code-一样好用：C-C-完整指南" class="headerlink" title="在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南"></a>在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南</h1><p>Vim 刚装好时很轻便，但缺少现代 IDE 常见的代码补全、错误诊断、跳转和项目搜索。好消息是，我们可以通过插件和语言服务器，把这些开发体验接进 Vim。</p>
+<p>本文以 <strong>Ubuntu 24.04 + 原版 Vim + C&#x2F;C++</strong> 为例，逐步安装并配置：</p>
+<ul>
+<li><strong>代码补全</strong>：输入代码时显示类型、函数和成员建议。</li>
+<li><strong>语义诊断</strong>：在编辑时发现类型错误、头文件或编译参数问题。</li>
+<li><strong>代码导航</strong>：跳转到定义、查找引用、查看说明和重命名。</li>
+<li><strong>项目工具</strong>：文件树、模糊搜索、Git 操作和代码格式化。</li>
+</ul>
+<p>文中所说的“像 VS Code 一样”指常用编辑与语言服务体验接近，不代表完整复刻 VS Code 的图形界面、调试器和所有扩展。不同编程语言要接入各自的语言服务器；本文配置的是 C&#x2F;C++。</p>
+<h2 id="先看整体流程"><a href="#先看整体流程" class="headerlink" title="先看整体流程"></a>先看整体流程</h2><ol>
+<li>安装 Vim、编译工具、CMake、clangd 和项目依赖。</li>
+<li>准备符合 Coc 要求的 Node.js。</li>
+<li>用 vim-plug 安装和管理 Vim 插件。</li>
+<li>配置 Coc 与 C&#x2F;C++ 语言服务器 clangd。</li>
+<li>给 clangd 提供项目真实的编译参数。</li>
+<li>在 Vim 里验证补全、跳转、诊断和格式化。</li>
+</ol>
+<h2 id="第一步：安装基础工具"><a href="#第一步：安装基础工具" class="headerlink" title="第一步：安装基础工具"></a>第一步：安装基础工具</h2><p>在 Ubuntu 终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y vim git curl ca-certificates build-essential \</span><br><span class="line">  cmake clangd ripgrep</span><br></pre></td></tr></table></figure>
+
+<p>每个工具的用途：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vim</code></td>
+<td>编辑器本身。Ubuntu 24.04 提供的 Vim 9.1 满足 Coc 所需的 Vim 版本。</td>
+</tr>
+<tr>
+<td><code>git</code>、<code>curl</code>、<code>ca-certificates</code></td>
+<td>下载插件、安装脚本和证书校验所需工具。</td>
+</tr>
+<tr>
+<td><code>build-essential</code></td>
+<td>GCC、G++、Make 等基础编译工具。</td>
+</tr>
+<tr>
+<td><code>cmake</code></td>
+<td>管理 C&#x2F;C++ 项目和生成构建规则。</td>
+</tr>
+<tr>
+<td><code>clangd</code></td>
+<td>C&#x2F;C++ 语言服务器，负责补全、跳转、诊断等语义功能。</td>
+</tr>
+<tr>
+<td><code>ripgrep</code></td>
+<td>提供 <code>rg</code> 命令，供后面通过 fzf.vim 搜索项目内容。</td>
+</tr>
+</tbody></table>
+<p>先确认工具在当前环境中可用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim --version | <span class="built_in">head</span> -n 1</span><br><span class="line"><span class="built_in">command</span> -v clangd</span><br><span class="line">clangd --version</span><br></pre></td></tr></table></figure>
+
+<p><strong>这一步解决什么问题？</strong> Vim 插件只是编辑器的扩展；编译器、语言服务器和项目库仍需要单独安装。把工具装在当前使用的 Ubuntu、WSL 或容器环境里很重要，因为 Vim 也必须能在同一环境中找到它们。</p>
+<h2 id="第二步：安装适用的-Node-js"><a href="#第二步：安装适用的-Node-js" class="headerlink" title="第二步：安装适用的 Node.js"></a>第二步：安装适用的 Node.js</h2><p>coc.nvim 通过 Node.js 运行语言扩展和连接语言服务器。它不是 Vim 本身的一部分，所以需要单独安装 Node.js。</p>
+<p>先检查版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --version</span><br></pre></td></tr></table></figure>
+
+<p>在本文核对时，Coc 官方安装页要求 <strong>Node.js ≥ 22.15.0</strong>、<strong>Vim ≥ 9.0.0438</strong>。这些最低版本可能随 Coc 更新而变化，安装前应查看<a target="_blank" rel="noopener" href="https://cocnvim.com/install">官方要求</a>。如果已有合适版本的 Node.js，可以跳过本步。</p>
+<p>如果没有 Node.js 或版本过旧，可以使用 nvm 管理用户级 Node 版本。以 nvm 官方安装脚本为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p>安装脚本完成后，关闭并重新打开终端，再运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nvm install --lts</span><br><span class="line">nvm <span class="built_in">alias</span> default <span class="string">&#x27;lts/*&#x27;</span></span><br><span class="line">node --version</span><br></pre></td></tr></table></figure>
+
+<p><strong>这一步解决什么问题？</strong> nvm 可以安装 Node LTS，而不替换 Ubuntu 管理的系统包。把安装出的 Node 设为默认版本后，之后从正常加载 nvm 的终端启动 Vim，Coc 就能找到 Node。</p>
+<h2 id="第三步：安装-vim-plug-管理插件"><a href="#第三步：安装-vim-plug-管理插件" class="headerlink" title="第三步：安装 vim-plug 管理插件"></a>第三步：安装 vim-plug 管理插件</h2><p>vim-plug 是一个 Vim 插件管理器。它读取 Vim 配置里的插件列表，并提供统一的安装、更新和移除命令。</p>
+<p>在终端运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fLo ~/.vim/autoload/plug.vim --create-dirs \</span><br><span class="line">  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</span><br></pre></td></tr></table></figure>
+
+<p>若已有 <code>~/.vimrc</code>，先备份：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">cp</span> -a <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc&quot;</span> <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc.backup.<span class="subst">$(date +%Y%m%d-%H%M%S)</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure>
+
+<p>复制下面的配置到 <code>~/.vimrc</code>。若文件里已有其他设置，请先备份，再将需要的配置合并进去；不要把多个 <code>plug#begin()</code> 和 <code>plug#end()</code> 区块重复堆叠。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> nocompatible</span><br><span class="line"><span class="keyword">set</span> encoding=utf-<span class="number">8</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">number</span></span><br><span class="line"><span class="keyword">set</span> nocursorline</span><br><span class="line"><span class="keyword">set</span> hidden</span><br><span class="line"><span class="keyword">set</span> mouse=<span class="keyword">a</span></span><br><span class="line"><span class="keyword">set</span> signcolumn=yes</span><br><span class="line"><span class="keyword">set</span> updatetime=<span class="number">300</span></span><br><span class="line"><span class="keyword">set</span> expandtab</span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> smartindent</span><br><span class="line"><span class="keyword">set</span> ignorecase</span><br><span class="line"><span class="keyword">set</span> smartcase</span><br><span class="line"><span class="keyword">set</span> splitright</span><br><span class="line"><span class="keyword">set</span> splitbelow</span><br><span class="line"><span class="comment">&quot; 用空格作为快捷键前缀</span></span><br><span class="line"><span class="keyword">let</span> mapleader = <span class="string">&quot; &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> plug#begin(<span class="string">&#x27;~/.vim/plugged&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 语言服务、补全和代码导航</span></span><br><span class="line">Plug <span class="string">&#x27;neoclide/coc.nvim&#x27;</span>, &#123;<span class="string">&#x27;branch&#x27;</span>: <span class="string">&#x27;release&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 项目文件树</span></span><br><span class="line">Plug <span class="string">&#x27;preservim/nerdtree&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 模糊搜索文件和项目内容</span></span><br><span class="line">Plug <span class="string">&#x27;junegunn/fzf&#x27;</span>, &#123;<span class="string">&#x27;do&#x27;</span>: &#123; -&gt; fzf#install() &#125;&#125;</span><br><span class="line">Plug <span class="string">&#x27;junegunn/fzf.vim&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; Git 仓库操作</span></span><br><span class="line">Plug <span class="string">&#x27;tpope/vim-fugitive&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> plug#end()</span><br><span class="line"></span><br><span class="line"><span class="keyword">filetype</span> plugin <span class="built_in">indent</span> <span class="keyword">on</span></span><br><span class="line"><span class="keyword">syntax</span> enable</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 补全菜单可见时用 Tab / Shift+Tab 移动；否则 Tab 保持原有用途</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;Tab&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#next(<span class="number">1</span>) : <span class="string">&quot;\&lt;Tab&gt;&quot;</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;S-Tab&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#prev(<span class="number">1</span>) : <span class="string">&quot;\&lt;C-h&gt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 菜单打开时用 Enter 接受补全；否则插入换行</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;CR&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#confirm() : <span class="string">&quot;\&lt;C-g&gt;u\&lt;CR&gt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 插入模式下按 Ctrl+l 手动请求补全</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;C-l&gt;</span> coc#refresh()</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 代码导航和说明,跳转、引用、文档</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> gd <span class="symbol">&lt;Plug&gt;</span>(coc-definition)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> gy <span class="symbol">&lt;Plug&gt;</span>(coc-<span class="built_in">type</span>-definition)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> <span class="keyword">gr</span> <span class="symbol">&lt;Plug&gt;</span>(coc-references)</span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> K :<span class="keyword">call</span> CocActionAsync(<span class="string">&#x27;doHover&#x27;</span>)<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 重命名、代码操作与格式化</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;leader&gt;</span>rn <span class="symbol">&lt;Plug&gt;</span>(coc-<span class="built_in">rename</span>)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">a</span> <span class="symbol">&lt;Plug&gt;</span>(coc-codeaction-<span class="built_in">cursor</span>)</span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">f</span> :<span class="keyword">call</span> CocActionAsync(<span class="string">&#x27;format&#x27;</span>)<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 上一个 / 下一个诊断</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> [d <span class="symbol">&lt;Plug&gt;</span>(coc-diagnostic-<span class="keyword">prev</span>)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> ]d <span class="symbol">&lt;Plug&gt;</span>(coc-diagnostic-<span class="keyword">next</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 文件树、文件搜索和全文搜索</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">e</span> :NERDTreeToggle<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;C-p&gt;</span> :Files<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span>s :Rg<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 在 C/C++ 源文件和头文件间切换</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span>h :CocCommand clangd.switchSourceHeader<span class="symbol">&lt;CR&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这份配置各部分的作用：</p>
+<ul>
+<li><code>set number</code>、<code>set cursorline</code>、<code>set signcolumn=yes</code> 等设置行号、当前行和诊断图标区域。</li>
+<li><code>set expandtab</code>、<code>tabstop</code> 和 <code>shiftwidth</code> 统一缩进方式。</li>
+<li><code>plug#begin()</code> 与 <code>plug#end()</code> 之间的 <code>Plug</code> 行声明要安装哪些插件。</li>
+<li><code>coc.nvim</code> 是语言服务的编辑器端；<code>coc-clangd</code> 扩展稍后会把它连接到 clangd。</li>
+<li>NERDTree 提供文件树；fzf 和 ripgrep 提供快速搜索；Fugitive 提供 Git 操作。</li>
+<li>Coc 的按键映射负责菜单选择、函数跳转、重命名、诊断和格式化。</li>
+</ul>
+<h2 id="第四步：安装-Vim-插件"><a href="#第四步：安装-Vim-插件" class="headerlink" title="第四步：安装 Vim 插件"></a>第四步：安装 Vim 插件</h2><p>保存 <code>~/.vimrc</code>，退出并重新打开 Vim，然后运行：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:PlugInstall</span><br></pre></td></tr></table></figure>
+
+<p>vim-plug 会按配置下载插件。安装完成后重新启动 Vim。</p>
+<p><strong>为什么要重启？</strong> Coc 的语言服务和扩展依赖 Vim 启动时加载的插件、Node 环境和配置。重新启动后再安装 Coc 扩展，能确认主插件已经正常加载。</p>
+<p>如果 <code>:Files</code> 或 <code>:Rg</code> 找不到命令，检查插件是否安装，以及系统是否安装了 ripgrep。fzf 的安装钩子也需要能够下载其可执行程序。</p>
+<h2 id="第五步：把-Coc-连接到-clangd"><a href="#第五步：把-Coc-连接到-clangd" class="headerlink" title="第五步：把 Coc 连接到 clangd"></a>第五步：把 Coc 连接到 clangd</h2><p>确认 <code>command -v clangd</code> 能显示实际路径后，在 Vim 中运行：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:CocInstall coc-clangd</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后重启 Vim。<code>coc-clangd</code> 是 Coc 的 C&#x2F;C++ 扩展，它负责启动并管理 clangd 语言服务器。</p>
+<p>若 <code>clangd</code> 在系统的 <code>PATH</code> 中，通常无需手动写路径。若装了多个 clangd，或 Coc 找不到它，可以在 Vim 里执行：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:CocConfig</span><br></pre></td></tr></table></figure>
+
+<p>根据 <code>command -v clangd</code> 查到的真实路径设置，例如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;clangd.path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/clangd-18&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;clangd.arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;--background-index&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;--clang-tidy&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;inlayHint.enableParameter&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span><span class="comment">//不提示隐式转换,更简洁舒服,不会妨碍代码书写</span></span><br><span class="line">    <span class="attr">&quot;coc.preferences.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="comment">//使代码按作用域缩进</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>保存后运行 <code>:CocRestart</code>。</p>
+<p><strong>Coc 和 clangd 的分工：</strong> Coc 负责在 Vim 中呈现语言服务功能；clangd 负责解析 C&#x2F;C++ 代码和项目编译选项。二者接起来后，Vim 才能获得语义补全和准确诊断。</p>
+<h2 id="第六步：在-Vim-中体验-IDE-功能"><a href="#第六步：在-Vim-中体验-IDE-功能" class="headerlink" title="第六步：在 Vim 中体验 IDE 功能"></a>第六步：在 Vim 中体验 IDE 功能</h2><p>在项目根目录运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim src/main.cpp</span><br></pre></td></tr></table></figure>
+
+<p>首次打开大型项目时，clangd 会建立索引；等索引完成后再演示搜索和跳转。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>操作</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自动补全</td>
+<td>在插入模式输入代码</td>
+<td>由 Coc 扩展和 clangd 提供候选项。</td>
+</tr>
+<tr>
+<td>手动触发补全</td>
+<td>插入模式按 <code>Ctrl+l</code>，其中 L 是小写字母</td>
+<td>请求 Coc 刷新补全。</td>
+</tr>
+<tr>
+<td>选择与确认</td>
+<td>补全菜单打开时 <code>Tab</code> &#x2F; <code>Shift+Tab</code>，再按 <code>Enter</code></td>
+<td>上下移动并接受建议。</td>
+</tr>
+<tr>
+<td>跳转定义</td>
+<td>普通模式按 <code>gd</code></td>
+<td>跳到当前符号定义。</td>
+</tr>
+<tr>
+<td>返回原位置</td>
+<td>按 <code>Ctrl+o</code></td>
+<td>回到跳转前的光标位置。</td>
+</tr>
+<tr>
+<td>查找引用</td>
+<td>普通模式按 <code>gr</code></td>
+<td>查找当前符号在项目中的引用。</td>
+</tr>
+<tr>
+<td>查看说明</td>
+<td>普通模式按 <code>K</code></td>
+<td>显示符号类型或文档说明。</td>
+</tr>
+<tr>
+<td>重命名</td>
+<td>先按空格，再依次按 <code>r</code>、<code>n</code></td>
+<td>按语义重命名变量、函数等符号。</td>
+</tr>
+<tr>
+<td>格式化</td>
+<td>先按空格，再按 <code>f</code></td>
+<td>请求 clangd 格式化当前文件；项目规则可由 <code>.clang-format</code> 控制。</td>
+</tr>
+<tr>
+<td>上一个 &#x2F; 下一个诊断</td>
+<td>普通模式按 <code>[d</code> &#x2F; <code>]d</code></td>
+<td>在错误与警告之间移动。</td>
+</tr>
+<tr>
+<td>开关文件树</td>
+<td>先按空格，再按 <code>e</code></td>
+<td>显示或隐藏 NERDTree。</td>
+</tr>
+<tr>
+<td>搜索文件</td>
+<td>按 <code>Ctrl+p</code></td>
+<td>在项目文件中模糊查找。</td>
+</tr>
+<tr>
+<td>搜索项目内容</td>
+<td>先按空格，再按 <code>s</code></td>
+<td>通过 ripgrep 搜索文本。</td>
+</tr>
+<tr>
+<td>查看 Git 状态</td>
+<td>运行 <code>:Git</code></td>
+<td>使用 Fugitive 查看和操作仓库。</td>
+</tr>
+</tbody></table>
+<p>这里空格是配置里的 <code>&lt;leader&gt;</code> 键，所以 <code>空格 → r → n</code> 是依次按三个键，不是同时按住。</p>
+<h2 id="第七步：排查常见问题"><a href="#第七步：排查常见问题" class="headerlink" title="第七步：排查常见问题"></a>第七步：排查常见问题</h2><h3 id="没有补全"><a href="#没有补全" class="headerlink" title="没有补全"></a>没有补全</h3><p>先确认 Vim 在当前终端能找到 Node 和 clangd，再在 Vim 中执行：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:CocInfo</span><br><span class="line">:CocList extensions</span><br><span class="line">:CocCommand workspace.showOutput clangd</span><br></pre></td></tr></table></figure>
+
+<p>检查 Coc 是否启动、<code>coc-clangd</code> 是否安装、clangd 路径是否有效。首次安装语言扩展后重启 Vim，或者运行 <code>:CocRestart</code>。</p>
+<h2 id="官方资料"><a href="#官方资料" class="headerlink" title="官方资料"></a>官方资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cocnvim.com/install">coc.nvim 安装及运行要求</a></li>
+<li><a target="_blank" rel="noopener" href="https://cocnvim.com/extensions">coc.nvim 插件与语言支持</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/junegunn/vim-plug">vim-plug 安装与使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm">nvm 官方项目</a></li>
+<li><a target="_blank" rel="noopener" href="https://clangd.llvm.org/">clangd：C&#x2F;C++ 语言服务器</a></li>
+<li><a target="_blank" rel="noopener" href="https://clangd.llvm.org/installation#project-setup">clangd 项目设置与编译数据库</a></li>
+</ul>
+<blockquote>
+<p><strong>版本说明：</strong> Coc 和其他插件的最低运行条件会更新。本文按 2026 年 10 月核对的官方资料整理；实际部署时，请以官方文档当前内容为准。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/2026/10/20/blog/" data-id="cuidxsu491DFFfQExn0zKvfMg" data-title="如何把vim配置的和vscode一样好用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/10/20/aboutme/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">关于我</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/10/20/blog/">如何把vim配置的和vscode一样好用</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/20/aboutme/">关于我</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
