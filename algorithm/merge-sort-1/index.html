@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>每日算法---归并排序 | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="归并排序(Merge sort)1. 简介摘自维基百科归并排序（英语：Merge sort，或mergesort），是建立在归并操作上的一种有效的排序算法，效率为O(nlogn)。1945年由约翰·冯·诺伊曼首次提出。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。  2. 我的理解归并排序通过分而治之的办法实现了排序比较的利用最大化,实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---归并排序">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/merge-sort-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="归并排序(Merge sort)1. 简介摘自维基百科归并排序（英语：Merge sort，或mergesort），是建立在归并操作上的一种有效的排序算法，效率为O(nlogn)。1945年由约翰·冯·诺伊曼首次提出。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。  2. 我的理解归并排序通过分而治之的办法实现了排序比较的利用最大化,实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crazera-yi.github.io/images/algotirhm/gif/Merge-sort.gif">
+<meta property="article:published_time" content="2026-10-21T02:44:00.000Z">
+<meta property="article:modified_time" content="2026-10-21T09:15:39.326Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crazera-yi.github.io/images/algotirhm/gif/Merge-sort.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Algorithm/算法_归并排序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/merge-sort-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-21T02:44:00.000Z" itemprop="datePublished">2026-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      每日算法---归并排序
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="归并排序-Merge-sort"><a href="#归并排序-Merge-sort" class="headerlink" title="归并排序(Merge sort)"></a>归并排序(Merge sort)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">摘自维基百科</a><br>归并排序（英语：Merge sort，或mergesort），是建立在归并操作上的一种有效的排序算法，效率为<br>O(nlogn)。1945年由约翰·冯·诺伊曼首次提出。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。</p>
+<p><img src="/../../images/algotirhm/gif/Merge-sort.gif" alt="演示动画"></p>
+<h2 id="2-我的理解"><a href="#2-我的理解" class="headerlink" title="2. 我的理解"></a>2. 我的理解</h2><p>归并排序通过分而治之的办法实现了排序比较的利用最大化,实现时间复杂度上的高性能和稳定性,但是由于需要辅助数组,所以空间复杂度偏高.整体思路为,通过对于一个数组进行多次分割,然后排序,合并起来实现对于一个数据的排序.常规算法实现有两种方法,递归和非递归,下面将依次用<code>C++</code>实现</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><ol>
+<li>归并排序的递归实现</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">// 使用全局数组是为了便于演示</span></span><br><span class="line"><span class="comment">//  实际情况可能会出现规定的辅助数组大小不足的情况</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_LEN = <span class="number">10086</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">help</span><span class="params">(MAX_LEN, <span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MergeSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left == right)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 分割区域开始排序</span></span><br><span class="line">    <span class="built_in">MergeSort</span>(arry, left, mid);</span><br><span class="line">    <span class="built_in">MergeSort</span>(arry, mid + <span class="number">1</span>, right);</span><br><span class="line">    <span class="built_in">Merge</span>(arry, left, mid, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 用于为左边排序定位</span></span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="comment">// 左边区域的索引</span></span><br><span class="line">    <span class="type">int</span> a = left;</span><br><span class="line">    <span class="comment">// 右边区域的索引</span></span><br><span class="line">    <span class="type">int</span> b = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid &amp;&amp; b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// 被拷贝了的就索引加1</span></span><br><span class="line">        help[i] = arry[a] &lt;= arry[b] ? arry[a++] : arry[b++];</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将剩余的没拷贝完的部分全部拷贝</span></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将辅助数组的值放入传入数组</span></span><br><span class="line">    <span class="keyword">for</span> (i = lelf; i &lt;= right; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        arry[i] = help[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>归并排序的非递归实现</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">// 非递归版本的归并排序仅MergeSort函数不同,Merge函数不做修改</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_LEN = <span class="number">10086</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">help</span><span class="params">(MAX_LEN, <span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MergeSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">// 用移位代替乘法提升效率</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> left, mid, right, step = <span class="number">1</span>; step &lt; n; step &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        left = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (left &lt; n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// r....m....r</span></span><br><span class="line">            <span class="comment">// 中间的小点代表step</span></span><br><span class="line">            mid = left + step - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (mid + <span class="number">1</span> &gt; n)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 同上</span></span><br><span class="line">            right = <span class="built_in">min</span>(left + (step &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">            <span class="built_in">Merge</span>(arry, left, mid, right);</span><br><span class="line">            <span class="comment">// 更新left位置,直到这一次循环跑到数组尾巴</span></span><br><span class="line">            left = right + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 用于为左边排序定位</span></span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="comment">// 左边区域的索引</span></span><br><span class="line">    <span class="type">int</span> a = left;</span><br><span class="line">    <span class="comment">// 右边区域的索引</span></span><br><span class="line">    <span class="type">int</span> b = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid &amp;&amp; b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 被拷贝了的就索引加1</span></span><br><span class="line">        help[i] = arry[a] &lt;= arry[b] ? arry[a++] : arry[b++];</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将剩余的没拷贝完的部分全部拷贝</span></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将辅助数组的值放入传入数组</span></span><br><span class="line">    <span class="keyword">for</span> (i = left; i &lt;= right; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        arry[i] = help[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>对于两种归并排序如何使用主要看数据数量,递归实现虽然实现更为简单,但是递归本质是调用了系统栈,要是数据过大容易有爆栈风险,如果数据量大,最好还是选择非递归实现</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-1/" data-id="cuidY-FE_3HQs5JM1NIWNFhK4" data-title="每日算法---归并排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/linux/vim-setting/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">如何把vim配置的和vscode一样好用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/cpp/" style="font-size: 10px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/sorting/" style="font-size: 10px;">排序</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 10px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/algorithm/merge-sort-1/">每日算法---归并排序</a>
+          </li>
+        
+          <li>
+            <a href="/linux/vim-setting/">如何把vim配置的和vscode一样好用</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/20/aboutme/">关于我</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
