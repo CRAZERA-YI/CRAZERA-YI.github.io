@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>每日算法---归并排序(拓) | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="归并排序的分治思想1. 原理 思考一个问题在大范围上的答案，是否等于，左部分的答案 + 右部分的答案 + 跨越左右产生的答案 计算“跨越左右产生的答案”时，如果加上左、右各自有序这个设定，会不会获得计算的便利性 如果以上两点都成立，那么该问题很可能被归并分治解决 求解答案的过程中只需要加入归并排序的过程即可，因为要让左、右各自有序，来获得计算的便利性  2. 例题 小和问题  123456789假">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---归并排序(拓)">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/merge-sort-2/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="归并排序的分治思想1. 原理 思考一个问题在大范围上的答案，是否等于，左部分的答案 + 右部分的答案 + 跨越左右产生的答案 计算“跨越左右产生的答案”时，如果加上左、右各自有序这个设定，会不会获得计算的便利性 如果以上两点都成立，那么该问题很可能被归并分治解决 求解答案的过程中只需要加入归并排序的过程即可，因为要让左、右各自有序，来获得计算的便利性  2. 例题 小和问题  123456789假">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-22T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T11:54:22.458Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Algorithm/算法_归并排序的分治思想" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/merge-sort-2/" class="article-date">
+  <time class="dt-published" datetime="2026-10-22T10:00:00.000Z" itemprop="datePublished">2026-10-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      每日算法---归并排序(拓)
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="归并排序的分治思想"><a href="#归并排序的分治思想" class="headerlink" title="归并排序的分治思想"></a>归并排序的分治思想</h1><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h2><ol>
+<li>思考一个问题在大范围上的答案，是否等于，左部分的答案 + 右部分的答案 + 跨越左右产生的答案</li>
+<li>计算“跨越左右产生的答案”时，如果加上左、右各自有序这个设定，会不会获得计算的便利性</li>
+<li>如果以上两点都成立，那么该问题很可能被归并分治解决</li>
+<li>求解答案的过程中只需要加入归并排序的过程即可，因为要让左、右各自有序，来获得计算的便利性</li>
+</ol>
+<h2 id="2-例题"><a href="#2-例题" class="headerlink" title="2. 例题"></a>2. 例题</h2><ul>
+<li>小和问题</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">假设数组 s = [ 1, 3, 5, 2, 4, 6]</span><br><span class="line">在s[0]的左边所有 &lt;= s[0]的数的总和为0</span><br><span class="line">在s[1]的左边所有 &lt;= s[1]的数的总和为1</span><br><span class="line">在s[2]的左边所有 &lt;= s[2]的数的总和为4</span><br><span class="line">在s[3]的左边所有 &lt;= s[3]的数的总和为1</span><br><span class="line">在s[4]的左边所有 &lt;= s[4]的数的总和为6</span><br><span class="line">在s[5]的左边所有 &lt;= s[5]的数的总和为15</span><br><span class="line">所以s数组的“小和”为 : 0 + 1 + 4 + 1 + 6 + 15 = 27</span><br><span class="line">给定一个数组arr，实现函数返回arr的“小和”</span><br></pre></td></tr></table></figure>
+<h2 id="3-解法"><a href="#3-解法" class="headerlink" title="3. 解法"></a>3. 解法</h2><h3 id="3-1-一般思路"><a href="#3-1-一般思路" class="headerlink" title="3.1 一般思路"></a>3.1 一般思路</h3><p>直接暴力遍历每一个数字,与前面的数字进行比较,时间复杂度会到O(n^2),对于这个复杂度实在不是很合适</p>
+<h3 id="3-2-归并分治"><a href="#3-2-归并分治" class="headerlink" title="3.2 归并分治"></a>3.2 归并分治</h3><h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p><strong>思考</strong> : 此题目是否满足归并分治的原理</p>
+<p><strong>思考</strong> : 对于一个任意位置的数字,他的小和大小与前面的数字的顺序无关,故是否可以通过使得前面有序来简化计算</p>
+<p>通过思考,我们发现此题目符合上面两个要去,故可以考虑使用归并分治来实现小和问题的低时间复杂度实现</p>
+<h4 id="代码构思"><a href="#代码构思" class="headerlink" title="代码构思"></a>代码构思</h4><p>应该从最小分割单位加到最大分割单位,那样既可以满足归并排序低时间复杂度,又能避免重复计算导致的结果错误</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>下面用递归归并实现</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_LEN = <span class="number">10086</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">help</span><span class="params">(MAX_LEN)</span></span>;</span><br><span class="line"><span class="comment">// void Merge(vector&lt;int&gt; arry, int left, int mid, int right);</span></span><br><span class="line"><span class="type">long</span> <span class="type">long</span> ans = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">SmallSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">SmallSum</span>(arry, left, mid);</span><br><span class="line">    <span class="built_in">SmallSum</span>(arry, mid + <span class="number">1</span>, right);</span><br><span class="line">    <span class="built_in">Merge</span>(arry, left, mid, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="type">int</span> a = left;</span><br><span class="line">    <span class="type">int</span> b = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 小和问题最重要逻辑,通过有序来加快求和</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x = mid + <span class="number">1</span>, y = left; x &lt;= right; x++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (y &lt;= mid &amp;&amp; arry[y] &lt;= arry[x])</span><br><span class="line">        &#123;</span><br><span class="line">            sum += arry[y++];</span><br><span class="line">        &#125;</span><br><span class="line">        ans += sum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid &amp;&amp; b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a] &lt;= arry[b] ? arry[a++] : arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将辅助数组的值放入传入数组</span></span><br><span class="line">    <span class="keyword">for</span> (i = left; i &lt;= right; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        arry[i] = help[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">GetSmallSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 把ans归零,避免下次调用ans有余值</span></span><br><span class="line">    ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">SmallSum</span>(arry, <span class="number">0</span>, arry.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-拓展题目"><a href="#4-拓展题目" class="headerlink" title="4. 拓展题目"></a>4. 拓展题目</h2><ul>
+<li>翻转对问题</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">给定一个数组 nums ，</span><br><span class="line">如果 i &lt; j 且 nums[i] &gt; 2*nums[j] 我们就将 (i, j) 称作一个翻转对</span><br><span class="line">你需要返回给定数组中的翻转对的数量</span><br></pre></td></tr></table></figure>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>思路与小和问题十分相似</p>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_LEN = <span class="number">10086</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">help</span><span class="params">(MAX_LEN)</span></span>;</span><br><span class="line"><span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ReversePair</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">ReversePair</span>(arry, left, mid);</span><br><span class="line">    <span class="built_in">ReversePair</span>(arry, mid + <span class="number">1</span>, right);</span><br><span class="line">    <span class="built_in">Merge</span>(arry, left, mid, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="type">int</span> a = left;</span><br><span class="line">    <span class="type">int</span> b = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 翻转对问题的核心代码</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x = mid + <span class="number">1</span>, y = left; y &lt;= mid; y++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (x &lt;= right &amp;&amp; arry[y] &gt; (<span class="type">long</span> <span class="type">long</span>)arry[x] * <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            sum++;</span><br><span class="line">            x++;</span><br><span class="line">        &#125;</span><br><span class="line">        ans += sum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid &amp;&amp; b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a] &lt;= arry[b] ? arry[a++] : arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (a &lt;= mid)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[a++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (b &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        help[i++] = arry[b++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将辅助数组的值放入传入数组</span></span><br><span class="line">    <span class="keyword">for</span> (i = left; i &lt;= right; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        arry[i] = help[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GetReversePair</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 把ans归零,避免下次调用ans有余值</span></span><br><span class="line">    ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">ReversePair</span>(arry, <span class="number">0</span>, arry.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>通过归并分治的办法,把解法优化到了O(nlogn)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-2/" data-id="cuidQQGFZ37vXNZrZn6y_DBzk" data-title="每日算法---归并排序(拓)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/algorithm/merge-sort-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">每日算法---归并排序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/sorting/" style="font-size: 20px;">排序</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/algorithm/merge-sort-2/">每日算法---归并排序(拓)</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/merge-sort-1/">每日算法---归并排序</a>
+          </li>
+        
+          <li>
+            <a href="/linux/vim-setting/">如何把vim配置的和vscode一样好用</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/20/aboutme/">关于我</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
