@@ -107,7 +107,7 @@
 <ul>
 <li><strong>GitHub</strong>: <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI">CRAZERA-YI</a></li>
 <li><strong>Gitee</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/crazera">crazera</a></li>
-<li><strong>Email</strong>: <a href="mailto:&#x33;&#x35;&#50;&#57;&#x39;&#x37;&#x38;&#x35;&#x34;&#49;&#x40;&#113;&#113;&#46;&#99;&#111;&#x6d;">3529978541@qq.com</a></li>
+<li><strong>Email</strong>: <a href="mailto:&#51;&#53;&#50;&#57;&#x39;&#x37;&#56;&#x35;&#52;&#49;&#64;&#x71;&#x71;&#46;&#99;&#x6f;&#x6d;">3529978541@qq.com</a></li>
 </ul>
 <hr>
 <p><em>本文档作为博客主页的置顶文章，内容会随时更新。</em></p>
@@ -115,11 +115,70 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/2026/10/20/aboutme/" data-id="cuidqfqMu-VKWUfT--GELhYBc" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/2026/10/20/aboutme/" data-id="cuidg6BTERynuT60T3pG9OCJK" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Algorithm/算法_随机快速排序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/quick-sort-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-23T10:00:00.000Z" itemprop="datePublished">2026-10-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="快速排序-Quick-Sort"><a href="#快速排序-Quick-Sort" class="headerlink" title="快速排序(Quick Sort)"></a>快速排序(Quick Sort)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">摘自维基百科</a><br>快速排序（英语：Quicksort），又称分区交换排序（partition-exchange sort），是一种排序算法，最早由东尼·霍尔提出。在平均状况下，排序n个项目要O(nlog⁡n)次比较。在最坏状况下则需要O(n^2)次比较，但这种状况并不常见。事实上，快速排序O(nlogn)通常明显比其他算法更快，因为它的内部循环可以在大部分的架构上很有效率地达成。</p>
+<p>快速排序使用分治法策略来把一个序列分为较小和较大的2个子序列，然后递归地排序两个子序列。<br>步骤为：</p>
+<ol>
+<li>挑选基准值：从数列中挑出一个元素，称为“基准”（pivot），</li>
+<li>分割：重新排序数列，所有比基准值小的元素摆放在基准前面，所有比基准值大的元素摆在基准后面（与基准值相等的数可以到任何一边）。在这个分割结束之后，对基准值的排序就已经完成，</li>
+<li>递归排序子序列：递归地将小于基准值元素的子序列和大于基准值元素的子序列排序。<br>递归到最底部的判断条件是数列的大小是零或一，此时该数列显然已经有序。</li>
+</ol>
+<p><img src="/../../images/algotirhm/gif/Quick-sort.gif" alt="演示动画"></p>
+<h2 id="2-我的理解"><a href="#2-我的理解" class="headerlink" title="2. 我的理解"></a>2. 我的理解</h2><p>快速排序也是利用分治思想实现的排序算法,但是从原理实现来说,存在无法避免的速率不稳定,最差情况甚至能时间复杂度达到O(n^2)(每次均随机到最值).</p>
+<h2 id="3-基础版快速排序"><a href="#3-基础版快速排序" class="headerlink" title="3. 基础版快速排序"></a>3. 基础版快速排序</h2><h3 id="3-1-代码实现"><a href="#3-1-代码实现" class="headerlink" title="3.1 代码实现"></a>3.1 代码实现</h3><p>对于&#x3D;&#x3D;pivol的数字,一次只管一个,要是极端情况,会导致栈溢出或者超时</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// C++11引入的新库,相比于python,java写起来有点麻烦</span></span><br><span class="line">    <span class="comment">// 获取一个生成器</span></span><br><span class="line">    <span class="function"><span class="type">static</span> std::mt19937 <span class="title">gen</span><span class="params">(std::random_device&#123;&#125;())</span></span>;</span><br><span class="line">    <span class="comment">// 获取一个生成区间(左闭右闭)</span></span><br><span class="line">    <span class="function">std::uniform_int_distribution&lt;<span class="type">int</span>&gt; <span class="title">dist</span><span class="params">(left, right)</span></span>;</span><br><span class="line">    <span class="comment">// 随机数生成 ,获取pivot</span></span><br><span class="line">    <span class="type">int</span> p = arry[<span class="built_in">dist</span>(gen)];</span><br><span class="line">    <span class="comment">// 获取p所在坐标,然后又得到两个区间</span></span><br><span class="line">    <span class="type">int</span> mid = <span class="built_in">Partition</span>(arry, left, right, p);</span><br><span class="line">    <span class="comment">// 继续递归</span></span><br><span class="line">    <span class="built_in">QuickSort</span>(arry, left, mid - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">QuickSort</span>(arry, mid + <span class="number">1</span>, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// a用于标定&quot;空位&quot;,并非真正的空位,而是给&lt;=p的数字交换的位置</span></span><br><span class="line">    <span class="comment">// b用于记忆==p的点的位置,用于最后把==p的数字放在&lt;p和&gt;p的数字们之间,构成新的区间</span></span><br><span class="line">    <span class="type">int</span> a = left, b = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = left; i &lt;= right; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (arry[i] &lt;= p)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">swap</span>(arry, i, a);</span><br><span class="line">            <span class="keyword">if</span> (arry[a] == p)</span><br><span class="line">            &#123;</span><br><span class="line">                b = a;</span><br><span class="line">            &#125;</span><br><span class="line">            a++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">swap</span>(arry, b, a - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> a - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最基本的交换函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp = arry[x];</span><br><span class="line">    arry[x] = arry[y];</span><br><span class="line">    arry[y] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-荷兰旗快速排序"><a href="#4-荷兰旗快速排序" class="headerlink" title="4. 荷兰旗快速排序"></a>4. 荷兰旗快速排序</h2><p>通过添加一个变量实现了,程序自动把&#x3D;&#x3D;pivol的数字挤到中间去</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> first, last;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// C++11引入的新库,相比于python,java写起来有点麻烦</span></span><br><span class="line">    <span class="comment">// 获取一个生成器</span></span><br><span class="line">    <span class="function"><span class="type">static</span> std::mt19937 <span class="title">gen</span><span class="params">(std::random_device&#123;&#125;())</span></span>;</span><br><span class="line">    <span class="comment">// 获取一个生成区间(左闭右闭)</span></span><br><span class="line">    <span class="function">std::uniform_int_distribution&lt;<span class="type">int</span>&gt; <span class="title">dist</span><span class="params">(left, right)</span></span>;</span><br><span class="line">    <span class="comment">// 随机数生成 ,获取pivot</span></span><br><span class="line">    <span class="type">int</span> p = arry[<span class="built_in">dist</span>(gen)];</span><br><span class="line">    <span class="comment">// 获取p所在坐标,然后又得到两个区间</span></span><br><span class="line">    <span class="built_in">Partition</span>(arry, left, right, p);</span><br><span class="line">    <span class="comment">// 继续递归</span></span><br><span class="line">    <span class="type">int</span> l = first - <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> r = last + <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">QuickSort</span>(arry, left, l);</span><br><span class="line">    <span class="built_in">QuickSort</span>(arry, r, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// first last用于标定&quot;空位&quot;,并非真正的空位,而是给&lt;p和&gt;p的数字交换的位置</span></span><br><span class="line">    <span class="comment">// 通过first和last的换位最终会把==p的数字挤到中间去</span></span><br><span class="line">    first = left;</span><br><span class="line">    last = right;</span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= last)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 等于的不动</span></span><br><span class="line">        <span class="keyword">if</span> (arry[i] == p)</span><br><span class="line">        &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 小于的去前面</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (arry[i] &lt; p)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">swap</span>(arry, first, i);</span><br><span class="line">            first++;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 大于的去后面</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">swap</span>(arry, i, last);</span><br><span class="line">            last--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最基本的交换函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp = arry[x];</span><br><span class="line">    arry[x] = arry[y];</span><br><span class="line">    arry[y] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>快速排序也是一种分治排序,但是具有一定的不稳定性,但是通过随机数,削弱了这种不稳定性,使得其期望时间复杂度可以达到O(nlogn)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/quick-sort-1/" data-id="cuidsyhZxum4X_ZBPs6D0pQVb" data-title="每日算法---随机快速排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
 
     </footer>
   </div>
@@ -185,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-2/" data-id="cuidQQGFZ37vXNZrZn6y_DBzk" data-title="每日算法---归并排序(拓)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-2/" data-id="cuidxV35yDJu8YQmunfu-6G9I" data-title="每日算法---归并排序(拓)" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -226,7 +285,8 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <h1 id="归并排序-Merge-sort"><a href="#归并排序-Merge-sort" class="headerlink" title="归并排序(Merge sort)"></a>归并排序(Merge sort)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">摘自维基百科</a><br>归并排序（英语：Merge sort，或mergesort），是建立在归并操作上的一种有效的排序算法，效率为<br>O(nlogn)。1945年由约翰·冯·诺伊曼首次提出。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。</p>
-<p><img src="/../../images/algotirhm/gif/Merge-sort.gif" alt="演示动画"></p>
+<p>归并操作（merge），也叫归并算法，指的是将两个已经排序的序列合并成一个序列的操作。归并排序算法依赖归并操作。</p>
+<p>递归法（Top-down）<br>申请空间，使其大小为两个已经排序序列之和，该空间用来存放合并后的序列<br>设置两个指针，最初位置分别为两个已经排序序列的起始位置<br>比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置<br>重复步骤3直到某一指针到达序列尾<br>将另一序列剩下的所有元素直接复制到合并序列尾<br><img src="/../../images/algotirhm/gif/Merge-sort.gif" alt="演示动画"></p>
 <h2 id="2-我的理解"><a href="#2-我的理解" class="headerlink" title="2. 我的理解"></a>2. 我的理解</h2><p>归并排序通过分而治之的办法实现了排序比较的利用最大化,实现时间复杂度上的高性能和稳定性,但是由于需要辅助数组,所以空间复杂度偏高.整体思路为,通过对于一个数组进行多次分割,然后排序,合并起来实现对于一个数据的排序.常规算法实现有两种方法,递归和非递归,下面将依次用<code>C++</code>实现</p>
 <h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><ol>
 <li>归并排序的递归实现</li>
@@ -242,7 +302,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-1/" data-id="cuidV57rWS_SFWyYcFf-9VBqm" data-title="每日算法---归并排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-1/" data-id="cuid-bxxvL69h2xllipdK3Qs5" data-title="每日算法---归并排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -491,7 +551,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/linux/vim-setting/" data-id="cuidm9hJhWkNxh1gmQs22k8jT" data-title="如何把vim配置的和vscode一样好用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/linux/vim-setting/" data-id="cuidCY7tojwHEash3L29XWOb5" data-title="如何把vim配置的和vscode一样好用" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -555,6 +615,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
+          </li>
         
           <li>
             <a href="/algorithm/merge-sort-2/">每日算法---归并排序(拓)</a>
