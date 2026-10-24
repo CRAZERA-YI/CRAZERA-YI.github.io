@@ -129,6 +129,59 @@
 
 
   
+    <article id="post-Algorithm/算法_随机选择" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/random-selection-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-24T04:00:00.000Z" itemprop="datePublished">2026-10-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/algorithm/random-selection-1/">每日算法---随机选择算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="随机选择算法"><a href="#随机选择算法" class="headerlink" title="随机选择算法"></a>随机选择算法</h1><h2 id="1-引入"><a href="#1-引入" class="headerlink" title="1. 引入"></a>1. 引入</h2><ul>
+<li>例题</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">无序数组中寻找第K大的数</span><br><span class="line">给定整数数组 nums 和整数 k，请返回数组中第 k 个最大的元素。</span><br><span class="line">请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。</span><br><span class="line">你必须设计并实现时间复杂度为 O(n) 的算法解决此问题。</span><br></pre></td></tr></table></figure>
+<h2 id="2-思考"><a href="#2-思考" class="headerlink" title="2. 思考"></a>2. 思考</h2><h3 id="2-1-常规思路"><a href="#2-1-常规思路" class="headerlink" title="2.1 常规思路"></a>2.1 常规思路</h3><p>我们的常规思路可能是先利用排序,再选择,但是这样最好的情况也只能是O(nlogn),无法做到题目要求的O(n).所以必须考虑到新的办法.</p>
+<h3 id="2-2-新法思考"><a href="#2-2-新法思考" class="headerlink" title="2.2 新法思考"></a>2.2 新法思考</h3><p>是否可以借鉴前几次所使用到的分治思想,经过思考,其实可行,对于每一次分割,要是有一半是目标位置以前或者以后,那就不用考虑了,每一次都可以减少”一半”的查找.</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;climits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p, <span class="type">int</span> index)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> ans = INT32_MAX;</span><br><span class="line"><span class="type">int</span> first, last;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">RandomSelect</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> index)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = arry[left];</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> std::mt19937 <span class="title">gen</span><span class="params">(random_device&#123;&#125;())</span></span>;</span><br><span class="line">    <span class="function">std::uniform_int_distribution&lt;<span class="type">int</span>&gt; <span class="title">range</span><span class="params">(left, right)</span></span>;</span><br><span class="line">    <span class="type">int</span> p = arry[<span class="built_in">range</span>(gen)];</span><br><span class="line">    <span class="built_in">Partition</span>(arry, left, right, p, index);</span><br><span class="line">    <span class="type">int</span> r = first - <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> l = last + <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 只看一半符合要求的数</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; first)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">RandomSelect</span>(arry, left, r, index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (index &gt; last)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">RandomSelect</span>(arry, l, right, index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        ans = arry[index];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> p, <span class="type">int</span> index)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    first = left;</span><br><span class="line">    last = right;</span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= last)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 等于的不动</span></span><br><span class="line">        <span class="keyword">if</span> (arry[i] == p)</span><br><span class="line">        &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 小于的去前面</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (arry[i] &lt; p)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">swap</span>(arry, first, i);</span><br><span class="line">            first++;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 大于的去后面</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">swap</span>(arry, i, last);</span><br><span class="line">            last--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最基本的交换函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp = arry[x];</span><br><span class="line">    arry[x] = arry[y];</span><br><span class="line">    arry[y] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>此题也是通过分治思想实现了时间复杂度的降低,分治思想真是很有用的一种解题方式</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/random-selection-1/" data-id="cuidH1IDamHv8aOet2FFm7JjZ" data-title="每日算法---随机选择算法" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Algorithm/算法_随机快速排序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/algorithm/quick-sort-1/" class="article-date">
@@ -585,7 +638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
     </div>
   </div>
 
@@ -595,7 +648,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/sorting/" style="font-size: 20px;">排序</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
     </div>
   </div>
 
@@ -617,6 +670,10 @@
       <ul>
         
           <li>
+            <a href="/algorithm/random-selection-1/">每日算法---随机选择算法</a>
+          </li>
+        
+          <li>
             <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
           </li>
         
@@ -630,10 +687,6 @@
         
           <li>
             <a href="/linux/vim-setting/">如何把vim配置的和vscode一样好用</a>
-          </li>
-        
-          <li>
-            <a href="/2026/10/20/aboutme/">关于我</a>
           </li>
         
       </ul>
