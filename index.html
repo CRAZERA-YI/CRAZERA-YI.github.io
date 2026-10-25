@@ -129,9 +129,889 @@
 
 
   
+    <article id="post-Algorithm/算法_哈希表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/hash-table-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-25T04:00:00.000Z" itemprop="datePublished">2026-10-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/algorithm/hash-table-1/">每日算法---哈希表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%93%88%E5%B8%8C%E8%A1%A8">摘自维基百科</a><br>散列表（英语：Hash table）是根据键而直接访问在存储器存储位置的数据结构。也就是说，它通过计算出一个键值的函数，将所需查询的数据映射到表中一个位置来让人访问，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在首字母为W的表中查找“王”姓的电话号码一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在首字母为W的表中查找“王”姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则F()，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则F()，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。</p>
+<h2 id="2-基本概念"><a href="#2-基本概念" class="headerlink" title="2. 基本概念"></a>2. 基本概念</h2><ol>
+<li><p>若关键字为k，则其值存放在f(k)的存储位置上。由此，不需比较便可直接获取所查记录。称这个对应关系f为散列函数，按这个思想建立的表为散列表。</p>
+</li>
+<li><p>对不同的关键字可能得到同一散列地址，即k1≠k2，而f(k1)&#x3D;f(k2)，这种现象称为冲突（英语：Collision）。具有相同函数值的关键字对该散列函数来说称做同义词。综上所述，根据散列函数f(k)和处理冲突的方法将一组关键字映射到一个有限的连续的地址集（区间）上，并以关键字在地址集中的“像”作为记录在表中的存储位置，这种表便称为散列表，这一映射过程称为散列造表或散列，所得的存储位置称散列地址。</p>
+</li>
+<li><p>若对于关键字集合中的任一个关键字，经散列函数镜像到地址集合中任何一个地址的概率是相等的，则称此类散列函数为均匀散列函数（Uniform Hash function），这就使关键字经过散列函数得到一个“随机的地址”，从而减少冲突。</p>
+</li>
+</ol>
+<h2 id="3-C-中的hash-table"><a href="#3-C-中的hash-table" class="headerlink" title="3.C++中的hash table"></a>3.C++中的hash table</h2><h3 id="3-1-std-unordered-set"><a href="#3-1-std-unordered-set" class="headerlink" title="3.1 std::unordered_set"></a>3.1 std::unordered_set</h3><h4 id="所在库"><a href="#所在库" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_set&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值"><a href="#1-构造与赋值" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>unordered_map()</code></td>
+<td>构造空 map</td>
+</tr>
+<tr>
+<td><code>unordered_map(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 map 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量"><a href="#2-容量" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-元素访问（独有）"><a href="#3-元素访问（独有）" class="headerlink" title="3. 元素访问（独有）"></a>3. 元素访问（独有）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>operator[](key)</code></td>
+<td>返回值的引用；键不存在则插入默认值</td>
+</tr>
+<tr>
+<td><code>at(key)</code></td>
+<td>返回值的引用；键不存在抛 <code>std::out_of_range</code></td>
+</tr>
+</tbody></table>
+<h4 id="4-修改"><a href="#4-修改" class="headerlink" title="4. 修改"></a>4. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入键值对，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert_or_assign(key, val)</code></td>
+<td>插入或覆盖赋值（C++17）</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>try_emplace(key, args...)</code></td>
+<td>键不存在才构造插入（C++17）</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="5-查找"><a href="#5-查找" class="headerlink" title="5. 查找"></a>5. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+</tbody></table>
+<h4 id="6-迭代器"><a href="#6-迭代器" class="headerlink" title="6. 迭代器"></a>6. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="7-哈希策略"><a href="#7-哈希策略" class="headerlink" title="7. 哈希策略"></a>7. 哈希策略</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bucket_count()</code></td>
+<td>桶总数</td>
+</tr>
+<tr>
+<td><code>max_bucket_count()</code></td>
+<td>最大桶数</td>
+</tr>
+<tr>
+<td><code>bucket_size(n)</code></td>
+<td>第 n 个桶的元素数</td>
+</tr>
+<tr>
+<td><code>bucket(key)</code></td>
+<td>键所在桶的编号</td>
+</tr>
+<tr>
+<td><code>load_factor()</code></td>
+<td>平均每桶元素数</td>
+</tr>
+<tr>
+<td><code>max_load_factor()</code></td>
+<td>获取&#x2F;设置最大负载因子</td>
+</tr>
+<tr>
+<td><code>rehash(n)</code></td>
+<td>设置桶数至少为 n</td>
+</tr>
+<tr>
+<td><code>reserve(n)</code></td>
+<td>预留可容纳 n 个元素的空间</td>
+</tr>
+</tbody></table>
+<h4 id="8-观察器"><a href="#8-观察器" class="headerlink" title="8. 观察器"></a>8. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hash_function()</code></td>
+<td>返回哈希函数对象</td>
+</tr>
+<tr>
+<td><code>key_eq()</code></td>
+<td>返回键相等比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-std-unordered-map"><a href="#3-2-std-unordered-map" class="headerlink" title="3.2 std::unordered_map"></a>3.2 std::unordered_map</h3><h4 id="所在库-1"><a href="#所在库-1" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_map&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数-1"><a href="#常用函数-1" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值-1"><a href="#1-构造与赋值-1" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>unordered_set()</code></td>
+<td>构造空 set</td>
+</tr>
+<tr>
+<td><code>unordered_set(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 set 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量-1"><a href="#2-容量-1" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-修改"><a href="#3-修改" class="headerlink" title="3. 修改"></a>3. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入元素，已存在则无效</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="4-查找"><a href="#4-查找" class="headerlink" title="4. 查找"></a>4. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+</tbody></table>
+<h4 id="5-迭代器"><a href="#5-迭代器" class="headerlink" title="5. 迭代器"></a>5. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-哈希策略"><a href="#6-哈希策略" class="headerlink" title="6. 哈希策略"></a>6. 哈希策略</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bucket_count()</code></td>
+<td>桶总数</td>
+</tr>
+<tr>
+<td><code>max_bucket_count()</code></td>
+<td>最大桶数</td>
+</tr>
+<tr>
+<td><code>bucket_size(n)</code></td>
+<td>第 n 个桶的元素数</td>
+</tr>
+<tr>
+<td><code>bucket(key)</code></td>
+<td>键所在桶的编号</td>
+</tr>
+<tr>
+<td><code>load_factor()</code></td>
+<td>平均每桶元素数</td>
+</tr>
+<tr>
+<td><code>max_load_factor()</code></td>
+<td>获取&#x2F;设置最大负载因子</td>
+</tr>
+<tr>
+<td><code>rehash(n)</code></td>
+<td>设置桶数至少为 n</td>
+</tr>
+<tr>
+<td><code>reserve(n)</code></td>
+<td>预留可容纳 n 个元素的空间</td>
+</tr>
+</tbody></table>
+<h4 id="7-观察器"><a href="#7-观察器" class="headerlink" title="7. 观察器"></a>7. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hash_function()</code></td>
+<td>返回哈希函数对象</td>
+</tr>
+<tr>
+<td><code>key_eq()</code></td>
+<td>返回键相等比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-两者的区别"><a href="#3-3-两者的区别" class="headerlink" title="3.3 两者的区别"></a>3.3 两者的区别</h3><ol>
+<li><strong>存储内容不同</strong>：<code>unordered_map</code> 存键值对（<code>pair&lt;const Key, T&gt;</code>），<code>unordered_set</code> 只存键。</li>
+<li><strong>元素访问不同</strong>：<code>unordered_map</code> 有 <code>operator[]</code> 和 <code>at()</code>，可按键读写值；<code>unordered_set</code> 没有元素访问函数，只能判断存在性。</li>
+<li><strong>修改接口不同</strong>：<code>unordered_map</code> 独有 <code>insert_or_assign</code>、<code>try_emplace</code>（针对键值对语义）；<code>unordered_set</code> 的插入只接收单个值。</li>
+<li><strong>元素可变性不同</strong>：<code>unordered_map</code> 的值可通过迭代器&#x2F;<code>operator[]</code> 修改；<code>unordered_set</code> 的元素不可修改（修改会破坏哈希）。</li>
+<li><strong>用途不同</strong>：<code>unordered_map</code> 用于映射、字典、计数；<code>unordered_set</code> 用于去重、存在性判断。</li>
+<li><strong>共同点</strong>：两者都基于哈希表，平均查找&#x2F;插入&#x2F;删除为 O(1)，都不保证遍历顺序，容量、迭代器、哈希策略、观察器类函数完全一致。</li>
+</ol>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>两者都可以很方便的用于数据统计,如果非哈希冲突的情况下,增删改查的时间复杂度都为O(1),是及其高效的统计方式,要是数据不多,也可以选择使用int&#x2F;bool数组实现类哈希表的功能</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/hash-table-1/" data-id="cuidArEpqr4TT_BoFpliM6RjN" data-title="每日算法---哈希表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Algorithm/算法_有序表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/ordered-table-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-25T04:00:00.000Z" itemprop="datePublished">2026-10-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/algorithm/ordered-table-1/">每日算法---有序表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="有序表"><a href="#有序表" class="headerlink" title="有序表"></a>有序表</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%B3%E8%81%94%E6%80%A7%E5%AE%B9%E5%99%A8">摘自维基百科</a><br>关联容器是指C++标准模板库中的一套类模板，实现了有序关联数组。[1]可用于存放任意数据类型的元素。C++标准中定义的关联容器有： set, map, multiset, multimap。</p>
+<p>关联容器类似于C++中的无序关联容器。差别为：</p>
+<ul>
+<li>关联容器是红黑树实现，无序关联容器是哈希表实现。</li>
+<li>关联容器保证按键值有序遍历，因此可以做范围查找，而无序关联容器不可以。关联支持一些导航类的操作，如求出给定键最邻近的键，最大键、最小键操作。</li>
+<li>关联容器的迭代器不会失效，除非所指元素被删除。无序关联容器的iterator在修改元素时可能会失效。所以对关联容器的遍历与修改在一定程度上可并行</li>
+<li>哈希表查找时候要算hash，这个最坏时间复杂度是O(key的长度)；基于比较的有序关联容器通常只使用头几个字符进行比较</li>
+</ul>
+<h2 id="2-C-中的ordered-table"><a href="#2-C-中的ordered-table" class="headerlink" title="2. C++中的ordered table"></a>2. C++中的ordered table</h2><h3 id="2-1-std-set"><a href="#2-1-std-set" class="headerlink" title="2.1 std::set"></a>2.1 std::set</h3><h4 id="所在库"><a href="#所在库" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值"><a href="#1-构造与赋值" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>map()</code></td>
+<td>构造空 map</td>
+</tr>
+<tr>
+<td><code>map(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>map(first, last)</code></td>
+<td>用迭代器区间构造</td>
+</tr>
+<tr>
+<td><code>map(comp)</code></td>
+<td>指定比较函数构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 map 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量"><a href="#2-容量" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-元素访问（独有）"><a href="#3-元素访问（独有）" class="headerlink" title="3. 元素访问（独有）"></a>3. 元素访问（独有）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>operator[](key)</code></td>
+<td>返回值的引用；键不存在则插入默认值</td>
+</tr>
+<tr>
+<td><code>at(key)</code></td>
+<td>返回值的引用；键不存在抛 <code>std::out_of_range</code></td>
+</tr>
+</tbody></table>
+<h4 id="4-修改"><a href="#4-修改" class="headerlink" title="4. 修改"></a>4. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入键值对，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert(hint, val)</code></td>
+<td>带提示位置插入</td>
+</tr>
+<tr>
+<td><code>insert(first, last)</code></td>
+<td>插入迭代器区间</td>
+</tr>
+<tr>
+<td><code>insert_or_assign(key, val)</code></td>
+<td>插入或覆盖赋值（C++17）</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>try_emplace(key, args...)</code></td>
+<td>键不存在才构造插入（C++17）</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="5-查找"><a href="#5-查找" class="headerlink" title="5. 查找"></a>5. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+<tr>
+<td><code>lower_bound(key)</code></td>
+<td>返回首个不小于 key 的元素的迭代器</td>
+</tr>
+<tr>
+<td><code>upper_bound(key)</code></td>
+<td>返回首个大于 key 的元素的迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-迭代器"><a href="#6-迭代器" class="headerlink" title="6. 迭代器"></a>6. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器（按键升序）</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+<tr>
+<td><code>rbegin()</code> &#x2F; <code>rend()</code></td>
+<td>反向迭代器</td>
+</tr>
+<tr>
+<td><code>crbegin()</code> &#x2F; <code>crend()</code></td>
+<td>const 反向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="7-观察器"><a href="#7-观察器" class="headerlink" title="7. 观察器"></a>7. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>key_comp()</code></td>
+<td>返回键比较函数对象</td>
+</tr>
+<tr>
+<td><code>value_comp()</code></td>
+<td>返回值（键值对）比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-std-set"><a href="#2-2-std-set" class="headerlink" title="2.2 std::set"></a>2.2 std::set</h3><h4 id="所在库-1"><a href="#所在库-1" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数-1"><a href="#常用函数-1" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值-1"><a href="#1-构造与赋值-1" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set()</code></td>
+<td>构造空 set</td>
+</tr>
+<tr>
+<td><code>set(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>set(first, last)</code></td>
+<td>用迭代器区间构造</td>
+</tr>
+<tr>
+<td><code>set(comp)</code></td>
+<td>指定比较函数构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 set 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量-1"><a href="#2-容量-1" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-修改"><a href="#3-修改" class="headerlink" title="3. 修改"></a>3. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入元素，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert(hint, val)</code></td>
+<td>带提示位置插入</td>
+</tr>
+<tr>
+<td><code>insert(first, last)</code></td>
+<td>插入迭代器区间</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="4-查找"><a href="#4-查找" class="headerlink" title="4. 查找"></a>4. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+<tr>
+<td><code>lower_bound(key)</code></td>
+<td>返回首个不小于 key 的元素的迭代器</td>
+</tr>
+<tr>
+<td><code>upper_bound(key)</code></td>
+<td>返回首个大于 key 的元素的迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="5-迭代器"><a href="#5-迭代器" class="headerlink" title="5. 迭代器"></a>5. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器（按键升序）</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+<tr>
+<td><code>rbegin()</code> &#x2F; <code>rend()</code></td>
+<td>反向迭代器</td>
+</tr>
+<tr>
+<td><code>crbegin()</code> &#x2F; <code>crend()</code></td>
+<td>const 反向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-观察器"><a href="#6-观察器" class="headerlink" title="6. 观察器"></a>6. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>key_comp()</code></td>
+<td>返回键比较函数对象</td>
+</tr>
+<tr>
+<td><code>value_comp()</code></td>
+<td>返回值比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-两者区别"><a href="#2-3-两者区别" class="headerlink" title="2.3 两者区别"></a>2.3 两者区别</h3><ol>
+<li><strong>存储内容不同</strong>：<code>map</code> 存键值对（<code>pair&lt;const Key, T&gt;</code>），<code>set</code> 只存键。</li>
+<li><strong>元素访问不同</strong>：<code>map</code> 有 <code>operator[]</code> 和 <code>at()</code>，可按键读写值；<code>set</code> 没有元素访问函数，只能判断存在性。</li>
+<li><strong>修改接口不同</strong>：<code>map</code> 独有 <code>insert_or_assign</code>、<code>try_emplace</code>（针对键值对语义）；<code>set</code> 的插入只接收单个值。</li>
+<li><strong>元素可变性不同</strong>：<code>map</code> 的值可通过迭代器&#x2F;<code>operator[]</code> 修改（键不可改）；<code>set</code> 的元素不可修改（修改会破坏有序性）。</li>
+<li><strong>用途不同</strong>：<code>map</code> 用于有序映射、字典、计数；<code>set</code> 用于有序去重、存在性判断、范围查询。</li>
+<li><strong>共同点</strong>：两者都基于红黑树（平衡二叉搜索树），元素<strong>按键有序</strong>存储，查找&#x2F;插入&#x2F;删除为 O(log n)，支持 <code>lower_bound</code>&#x2F;<code>upper_bound</code> 等有序查找；容量、迭代器、观察器类函数完全一致。</li>
+</ol>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>set和map均是基于平衡树实现的数据结构,相比于哈希表,优势是可以搜索搜索相邻数值,但是对于普通键值对的搜索速度(O(logn))慢于哈希表(O(1))</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/ordered-table-1/" data-id="cuid_jCtDab6R7bWqTvnlu9a8" data-title="每日算法---有序表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Algorithm/算法_堆排序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/algorithm/random-selection-1/" class="article-date">
+    <a href="/algorithm/heap-sort-1/" class="article-date">
   <time class="dt-published" datetime="2026-10-24T10:00:00.000Z" itemprop="datePublished">2026-10-24</time>
 </a>
     
@@ -147,7 +1027,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/algorithm/random-selection-1/">每日算法---堆排序</a>
+      <a class="p-name article-title" href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
     </h1>
   
 
@@ -160,19 +1040,12 @@
 <p>重复从最大堆取出数值最大的结点（把根结点和最后一个结点交换，把交换后的最后一个结点移出堆），并让残余的堆维持最大堆性质。<br><img src="/../../images/algotirhm/gif/Heap-sort.gif" alt="演示动画"></p>
 <p><span id="min-max">最小—最大堆（Min-Max Heap）</span> 是最大层和最小层交替出现的二叉树，即最大层结点的子节点属于最小层，最小层结点的子节点属于最大层。以最大（小）层结n点为根结点的子树保有最大（小）堆性质：根结点的键值为该子树结点键值中最大（小）项。</p>
 <h2 id="2-我的理解"><a href="#2-我的理解" class="headerlink" title="2.我的理解"></a>2.我的理解</h2><p>堆实际上就是二叉树,让一个无序数组变成一个最大&#x2F;最小堆,使得其最大值&#x2F;最小值在根部,移除根部的数字,将次之的数字移上来最多只用最大层数那么多次,故而可以做到O(nlogn)的时间复杂度进行排序</p>
-<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3.代码实现"></a>3.代码实现</h2><h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><p>堆排序的代码实现相对于快速排序和选择排序其实要简单些,下面演示的是最基础的堆排序,从上往下构造堆,效率还不是最高的</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">HeapInsert</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> i)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Heapify</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> i, <span class="type">int</span> size)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">HeapSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 先构造大根堆</span></span><br><span class="line">        <span class="built_in">HeapInsert</span>(arry, i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> size = n;</span><br><span class="line">    <span class="comment">// 开始堆排序,一次次的把最大值放到最后,实现有序</span></span><br><span class="line">    <span class="keyword">while</span> (size &gt; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        size--;</span><br><span class="line">        <span class="built_in">swap</span>(arry, <span class="number">0</span>, size);</span><br><span class="line">        <span class="built_in">Heapify</span>(arry, <span class="number">0</span>, size);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 构造大根堆所用,要是比父节点大就上去,反之不动</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">HeapInsert</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (arry[i] &gt; arry[(i - <span class="number">1</span>) / <span class="number">2</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arry, i, (i - <span class="number">1</span>) / <span class="number">2</span>);</span><br><span class="line">        i = (i - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每当移动了一次顶点和尾巴,都要进行一次堆化,保证永远都是一个大根堆</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Heapify</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> i, <span class="type">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 当前节点的左儿子</span></span><br><span class="line">    <span class="type">int</span> lson = i * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (lson &lt; size)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 比较左儿子和右儿子谁更大,是否存在右儿子</span></span><br><span class="line">        <span class="type">int</span> best = lson + <span class="number">1</span> &lt; size &amp;&amp; arry[lson + <span class="number">1</span>] &gt; arry[lson] ? lson + <span class="number">1</span> : lson;</span><br><span class="line">        <span class="comment">// 儿子里面最大的和当前节点比较</span></span><br><span class="line">        best = arry[i] &gt; arry[best] ? i : best;</span><br><span class="line">        <span class="comment">// 如果 最大的就是自己,那当前就是大根堆了,直接返回</span></span><br><span class="line">        <span class="keyword">if</span> (best == i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 不是就换位,继续进行,知道成为大根堆</span></span><br><span class="line">        <span class="built_in">swap</span>(arry, best, i);</span><br><span class="line">        i = best;</span><br><span class="line">        lson = i * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp = arry[x];</span><br><span class="line">    arry[x] = arry[y];</span><br><span class="line">    arry[y] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="进阶版"><a href="#进阶版" class="headerlink" title="进阶版"></a>进阶版</h3><p>只需要改动堆生成顺序即可其他不变,可以使得建立大根堆的时间变为O(n)</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">HeapSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 先构造大根堆</span></span><br><span class="line">        <span class="built_in">HeapInsert</span>(arry, i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> size = n;</span><br><span class="line">    <span class="comment">// 开始堆排序,一次次的把最大值放到最后,实现有序</span></span><br><span class="line">    <span class="keyword">while</span> (size &gt; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        size--;</span><br><span class="line">        <span class="built_in">swap</span>(arry, <span class="number">0</span>, size);</span><br><span class="line">        <span class="built_in">Heapify</span>(arry, <span class="number">0</span>, size);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>为什么从下往上效率更高呢?<br>从上往下分别由n&#x2F;2,n&#x2F;4,n&#x2F;8 ….个数字,对应的需要和xia面比较的次数也相应的为n&#x2F;2 * 0, n&#x2F;4 * 1,n&#x2F;8 * 2…一次类推,而要是从上往下,那用的比较时间就要多得多了</p>
-<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>堆排序是一个对于二叉树的神奇利用,实现了空间与时间的高效</p>
-
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3.代码实现"></a>3.代码实现</h2><p>堆排序的代码实现相对于快速排序和选择排序其实要简单些</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/random-selection-1/" data-id="cuidrPnBIv7K7dCQv6eGdmMaS" data-title="每日算法---堆排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/heap-sort-1/" data-id="cuidrPnBIv7K7dCQv6eGdmMaS" data-title="每日算法---堆排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -695,7 +1568,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
     </div>
   </div>
 
@@ -705,7 +1578,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
     </div>
   </div>
 
@@ -727,7 +1600,15 @@
       <ul>
         
           <li>
-            <a href="/algorithm/random-selection-1/">每日算法---堆排序</a>
+            <a href="/algorithm/hash-table-1/">每日算法---哈希表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/ordered-table-1/">每日算法---有序表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
           </li>
         
           <li>
@@ -736,14 +1617,6 @@
         
           <li>
             <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
-          </li>
-        
-          <li>
-            <a href="/algorithm/merge-sort-2/">每日算法---归并排序(拓)</a>
-          </li>
-        
-          <li>
-            <a href="/algorithm/merge-sort-1/">每日算法---归并排序</a>
           </li>
         
       </ul>

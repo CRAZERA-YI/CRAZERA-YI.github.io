@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>每日算法---哈希表 | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="哈希表1. 简介摘自维基百科散列表（英语：Hash table）是根据键而直接访问在存储器存储位置的数据结构。也就是说，它通过计算出一个键值的函数，将所需查询的数据映射到表中一个位置来让人访问，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。 一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---哈希表">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/hash-table-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="哈希表1. 简介摘自维基百科散列表（英语：Hash table）是根据键而直接访问在存储器存储位置的数据结构。也就是说，它通过计算出一个键值的函数，将所需查询的数据映射到表中一个位置来让人访问，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。 一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-25T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-25T06:30:44.357Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Algorithm/算法_哈希表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/hash-table-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-25T04:00:00.000Z" itemprop="datePublished">2026-10-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      每日算法---哈希表
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%93%88%E5%B8%8C%E8%A1%A8">摘自维基百科</a><br>散列表（英语：Hash table）是根据键而直接访问在存储器存储位置的数据结构。也就是说，它通过计算出一个键值的函数，将所需查询的数据映射到表中一个位置来让人访问，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在首字母为W的表中查找“王”姓的电话号码一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名x到首字母F(x)的一个函数关系），在首字母为W的表中查找“王”姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则F()，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则F()，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。</p>
+<h2 id="2-基本概念"><a href="#2-基本概念" class="headerlink" title="2. 基本概念"></a>2. 基本概念</h2><ol>
+<li><p>若关键字为k，则其值存放在f(k)的存储位置上。由此，不需比较便可直接获取所查记录。称这个对应关系f为散列函数，按这个思想建立的表为散列表。</p>
+</li>
+<li><p>对不同的关键字可能得到同一散列地址，即k1≠k2，而f(k1)&#x3D;f(k2)，这种现象称为冲突（英语：Collision）。具有相同函数值的关键字对该散列函数来说称做同义词。综上所述，根据散列函数f(k)和处理冲突的方法将一组关键字映射到一个有限的连续的地址集（区间）上，并以关键字在地址集中的“像”作为记录在表中的存储位置，这种表便称为散列表，这一映射过程称为散列造表或散列，所得的存储位置称散列地址。</p>
+</li>
+<li><p>若对于关键字集合中的任一个关键字，经散列函数镜像到地址集合中任何一个地址的概率是相等的，则称此类散列函数为均匀散列函数（Uniform Hash function），这就使关键字经过散列函数得到一个“随机的地址”，从而减少冲突。</p>
+</li>
+</ol>
+<h2 id="3-C-中的hash-table"><a href="#3-C-中的hash-table" class="headerlink" title="3.C++中的hash table"></a>3.C++中的hash table</h2><h3 id="3-1-std-unordered-set"><a href="#3-1-std-unordered-set" class="headerlink" title="3.1 std::unordered_set"></a>3.1 std::unordered_set</h3><h4 id="所在库"><a href="#所在库" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_set&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值"><a href="#1-构造与赋值" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>unordered_map()</code></td>
+<td>构造空 map</td>
+</tr>
+<tr>
+<td><code>unordered_map(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 map 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量"><a href="#2-容量" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-元素访问（独有）"><a href="#3-元素访问（独有）" class="headerlink" title="3. 元素访问（独有）"></a>3. 元素访问（独有）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>operator[](key)</code></td>
+<td>返回值的引用；键不存在则插入默认值</td>
+</tr>
+<tr>
+<td><code>at(key)</code></td>
+<td>返回值的引用；键不存在抛 <code>std::out_of_range</code></td>
+</tr>
+</tbody></table>
+<h4 id="4-修改"><a href="#4-修改" class="headerlink" title="4. 修改"></a>4. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入键值对，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert_or_assign(key, val)</code></td>
+<td>插入或覆盖赋值（C++17）</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>try_emplace(key, args...)</code></td>
+<td>键不存在才构造插入（C++17）</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="5-查找"><a href="#5-查找" class="headerlink" title="5. 查找"></a>5. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+</tbody></table>
+<h4 id="6-迭代器"><a href="#6-迭代器" class="headerlink" title="6. 迭代器"></a>6. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="7-哈希策略"><a href="#7-哈希策略" class="headerlink" title="7. 哈希策略"></a>7. 哈希策略</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bucket_count()</code></td>
+<td>桶总数</td>
+</tr>
+<tr>
+<td><code>max_bucket_count()</code></td>
+<td>最大桶数</td>
+</tr>
+<tr>
+<td><code>bucket_size(n)</code></td>
+<td>第 n 个桶的元素数</td>
+</tr>
+<tr>
+<td><code>bucket(key)</code></td>
+<td>键所在桶的编号</td>
+</tr>
+<tr>
+<td><code>load_factor()</code></td>
+<td>平均每桶元素数</td>
+</tr>
+<tr>
+<td><code>max_load_factor()</code></td>
+<td>获取&#x2F;设置最大负载因子</td>
+</tr>
+<tr>
+<td><code>rehash(n)</code></td>
+<td>设置桶数至少为 n</td>
+</tr>
+<tr>
+<td><code>reserve(n)</code></td>
+<td>预留可容纳 n 个元素的空间</td>
+</tr>
+</tbody></table>
+<h4 id="8-观察器"><a href="#8-观察器" class="headerlink" title="8. 观察器"></a>8. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hash_function()</code></td>
+<td>返回哈希函数对象</td>
+</tr>
+<tr>
+<td><code>key_eq()</code></td>
+<td>返回键相等比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-std-unordered-map"><a href="#3-2-std-unordered-map" class="headerlink" title="3.2 std::unordered_map"></a>3.2 std::unordered_map</h3><h4 id="所在库-1"><a href="#所在库-1" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_map&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数-1"><a href="#常用函数-1" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值-1"><a href="#1-构造与赋值-1" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>unordered_set()</code></td>
+<td>构造空 set</td>
+</tr>
+<tr>
+<td><code>unordered_set(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 set 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量-1"><a href="#2-容量-1" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-修改"><a href="#3-修改" class="headerlink" title="3. 修改"></a>3. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入元素，已存在则无效</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="4-查找"><a href="#4-查找" class="headerlink" title="4. 查找"></a>4. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+</tbody></table>
+<h4 id="5-迭代器"><a href="#5-迭代器" class="headerlink" title="5. 迭代器"></a>5. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-哈希策略"><a href="#6-哈希策略" class="headerlink" title="6. 哈希策略"></a>6. 哈希策略</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bucket_count()</code></td>
+<td>桶总数</td>
+</tr>
+<tr>
+<td><code>max_bucket_count()</code></td>
+<td>最大桶数</td>
+</tr>
+<tr>
+<td><code>bucket_size(n)</code></td>
+<td>第 n 个桶的元素数</td>
+</tr>
+<tr>
+<td><code>bucket(key)</code></td>
+<td>键所在桶的编号</td>
+</tr>
+<tr>
+<td><code>load_factor()</code></td>
+<td>平均每桶元素数</td>
+</tr>
+<tr>
+<td><code>max_load_factor()</code></td>
+<td>获取&#x2F;设置最大负载因子</td>
+</tr>
+<tr>
+<td><code>rehash(n)</code></td>
+<td>设置桶数至少为 n</td>
+</tr>
+<tr>
+<td><code>reserve(n)</code></td>
+<td>预留可容纳 n 个元素的空间</td>
+</tr>
+</tbody></table>
+<h4 id="7-观察器"><a href="#7-观察器" class="headerlink" title="7. 观察器"></a>7. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hash_function()</code></td>
+<td>返回哈希函数对象</td>
+</tr>
+<tr>
+<td><code>key_eq()</code></td>
+<td>返回键相等比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-两者的区别"><a href="#3-3-两者的区别" class="headerlink" title="3.3 两者的区别"></a>3.3 两者的区别</h3><ol>
+<li><strong>存储内容不同</strong>：<code>unordered_map</code> 存键值对（<code>pair&lt;const Key, T&gt;</code>），<code>unordered_set</code> 只存键。</li>
+<li><strong>元素访问不同</strong>：<code>unordered_map</code> 有 <code>operator[]</code> 和 <code>at()</code>，可按键读写值；<code>unordered_set</code> 没有元素访问函数，只能判断存在性。</li>
+<li><strong>修改接口不同</strong>：<code>unordered_map</code> 独有 <code>insert_or_assign</code>、<code>try_emplace</code>（针对键值对语义）；<code>unordered_set</code> 的插入只接收单个值。</li>
+<li><strong>元素可变性不同</strong>：<code>unordered_map</code> 的值可通过迭代器&#x2F;<code>operator[]</code> 修改；<code>unordered_set</code> 的元素不可修改（修改会破坏哈希）。</li>
+<li><strong>用途不同</strong>：<code>unordered_map</code> 用于映射、字典、计数；<code>unordered_set</code> 用于去重、存在性判断。</li>
+<li><strong>共同点</strong>：两者都基于哈希表，平均查找&#x2F;插入&#x2F;删除为 O(1)，都不保证遍历顺序，容量、迭代器、哈希策略、观察器类函数完全一致。</li>
+</ol>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>两者都可以很方便的用于数据统计,如果非哈希冲突的情况下,增删改查的时间复杂度都为O(1),是及其高效的统计方式,要是数据不多,也可以选择使用int&#x2F;bool数组实现类哈希表的功能</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/hash-table-1/" data-id="cuidArEpqr4TT_BoFpliM6RjN" data-title="每日算法---哈希表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/algorithm/ordered-table-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">每日算法---有序表</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/algorithm/hash-table-1/">每日算法---哈希表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/ordered-table-1/">每日算法---有序表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/random-selection-1/">每日算法---随机选择算法</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

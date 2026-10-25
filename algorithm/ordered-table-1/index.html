@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>每日算法---有序表 | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="有序表1. 简介摘自维基百科关联容器是指C++标准模板库中的一套类模板，实现了有序关联数组。[1]可用于存放任意数据类型的元素。C++标准中定义的关联容器有： set, map, multiset, multimap。 关联容器类似于C++中的无序关联容器。差别为：  关联容器是红黑树实现，无序关联容器是哈希表实现。 关联容器保证按键值有序遍历，因此可以做范围查找，而无序关联容器不可以。关联支持一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---有序表">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/ordered-table-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="有序表1. 简介摘自维基百科关联容器是指C++标准模板库中的一套类模板，实现了有序关联数组。[1]可用于存放任意数据类型的元素。C++标准中定义的关联容器有： set, map, multiset, multimap。 关联容器类似于C++中的无序关联容器。差别为：  关联容器是红黑树实现，无序关联容器是哈希表实现。 关联容器保证按键值有序遍历，因此可以做范围查找，而无序关联容器不可以。关联支持一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-25T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-25T06:54:58.775Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="有序表">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Algorithm/算法_有序表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/algorithm/ordered-table-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-25T04:00:00.000Z" itemprop="datePublished">2026-10-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      每日算法---有序表
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="有序表"><a href="#有序表" class="headerlink" title="有序表"></a>有序表</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%B3%E8%81%94%E6%80%A7%E5%AE%B9%E5%99%A8">摘自维基百科</a><br>关联容器是指C++标准模板库中的一套类模板，实现了有序关联数组。[1]可用于存放任意数据类型的元素。C++标准中定义的关联容器有： set, map, multiset, multimap。</p>
+<p>关联容器类似于C++中的无序关联容器。差别为：</p>
+<ul>
+<li>关联容器是红黑树实现，无序关联容器是哈希表实现。</li>
+<li>关联容器保证按键值有序遍历，因此可以做范围查找，而无序关联容器不可以。关联支持一些导航类的操作，如求出给定键最邻近的键，最大键、最小键操作。</li>
+<li>关联容器的迭代器不会失效，除非所指元素被删除。无序关联容器的iterator在修改元素时可能会失效。所以对关联容器的遍历与修改在一定程度上可并行</li>
+<li>哈希表查找时候要算hash，这个最坏时间复杂度是O(key的长度)；基于比较的有序关联容器通常只使用头几个字符进行比较</li>
+</ul>
+<h2 id="2-C-中的ordered-table"><a href="#2-C-中的ordered-table" class="headerlink" title="2. C++中的ordered table"></a>2. C++中的ordered table</h2><h3 id="2-1-std-set"><a href="#2-1-std-set" class="headerlink" title="2.1 std::set"></a>2.1 std::set</h3><h4 id="所在库"><a href="#所在库" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值"><a href="#1-构造与赋值" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>map()</code></td>
+<td>构造空 map</td>
+</tr>
+<tr>
+<td><code>map(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>map(first, last)</code></td>
+<td>用迭代器区间构造</td>
+</tr>
+<tr>
+<td><code>map(comp)</code></td>
+<td>指定比较函数构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 map 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量"><a href="#2-容量" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-元素访问（独有）"><a href="#3-元素访问（独有）" class="headerlink" title="3. 元素访问（独有）"></a>3. 元素访问（独有）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>operator[](key)</code></td>
+<td>返回值的引用；键不存在则插入默认值</td>
+</tr>
+<tr>
+<td><code>at(key)</code></td>
+<td>返回值的引用；键不存在抛 <code>std::out_of_range</code></td>
+</tr>
+</tbody></table>
+<h4 id="4-修改"><a href="#4-修改" class="headerlink" title="4. 修改"></a>4. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入键值对，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert(hint, val)</code></td>
+<td>带提示位置插入</td>
+</tr>
+<tr>
+<td><code>insert(first, last)</code></td>
+<td>插入迭代器区间</td>
+</tr>
+<tr>
+<td><code>insert_or_assign(key, val)</code></td>
+<td>插入或覆盖赋值（C++17）</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>try_emplace(key, args...)</code></td>
+<td>键不存在才构造插入（C++17）</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="5-查找"><a href="#5-查找" class="headerlink" title="5. 查找"></a>5. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+<tr>
+<td><code>lower_bound(key)</code></td>
+<td>返回首个不小于 key 的元素的迭代器</td>
+</tr>
+<tr>
+<td><code>upper_bound(key)</code></td>
+<td>返回首个大于 key 的元素的迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-迭代器"><a href="#6-迭代器" class="headerlink" title="6. 迭代器"></a>6. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器（按键升序）</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+<tr>
+<td><code>rbegin()</code> &#x2F; <code>rend()</code></td>
+<td>反向迭代器</td>
+</tr>
+<tr>
+<td><code>crbegin()</code> &#x2F; <code>crend()</code></td>
+<td>const 反向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="7-观察器"><a href="#7-观察器" class="headerlink" title="7. 观察器"></a>7. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>key_comp()</code></td>
+<td>返回键比较函数对象</td>
+</tr>
+<tr>
+<td><code>value_comp()</code></td>
+<td>返回值（键值对）比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-std-set"><a href="#2-2-std-set" class="headerlink" title="2.2 std::set"></a>2.2 std::set</h3><h4 id="所在库-1"><a href="#所在库-1" class="headerlink" title="所在库"></a>所在库</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用函数-1"><a href="#常用函数-1" class="headerlink" title="常用函数"></a>常用函数</h4><h4 id="1-构造与赋值-1"><a href="#1-构造与赋值-1" class="headerlink" title="1. 构造与赋值"></a>1. 构造与赋值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set()</code></td>
+<td>构造空 set</td>
+</tr>
+<tr>
+<td><code>set(initializer_list)</code></td>
+<td>用初始化列表构造</td>
+</tr>
+<tr>
+<td><code>set(first, last)</code></td>
+<td>用迭代器区间构造</td>
+</tr>
+<tr>
+<td><code>set(comp)</code></td>
+<td>指定比较函数构造</td>
+</tr>
+<tr>
+<td><code>operator=</code></td>
+<td>赋值&#x2F;拷贝&#x2F;移动赋值</td>
+</tr>
+<tr>
+<td><code>swap(other)</code></td>
+<td>交换两个 set 内容</td>
+</tr>
+</tbody></table>
+<h4 id="2-容量-1"><a href="#2-容量-1" class="headerlink" title="2. 容量"></a>2. 容量</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>empty()</code></td>
+<td>是否为空</td>
+</tr>
+<tr>
+<td><code>size()</code></td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>max_size()</code></td>
+<td>可容纳的最大元素数</td>
+</tr>
+</tbody></table>
+<h4 id="3-修改"><a href="#3-修改" class="headerlink" title="3. 修改"></a>3. 修改</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>insert(val)</code></td>
+<td>插入元素，已存在则无效</td>
+</tr>
+<tr>
+<td><code>insert(hint, val)</code></td>
+<td>带提示位置插入</td>
+</tr>
+<tr>
+<td><code>insert(first, last)</code></td>
+<td>插入迭代器区间</td>
+</tr>
+<tr>
+<td><code>emplace(args...)</code></td>
+<td>原地构造插入</td>
+</tr>
+<tr>
+<td><code>emplace_hint(hint, args...)</code></td>
+<td>带提示位置原地构造</td>
+</tr>
+<tr>
+<td><code>erase(key)</code></td>
+<td>按键删除，返回删除个数</td>
+</tr>
+<tr>
+<td><code>erase(iter)</code></td>
+<td>删除迭代器指向元素，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>erase(first, last)</code></td>
+<td>删除区间，返回下一迭代器</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>merge(other)</code></td>
+<td>合并另一容器元素（C++17）</td>
+</tr>
+</tbody></table>
+<h4 id="4-查找"><a href="#4-查找" class="headerlink" title="4. 查找"></a>4. 查找</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find(key)</code></td>
+<td>返回迭代器，找不到返回 <code>end()</code></td>
+</tr>
+<tr>
+<td><code>count(key)</code></td>
+<td>返回该键元素个数（0 或 1）</td>
+</tr>
+<tr>
+<td><code>contains(key)</code></td>
+<td>是否存在（C++20）</td>
+</tr>
+<tr>
+<td><code>equal_range(key)</code></td>
+<td>返回匹配键的迭代器区间</td>
+</tr>
+<tr>
+<td><code>lower_bound(key)</code></td>
+<td>返回首个不小于 key 的元素的迭代器</td>
+</tr>
+<tr>
+<td><code>upper_bound(key)</code></td>
+<td>返回首个大于 key 的元素的迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="5-迭代器"><a href="#5-迭代器" class="headerlink" title="5. 迭代器"></a>5. 迭代器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>begin()</code> &#x2F; <code>end()</code></td>
+<td>正向迭代器（按键升序）</td>
+</tr>
+<tr>
+<td><code>cbegin()</code> &#x2F; <code>cend()</code></td>
+<td>const 正向迭代器</td>
+</tr>
+<tr>
+<td><code>rbegin()</code> &#x2F; <code>rend()</code></td>
+<td>反向迭代器</td>
+</tr>
+<tr>
+<td><code>crbegin()</code> &#x2F; <code>crend()</code></td>
+<td>const 反向迭代器</td>
+</tr>
+</tbody></table>
+<h4 id="6-观察器"><a href="#6-观察器" class="headerlink" title="6. 观察器"></a>6. 观察器</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>key_comp()</code></td>
+<td>返回键比较函数对象</td>
+</tr>
+<tr>
+<td><code>value_comp()</code></td>
+<td>返回值比较函数对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-两者区别"><a href="#2-3-两者区别" class="headerlink" title="2.3 两者区别"></a>2.3 两者区别</h3><ol>
+<li><strong>存储内容不同</strong>：<code>map</code> 存键值对（<code>pair&lt;const Key, T&gt;</code>），<code>set</code> 只存键。</li>
+<li><strong>元素访问不同</strong>：<code>map</code> 有 <code>operator[]</code> 和 <code>at()</code>，可按键读写值；<code>set</code> 没有元素访问函数，只能判断存在性。</li>
+<li><strong>修改接口不同</strong>：<code>map</code> 独有 <code>insert_or_assign</code>、<code>try_emplace</code>（针对键值对语义）；<code>set</code> 的插入只接收单个值。</li>
+<li><strong>元素可变性不同</strong>：<code>map</code> 的值可通过迭代器&#x2F;<code>operator[]</code> 修改（键不可改）；<code>set</code> 的元素不可修改（修改会破坏有序性）。</li>
+<li><strong>用途不同</strong>：<code>map</code> 用于有序映射、字典、计数；<code>set</code> 用于有序去重、存在性判断、范围查询。</li>
+<li><strong>共同点</strong>：两者都基于红黑树（平衡二叉搜索树），元素<strong>按键有序</strong>存储，查找&#x2F;插入&#x2F;删除为 O(log n)，支持 <code>lower_bound</code>&#x2F;<code>upper_bound</code> 等有序查找；容量、迭代器、观察器类函数完全一致。</li>
+</ol>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>set和map均是基于平衡树实现的数据结构,相比于哈希表,优势是可以搜索搜索相邻数值,但是对于普通键值对的搜索速度(O(logn))慢于哈希表(O(1))</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/algorithm/ordered-table-1/" data-id="cuid_jCtDab6R7bWqTvnlu9a8" data-title="每日算法---有序表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/algorithm/hash-table-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          每日算法---哈希表
+        
+      </div>
+    </a>
+  
+  
+    <a href="/algorithm/heap-sort-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">每日算法---堆排序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/algorithm/hash-table-1/">每日算法---哈希表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/ordered-table-1/">每日算法---有序表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/random-selection-1/">每日算法---随机选择算法</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
