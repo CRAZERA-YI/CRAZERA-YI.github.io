@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>用C++实现符号画 | 陈某人的个人空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="利用C++实现的符号画转换引入你可能在互联网的很多地方见过像是以下这些的符号画,你可能很好奇这些是哪里来的,今天我就用一个程序,带你一步步实现自己的符号画程序. 前置准备下载这个图像处理库https:&#x2F;&#x2F;gitee.com&#x2F;mirrors_syoyo&#x2F;fpng&#x2F;blob&#x2F;initial&#x2F;stb_image.h Windows请用下面这行命令下载 1curl.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用C++实现符号画">
+<meta property="og:url" content="https://crazera-yi.github.io/Jotting/char-iamge/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="利用C++实现的符号画转换引入你可能在互联网的很多地方见过像是以下这些的符号画,你可能很好奇这些是哪里来的,今天我就用一个程序,带你一步步实现自己的符号画程序. 前置准备下载这个图像处理库https:&#x2F;&#x2F;gitee.com&#x2F;mirrors_syoyo&#x2F;fpng&#x2F;blob&#x2F;initial&#x2F;stb_image.h Windows请用下面这行命令下载 1curl.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crazera-yi.github.io/images/jotting/char_image.png">
+<meta property="og:image" content="https://crazera-yi.github.io/images/jotting/char_image_2.jpeg">
+<meta property="og:image" content="https://crazera-yi.github.io/images/jotting/stb_macro.png">
+<meta property="og:image" content="https://crazera-yi.github.io/images/jotting/mickey.jpg">
+<meta property="article:published_time" content="2026-10-26T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-26T15:07:53.544Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="图形处理">
+<meta property="article:tag" content="程序设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crazera-yi.github.io/images/jotting/char_image.png">
+  
+    <link rel="alternate" href="/atom.xml" title="陈某人的个人空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">陈某人的个人空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://crazera-yi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Jotting/C++实现符号画" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/Jotting/char-iamge/" class="article-date">
+  <time class="dt-published" datetime="2026-10-26T10:00:00.000Z" itemprop="datePublished">2026-10-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/jotting/">杂谈</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      用C++实现符号画
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="利用C-实现的符号画转换"><a href="#利用C-实现的符号画转换" class="headerlink" title="利用C++实现的符号画转换"></a>利用C++实现的符号画转换</h1><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>你可能在互联网的很多地方见过像是以下这些的符号画,你可能很好奇这些是哪里来的,今天我就用一个程序,带你一步步实现自己的符号画程序.<br><img src="/../../images/jotting/char_image.png" alt="符号画_1"><br><img src="/../../images/jotting/char_image_2.jpeg" alt="符号画_2"></p>
+<h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><p>下载这个图像处理库<br><a target="_blank" rel="noopener" href="https://gitee.com/mirrors_syoyo/fpng/blob/initial/stb_image.h">https://gitee.com/mirrors_syoyo&#x2F;fpng&#x2F;blob&#x2F;initial&#x2F;stb_image.h</a></p>
+<p>Windows请用下面这行命令下载</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl.exe <span class="literal">-L</span> <span class="literal">-O</span> https://gitee.com/mirrors_syoyo/fpng/raw/initial/stb_image.h</span><br></pre></td></tr></table></figure>
+<p>Linux,MacOS请删去.exe</p>
+<p>下载完成后把这个.h文件放在项目下面</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="代码思路"><a href="#代码思路" class="headerlink" title="代码思路"></a>代码思路</h3><p>其实代码思路很简单 </p>
+<ol>
+<li>将图片的位信息加载到数组</li>
+<li>按块分析数组</li>
+<li>将色块替换为字符</li>
+<li>打印</li>
+</ol>
+<h3 id="函数实现"><a href="#函数实现" class="headerlink" title="函数实现"></a>函数实现</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> <span class="comment">//标准输入输出</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span><span class="comment">//储存用于画图的字符,使用char数组也行</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span>  <span class="comment">//需要使用里面的max  min函数,cmath里面没有max min函数,有点搞笑</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STB_IMAGE_IMPLEMENTATION </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span>  <span class="string">&quot;stb_image.h&quot;</span></span></span><br><span class="line"><span class="comment">//储存画图用的字符,从暗到明一共18个(最后一个是空格),精确度拉满</span></span><br><span class="line"><span class="type">const</span> std::string CHARS = <span class="string">&quot;MNHQ$OC?7&gt;!:-;,. &quot;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>为什么要添加这个宏<code>#define STB_IMAGE_IMPLEMENTATION </code>,请看图片<br><img src="/../../images/jotting/stb_macro.png" alt="图_1"><br>这个库很精简,他把声明和定义都写在了同一个.h文件里面,只有通过宏才能把定义启用,不然只有声明,没办法调用函数</p>
+<p>接下来开始实现函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//参数1是图片路径,参数2是希望输出的字符画一行显示多少个字符(自定义精确度)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">imageToAscii</span><span class="params">(<span class="type">const</span> std::string &amp;imagePath, <span class="type">int</span> targetWidth)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> width, height, channels;</span><br><span class="line">    <span class="comment">// 强制以灰度(1通道)加载图片,直接理解为把图片转为黑白样式存到数组里面就行了,channel这个参数就是拿来接受1的,没啥用</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> *data = <span class="built_in">stbi_load</span>(imagePath.<span class="built_in">c_str</span>(), &amp;width, &amp;height, &amp;channels, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//防止访问到空指针数组,导致程序崩溃</span></span><br><span class="line">    <span class="keyword">if</span> (data == <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;读取失败，请检查图片路径: &quot;</span> &lt;&lt; imagePath &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 对比度拉伸,就是按照图片的最高和最低对比度作为基准,</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> minVal = <span class="number">255</span>, maxVal = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; width * height; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        minVal = std::<span class="built_in">min</span>(minVal, data[i]);</span><br><span class="line">        maxVal = std::<span class="built_in">max</span>(maxVal, data[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把图片每一个像素调整为相对对比度</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; width * height; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">float</span> norm = (<span class="type">float</span>)(data[i] - minVal) / (maxVal - minVal);</span><br><span class="line">        data[i] = (<span class="type">unsigned</span> <span class="type">char</span>)(norm * <span class="number">17.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 计算输出高度</span></span><br><span class="line">    <span class="comment">// 控制台字符通常“高大约(真的是大约,其实不完全是两倍,但是不咋看得出来,就按照两倍算吧)是宽的2倍”，所以高度要乘0.5补偿</span></span><br><span class="line">    <span class="type">float</span> charAspect = <span class="number">0.5f</span>;</span><br><span class="line">    <span class="comment">//计算高需要的列数</span></span><br><span class="line">    <span class="type">int</span> targetHeight = (<span class="type">int</span>)(targetWidth * ((<span class="type">float</span>)height / width) * charAspect);</span><br><span class="line">    <span class="keyword">if</span> (targetHeight &lt; <span class="number">1</span>)</span><br><span class="line">        targetHeight = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//分块,</span></span><br><span class="line">    <span class="type">float</span> blockW = (<span class="type">float</span>)width / targetWidth;</span><br><span class="line">    <span class="type">float</span> blockH = (<span class="type">float</span>)height / targetHeight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3.根据每一块的平均对比度,打印对应的字符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> y = <span class="number">0</span>; y &lt; targetHeight; ++y)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x = <span class="number">0</span>; x &lt; targetWidth; ++x)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> left = (<span class="type">int</span>)(x * blockW);</span><br><span class="line">            <span class="type">int</span> upper = (<span class="type">int</span>)(y * blockH);</span><br><span class="line">            <span class="type">int</span> right = (<span class="type">int</span>)((x + <span class="number">1</span>) * blockW);</span><br><span class="line">            <span class="type">int</span> lower = (<span class="type">int</span>)((y + <span class="number">1</span>) * blockH);</span><br><span class="line">            <span class="comment">// 求这个块内的平均亮度</span></span><br><span class="line">            <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> py = upper; py &lt; lower; ++py)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> px = left; px &lt; right; ++px)</span><br><span class="line">                &#123;</span><br><span class="line">                    sum += data[py * width + px];</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> idx = (count &gt; <span class="number">0</span>) ? (sum / count) : <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 打印字符</span></span><br><span class="line">            std::cout &lt;&lt; CHARS[<span class="number">17</span> - idx];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 换行</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">    <span class="built_in">stbi_image_free</span>(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p>这是main函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::string imagePath = <span class="string">&quot;test.jpg&quot;</span>; <span class="comment">// 图片路径</span></span><br><span class="line">    <span class="type">int</span> targetWidth = <span class="number">80</span>;</span><br><span class="line">    <span class="built_in">imageToAscii</span>(imagePath, targetWidth);</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是我使用的参考图片<br><img src="/../../images/jotting/mickey.jpg" alt="参考图片"></p>
+<p>编译命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ main.cpp -o bin</span><br><span class="line">.\bin.exe</span><br></pre></td></tr></table></figure>
+<p>成品展示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7C$$$O7!;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;!$NMMMMMMMMQ-:;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7NMNNNNNNNNMMN-;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-MNNNNNNNNNNNNM?;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;!MNNNNNNNNNNNNM7:;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:HMMNNNNNNNNMM$:;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:--!7HMNNNNMMMMH?:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7$HQ?!!!OMMNNNHOC!;::;;;:-77?7!;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:!&gt;CNC:......:NMNNNQ7:;;;:&gt;$NMMMMMMHC-;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-!!.;&gt;OC.   ...?MNNNNMQ!;-QMNNNNNNNNMMN&gt;:;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;:;;;;::7QN.!MMO... ...OMNNNNNNN&gt;QMMNNNNNNNNNNMN:;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;!O$C-;:&gt;QO-,HO:.......;NMMNNMMNMNMNNNNNNNNNNNNMM-;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:NMNMN&gt;:7MH,:MMO.. ...,QQOC??C$MMMMMMNNNNNNNNNNM$;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:HMNMMM7&gt;O7.;H$,..   .......  .:HM7HMMMNNNNMMNN$:;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;-HMMMN;..,,......   ..;&gt;O-,  ..?Q;:7$HNMMMMHC!:;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:;:$O&gt;;.......   .  ..-$M?  ...,H!;;;;;:---:;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;:?7,..        ..;&gt;QMMM7  ..,O!:;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;:-&gt;&gt;CH$?!-:::!&gt;7OHMMNH$Q-;.,!?:;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;-CHMMNNNNNNNNMO7$NMMNQ$$$Q7C!&gt;7-;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;?NNNNMMMHQ$O$NMNN$CCCCCC?CCNNC-;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;7MMNMMO&gt;:;:?HMNNNMMMMMNNNMMMMNMMHC-;:;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;:OO?77?!;-7$QQQHHHNMMNNNNNMM&gt;7QMMNMMC:;:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;-:::;,.!$$$$OOOO$$$$$HMNNNMC;;;&gt;HMMMMN!;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;:!;.:.&gt;OO7$OO$$$?C$$OOO$HMMC;;;;;:7NMNMN:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;:!...:&gt;$C:;OOO$C:;:$$OOO$$$H-----:--HNNMM&gt;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!-...:$Q:;7$OO$::;-$$OOO$$O&gt;;!&gt;&gt;:!.-MMNNN-;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!;...7$$OC$$OO$&gt;!7O$OOOO$7,.,,;::,.:NMMN7;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!:..,?$$OOOOOO$$$$OOOO$$O....,...,;;;-!-;:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;:-!--Q$OOOOOOOOOOOOOO$$C....    ..,&gt;-:;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;7$$$OOOOOOOOOOOO$$$:........;!-;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;:7$$$OOOOOOOOOOOOOO$$7;..;;;;;!::;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;O$$$$$$$OOOOOOOOOOO$$$$O7!::-:::;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;&gt;HQ$$$$$$$$$$$$$$OOO$$$$$QQ&gt;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;?MMMNHQ$$$$$O!!!?$$O$$$HMMNNN!;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;NMMNMMC:&gt;7??:;;;:$QQ$$$$NMNNMQ:;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;HMMNM$;;;;;;;;;;;-??77!-?MNNMM:;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;:-----:;;:;CMMNNN7-:;;;;;;;;;;;;;:!HNNNMH!!-;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;:;-&gt;&gt;&gt;!!!!!&gt;&gt;!--7OMMMMM?7!;;;;;;;;;::7OMMNMNN&gt;;;-!!:;:;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;&gt;&gt;!----------!7?&gt;&gt;???7!!7-;;;;;;;;:7!&gt;C$QO?!&gt;!-!!!7&gt;!!-:;:;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;C!!------------!&gt;&gt;&gt;!-!!!!77;;;;;;!&gt;!!---!!&gt;&gt;&gt;!!------!!&gt;&gt;!:;;;;;;;;;;;;:;;</span><br><span class="line">;;;;;:?!!--------------------!!!?;;;;;;7!--------------------!!!C!!!!!::;;;;::-!</span><br><span class="line">;;;;;;-7!--------------------!7$&gt;;;;;;:?!----------------------!?:;;;:-------::;</span><br><span class="line">;;;;;;;;O?!------------!!!77CO$C!;;;;;;$C7!-------------------!!?;;;;;;;;;;;;;;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这真是个非常有趣的小程序,反正挺好玩</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/Jotting/char-iamge/" data-id="cuidW4oQyGeL657umcfLvWdKu" data-title="用C++实现符号画" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" rel="tag">图形处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag">程序设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/network/tcp-async_server-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(上)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jotting/">杂谈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-programming/">网络编程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Asio/" rel="tag">Asio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boost/" rel="tag">Boost</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jsoncpp/" rel="tag">jsoncpp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" rel="tag">图形处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag">程序设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag">网络编程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Asio/" style="font-size: 10px;">Asio</a> <a href="/tags/Boost/" style="font-size: 10px;">Boost</a> <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/jsoncpp/" style="font-size: 10px;">jsoncpp</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" style="font-size: 10px;">图形处理</a> <a href="/tags/sorting/" style="font-size: 13.33px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">服务器</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">程序设计</a> <a href="/tags/algorithm/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">网络编程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/Jotting/char-iamge/">用C++实现符号画</a>
+          </li>
+        
+          <li>
+            <a href="/network/tcp-async_server-1/">如何用Boost.Asio库写一个自己的服务TCP异步服务器(上)</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/hash-table-1/">每日算法---哈希表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/ordered-table-1/">每日算法---有序表</a>
+          </li>
+        
+          <li>
+            <a href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 crazera<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

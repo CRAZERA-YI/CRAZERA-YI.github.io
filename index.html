@@ -107,7 +107,7 @@
 <ul>
 <li><strong>GitHub</strong>: <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI">CRAZERA-YI</a></li>
 <li><strong>Gitee</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/crazera">crazera</a></li>
-<li><strong>Email</strong>: <a href="mailto:&#51;&#53;&#50;&#57;&#x39;&#x37;&#56;&#x35;&#52;&#49;&#64;&#x71;&#x71;&#46;&#99;&#x6f;&#x6d;">3529978541@qq.com</a></li>
+<li><strong>Email</strong>: <a href="mailto:&#51;&#x35;&#x32;&#57;&#x39;&#55;&#x38;&#x35;&#52;&#x31;&#x40;&#113;&#113;&#46;&#x63;&#111;&#x6d;">3529978541@qq.com</a></li>
 </ul>
 <hr>
 <p><em>本文档作为博客主页的置顶文章，内容会随时更新。</em></p>
@@ -115,11 +115,144 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/2026/10/20/aboutme/" data-id="cuidg6BTERynuT60T3pG9OCJK" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/2026/10/20/aboutme/" data-id="cuidxQ65HIwEaWMdY1WJgnj_E" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Jotting/C++实现符号画" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/Jotting/char-iamge/" class="article-date">
+  <time class="dt-published" datetime="2026-10-26T10:00:00.000Z" itemprop="datePublished">2026-10-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/jotting/">杂谈</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/Jotting/char-iamge/">用C++实现符号画</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="利用C-实现的符号画转换"><a href="#利用C-实现的符号画转换" class="headerlink" title="利用C++实现的符号画转换"></a>利用C++实现的符号画转换</h1><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>你可能在互联网的很多地方见过像是以下这些的符号画,你可能很好奇这些是哪里来的,今天我就用一个程序,带你一步步实现自己的符号画程序.<br><img src="/../../images/jotting/char_image.png" alt="符号画_1"><br><img src="/../../images/jotting/char_image_2.jpeg" alt="符号画_2"></p>
+<h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><p>下载这个图像处理库<br><a target="_blank" rel="noopener" href="https://gitee.com/mirrors_syoyo/fpng/blob/initial/stb_image.h">https://gitee.com/mirrors_syoyo&#x2F;fpng&#x2F;blob&#x2F;initial&#x2F;stb_image.h</a></p>
+<p>Windows请用下面这行命令下载</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl.exe <span class="literal">-L</span> <span class="literal">-O</span> https://gitee.com/mirrors_syoyo/fpng/raw/initial/stb_image.h</span><br></pre></td></tr></table></figure>
+<p>Linux,MacOS请删去.exe</p>
+<p>下载完成后把这个.h文件放在项目下面</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="代码思路"><a href="#代码思路" class="headerlink" title="代码思路"></a>代码思路</h3><p>其实代码思路很简单 </p>
+<ol>
+<li>将图片的位信息加载到数组</li>
+<li>按块分析数组</li>
+<li>将色块替换为字符</li>
+<li>打印</li>
+</ol>
+<h3 id="函数实现"><a href="#函数实现" class="headerlink" title="函数实现"></a>函数实现</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> <span class="comment">//标准输入输出</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span><span class="comment">//储存用于画图的字符,使用char数组也行</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span>  <span class="comment">//需要使用里面的max  min函数,cmath里面没有max min函数,有点搞笑</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STB_IMAGE_IMPLEMENTATION </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span>  <span class="string">&quot;stb_image.h&quot;</span></span></span><br><span class="line"><span class="comment">//储存画图用的字符,从暗到明一共18个(最后一个是空格),精确度拉满</span></span><br><span class="line"><span class="type">const</span> std::string CHARS = <span class="string">&quot;MNHQ$OC?7&gt;!:-;,. &quot;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>为什么要添加这个宏<code>#define STB_IMAGE_IMPLEMENTATION </code>,请看图片<br><img src="/../../images/jotting/stb_macro.png" alt="图_1"><br>这个库很精简,他把声明和定义都写在了同一个.h文件里面,只有通过宏才能把定义启用,不然只有声明,没办法调用函数</p>
+<p>接下来开始实现函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//参数1是图片路径,参数2是希望输出的字符画一行显示多少个字符(自定义精确度)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">imageToAscii</span><span class="params">(<span class="type">const</span> std::string &amp;imagePath, <span class="type">int</span> targetWidth)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> width, height, channels;</span><br><span class="line">    <span class="comment">// 强制以灰度(1通道)加载图片,直接理解为把图片转为黑白样式存到数组里面就行了,channel这个参数就是拿来接受1的,没啥用</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> *data = <span class="built_in">stbi_load</span>(imagePath.<span class="built_in">c_str</span>(), &amp;width, &amp;height, &amp;channels, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//防止访问到空指针数组,导致程序崩溃</span></span><br><span class="line">    <span class="keyword">if</span> (data == <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;读取失败，请检查图片路径: &quot;</span> &lt;&lt; imagePath &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 对比度拉伸,就是按照图片的最高和最低对比度作为基准,</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> minVal = <span class="number">255</span>, maxVal = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; width * height; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        minVal = std::<span class="built_in">min</span>(minVal, data[i]);</span><br><span class="line">        maxVal = std::<span class="built_in">max</span>(maxVal, data[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把图片每一个像素调整为相对对比度</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; width * height; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">float</span> norm = (<span class="type">float</span>)(data[i] - minVal) / (maxVal - minVal);</span><br><span class="line">        data[i] = (<span class="type">unsigned</span> <span class="type">char</span>)(norm * <span class="number">17.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 计算输出高度</span></span><br><span class="line">    <span class="comment">// 控制台字符通常“高大约(真的是大约,其实不完全是两倍,但是不咋看得出来,就按照两倍算吧)是宽的2倍”，所以高度要乘0.5补偿</span></span><br><span class="line">    <span class="type">float</span> charAspect = <span class="number">0.5f</span>;</span><br><span class="line">    <span class="comment">//计算高需要的列数</span></span><br><span class="line">    <span class="type">int</span> targetHeight = (<span class="type">int</span>)(targetWidth * ((<span class="type">float</span>)height / width) * charAspect);</span><br><span class="line">    <span class="keyword">if</span> (targetHeight &lt; <span class="number">1</span>)</span><br><span class="line">        targetHeight = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//分块,</span></span><br><span class="line">    <span class="type">float</span> blockW = (<span class="type">float</span>)width / targetWidth;</span><br><span class="line">    <span class="type">float</span> blockH = (<span class="type">float</span>)height / targetHeight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3.根据每一块的平均对比度,打印对应的字符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> y = <span class="number">0</span>; y &lt; targetHeight; ++y)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x = <span class="number">0</span>; x &lt; targetWidth; ++x)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> left = (<span class="type">int</span>)(x * blockW);</span><br><span class="line">            <span class="type">int</span> upper = (<span class="type">int</span>)(y * blockH);</span><br><span class="line">            <span class="type">int</span> right = (<span class="type">int</span>)((x + <span class="number">1</span>) * blockW);</span><br><span class="line">            <span class="type">int</span> lower = (<span class="type">int</span>)((y + <span class="number">1</span>) * blockH);</span><br><span class="line">            <span class="comment">// 求这个块内的平均亮度</span></span><br><span class="line">            <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> py = upper; py &lt; lower; ++py)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> px = left; px &lt; right; ++px)</span><br><span class="line">                &#123;</span><br><span class="line">                    sum += data[py * width + px];</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> idx = (count &gt; <span class="number">0</span>) ? (sum / count) : <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 打印字符</span></span><br><span class="line">            std::cout &lt;&lt; CHARS[<span class="number">17</span> - idx];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 换行</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">    <span class="built_in">stbi_image_free</span>(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p>这是main函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::string imagePath = <span class="string">&quot;test.jpg&quot;</span>; <span class="comment">// 图片路径</span></span><br><span class="line">    <span class="type">int</span> targetWidth = <span class="number">80</span>;</span><br><span class="line">    <span class="built_in">imageToAscii</span>(imagePath, targetWidth);</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是我使用的参考图片<br><img src="/../../images/jotting/mickey.jpg" alt="参考图片"></p>
+<p>编译命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ main.cpp -o bin</span><br><span class="line">.\bin.exe</span><br></pre></td></tr></table></figure>
+<p>成品展示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7C$$$O7!;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;!$NMMMMMMMMQ-:;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7NMNNNNNNNNMMN-;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-MNNNNNNNNNNNNM?;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;!MNNNNNNNNNNNNM7:;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:HMMNNNNNNNNMM$:;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:--!7HMNNNNMMMMH?:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:7$HQ?!!!OMMNNNHOC!;::;;;:-77?7!;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:!&gt;CNC:......:NMNNNQ7:;;;:&gt;$NMMMMMMHC-;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-!!.;&gt;OC.   ...?MNNNNMQ!;-QMNNNNNNNNMMN&gt;:;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;:;;;;::7QN.!MMO... ...OMNNNNNNN&gt;QMMNNNNNNNNNNMN:;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;!O$C-;:&gt;QO-,HO:.......;NMMNNMMNMNMNNNNNNNNNNNNMM-;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:NMNMN&gt;:7MH,:MMO.. ...,QQOC??C$MMMMMMNNNNNNNNNNM$;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:HMNMMM7&gt;O7.;H$,..   .......  .:HM7HMMMNNNNMMNN$:;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;-HMMMN;..,,......   ..;&gt;O-,  ..?Q;:7$HNMMMMHC!:;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;:;:$O&gt;;.......   .  ..-$M?  ...,H!;;;;;:---:;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;:?7,..        ..;&gt;QMMM7  ..,O!:;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;:-&gt;&gt;CH$?!-:::!&gt;7OHMMNH$Q-;.,!?:;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;-CHMMNNNNNNNNMO7$NMMNQ$$$Q7C!&gt;7-;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;?NNNNMMMHQ$O$NMNN$CCCCCC?CCNNC-;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;7MMNMMO&gt;:;:?HMNNNMMMMMNNNMMMMNMMHC-;:;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;:OO?77?!;-7$QQQHHHNMMNNNNNMM&gt;7QMMNMMC:;:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;-:::;,.!$$$$OOOO$$$$$HMNNNMC;;;&gt;HMMMMN!;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;:!;.:.&gt;OO7$OO$$$?C$$OOO$HMMC;;;;;:7NMNMN:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;:!...:&gt;$C:;OOO$C:;:$$OOO$$$H-----:--HNNMM&gt;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!-...:$Q:;7$OO$::;-$$OOO$$O&gt;;!&gt;&gt;:!.-MMNNN-;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!;...7$$OC$$OO$&gt;!7O$OOOO$7,.,,;::,.:NMMN7;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;!:..,?$$OOOOOO$$$$OOOO$$O....,...,;;;-!-;:;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;:-!--Q$OOOOOOOOOOOOOO$$C....    ..,&gt;-:;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;7$$$OOOOOOOOOOOO$$$:........;!-;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;:7$$$OOOOOOOOOOOOOO$$7;..;;;;;!::;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;O$$$$$$$OOOOOOOOOOO$$$$O7!::-:::;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;&gt;HQ$$$$$$$$$$$$$$OOO$$$$$QQ&gt;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;?MMMNHQ$$$$$O!!!?$$O$$$HMMNNN!;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;NMMNMMC:&gt;7??:;;;:$QQ$$$$NMNNMQ:;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;HMMNM$;;;;;;;;;;;-??77!-?MNNMM:;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;;;;;:-----:;;:;CMMNNN7-:;;;;;;;;;;;;;:!HNNNMH!!-;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;:;-&gt;&gt;&gt;!!!!!&gt;&gt;!--7OMMMMM?7!;;;;;;;;;::7OMMNMNN&gt;;;-!!:;:;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;&gt;&gt;!----------!7?&gt;&gt;???7!!7-;;;;;;;;:7!&gt;C$QO?!&gt;!-!!!7&gt;!!-:;:;;;;;;;;;;;;;;;;</span><br><span class="line">;;;;;;C!!------------!&gt;&gt;&gt;!-!!!!77;;;;;;!&gt;!!---!!&gt;&gt;&gt;!!------!!&gt;&gt;!:;;;;;;;;;;;;:;;</span><br><span class="line">;;;;;:?!!--------------------!!!?;;;;;;7!--------------------!!!C!!!!!::;;;;::-!</span><br><span class="line">;;;;;;-7!--------------------!7$&gt;;;;;;:?!----------------------!?:;;;:-------::;</span><br><span class="line">;;;;;;;;O?!------------!!!77CO$C!;;;;;;$C7!-------------------!!?;;;;;;;;;;;;;;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这真是个非常有趣的小程序,反正挺好玩</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/Jotting/char-iamge/" data-id="cuidW4oQyGeL657umcfLvWdKu" data-title="用C++实现符号画" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" rel="tag">图形处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag">程序设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-NetWork/Asio实现服务器_上" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/network/tcp-async_server-1/" class="article-date">
+  <time class="dt-published" datetime="2026-10-26T04:00:00.000Z" itemprop="datePublished">2026-10-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/network-programming/">网络编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/network/tcp-async_server-1/">如何用Boost.Asio库写一个自己的服务TCP异步服务器(上)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="TCP异步服务器"><a href="#TCP异步服务器" class="headerlink" title="TCP异步服务器"></a>TCP异步服务器</h1><h2 id="1-协议介绍"><a href="#1-协议介绍" class="headerlink" title="1. 协议介绍"></a>1. 协议介绍</h2><h3 id="1-1-TCP协议简介"><a href="#1-1-TCP协议简介" class="headerlink" title="1.1 TCP协议简介"></a>1.1 TCP协议简介</h3><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE">摘自维基百科</a><br>传输控制协议（英语：Transmission Control Protocol，缩写：TCP）是一种面向连接的、可靠的、基于字节流的传输层通信协议，曾由RFC 793定义。<br>TCP协议的运行可划分为三个阶段：连接建立(connection establishment)、数据传送（data transfer）和连接终止（connection termination）。操作系统将TCP连接抽象为套接字(socket)表示的本地端点（local end-point），作为编程接口给程序使用。在TCP连接的生命期内，本地端点要经历一系列的状态改变</p>
+<h3 id="1-2-套接字协议"><a href="#1-2-套接字协议" class="headerlink" title="1.2 套接字协议"></a>1.2 套接字协议</h3><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF%E6%8F%92%E5%BA%A7">摘自维基百科</a><br>网络套接字（英语：Network socket；又译网络套接字、网络接口、网络插槽）在计算机科学中是电脑网络中进程间资料流的端点。使用以网际协议（Internet Protocol）为通信基础的网络套接字，称为网际套接字（Internet socket）。因为网际协议的流行，现代绝大多数的网络套接字，都是属于网际套接字<br>在套接字界面中，以IP地址及端口组成套接字地址（socket address）。远程的套接字地址，以及本地的套接字地址完成连线后，再加上使用的协议（protocol），这个五元组（five-element tuple），作为套接字对（socket pairs），之后就可以彼此交换资料。</p>
+<h4 id="套接字TCP通信流程图"><a href="#套接字TCP通信流程图" class="headerlink" title="套接字TCP通信流程图"></a>套接字TCP通信流程图</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A([服务端启动]) --&gt; B[&quot;socket() 创建套接字&quot;]</span><br><span class="line">    B --&gt; C[&quot;bind() 绑定端口&quot;]</span><br><span class="line">    C --&gt; D[&quot;listen() 开始监听&quot;]</span><br><span class="line">    D --&gt; E[&quot;accept() 等待连接&quot;]</span><br><span class="line"></span><br><span class="line">    F([客户端启动]) --&gt; G[&quot;socket() 创建套接字&quot;]</span><br><span class="line">    G --&gt; H[&quot;connect() 连接服务端&quot;]</span><br><span class="line"></span><br><span class="line">    H --&gt; E[&quot;握手成功&quot;] </span><br><span class="line">    E --&gt; I[&quot;建立连接&quot;]</span><br><span class="line">    I --&gt; J[&quot;双方 read()/write() 通信&quot;]</span><br><span class="line">    J --&gt; K[&quot;close() 关闭连接&quot;]</span><br><span class="line">    K --&gt; L([结束])</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-服务器前期构想"><a href="#2-服务器前期构想" class="headerlink" title="2. 服务器前期构想"></a>2. 服务器前期构想</h2><ul>
+<li>全双工<br>asio异步通信实现</li>
+<li>异步通信<br>asio库里面的封装的async_xx函数实现</li>
+<li>防切包,放粘包<br>通过TLCV协议的封装和解析实现</li>
+<li>大小端设备通信<br>通过把数据转化为网络字节序</li>
+<li>结构化数据封装<br>jsoncpp库实现把结构化数据封装为json模式</li>
+<li>TLV协议</li>
+<li>伪闭包<br>智能指针传入函数,用Map管理,增加引用对象,实现生命周期延长以及防止指针二次释放</li>
+<li>逻辑层处理</li>
+</ul>
+<h2 id="3-立项"><a href="#3-立项" class="headerlink" title="3. 立项"></a>3. 立项</h2><h3 id="3-1-所使用的库"><a href="#3-1-所使用的库" class="headerlink" title="3.1 所使用的库"></a>3.1 所使用的库</h3><p><a target="_blank" rel="noopener" href="https://boost.ac.cn/doc/libs/latest/index.html">Boost</a><br><a target="_blank" rel="noopener" href="https://github.com/open-source-parsers/jsoncpp">jsoncpp</a><br>C++标准 :C++11(代码中会使用到智能指针,functional库等C++11新特性)</p>
+<h3 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">├── CMakeLists.txt <span class="comment">#项目构建</span></span><br><span class="line">├── build <span class="comment"># 用于放置cmake生成的文件</span></span><br><span class="line">├── include</span><br><span class="line">│   ├── CServer.h <span class="comment"># 服务器管理</span></span><br><span class="line">│   ├── CSession.h <span class="comment"># 管理会话</span></span><br><span class="line">│   ├── LogicSystem.h <span class="comment"># 逻辑层</span></span><br><span class="line">│   ├── MsgNode.h   <span class="comment">#自定义消息类型,方便收发数据的管理</span></span><br><span class="line">│   ├── Singleton.h <span class="comment">#单例模式类</span></span><br><span class="line">│   └── const.h <span class="comment">#宏定义</span></span><br><span class="line">├── main.cpp</span><br><span class="line">└── src</span><br><span class="line">    ├── CServer.cpp</span><br><span class="line">    ├── CSession.cpp</span><br><span class="line">    ├── LogicSystem.cpp</span><br><span class="line">    └── MsgNode.cpp</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-项目构建"><a href="#3-3-项目构建" class="headerlink" title="3.3 项目构建"></a>3.3 项目构建</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(Server LANGUAGES CXX)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 C++ 标准</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">11</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD_REQUIRED <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_EXTENSIONS <span class="keyword">OFF</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译选项</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">NOT</span> CMAKE_BUILD_TYPE)</span><br><span class="line">    <span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS <span class="string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; -Wall -Wextra&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出目录设置</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/build/lib)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/build/lib)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找 Boost 库（需要 system 和 thread 组件）</span></span><br><span class="line"><span class="keyword">find_package</span>(Boost REQUIRED COMPONENTS system asio)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找 jsoncpp</span></span><br><span class="line"><span class="keyword">find_package</span>(PkgConfig REQUIRED)</span><br><span class="line">pkg_check_modules(JSONCPP REQUIRED jsoncpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">NOT</span> JSONCPP_FOUND)</span><br><span class="line">    <span class="keyword">message</span>(FATAL_ERROR <span class="string">&quot;jsoncpp not found, please install it (e.g. apt install libjsoncpp-dev)&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 收集源文件</span></span><br><span class="line"><span class="keyword">file</span>(GLOB SOURCES</span><br><span class="line">    <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/main.cpp</span><br><span class="line">    <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/src/*.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 头文件目录</span></span><br><span class="line"><span class="keyword">include_directories</span>(</span><br><span class="line">    <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/<span class="keyword">include</span></span><br><span class="line">    <span class="variable">$&#123;Boost_INCLUDE_DIRS&#125;</span></span><br><span class="line">    <span class="variable">$&#123;JSONCPP_INCLUDE_DIRS&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成可执行文件</span></span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span> <span class="variable">$&#123;SOURCES&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 链接库</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span></span><br><span class="line">    PRIVATE</span><br><span class="line">        <span class="variable">$&#123;Boost_LIBRARIES&#125;</span></span><br><span class="line">        <span class="variable">$&#123;JSONCPP_LIBRARIES&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定库目录</span></span><br><span class="line"><span class="keyword">target_link_directories</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span></span><br><span class="line">    PRIVATE</span><br><span class="line">        <span class="variable">$&#123;JSONCPP_LIBRARY_DIRS&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://crazera-yi.github.io/network/tcp-async_server-1/" data-id="cuidXXJ20F8tjtM75lYFda_9h" data-title="如何用Boost.Asio库写一个自己的服务TCP异步服务器(上)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Asio/" rel="tag">Asio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Boost/" rel="tag">Boost</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jsoncpp/" rel="tag">jsoncpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag">网络编程</a></li></ul>
 
     </footer>
   </div>
@@ -564,7 +697,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/hash-table-1/" data-id="cuidArEpqr4TT_BoFpliM6RjN" data-title="每日算法---哈希表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/hash-table-1/" data-id="cuidsLm5Sr25oGKW7aDljcc2Y" data-title="每日算法---哈希表" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -995,7 +1128,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/ordered-table-1/" data-id="cuid_jCtDab6R7bWqTvnlu9a8" data-title="每日算法---有序表" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/ordered-table-1/" data-id="cuid-grsDUMCBaSdUlKEJwXzf" data-title="每日算法---有序表" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1045,7 +1178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/heap-sort-1/" data-id="cuidrPnBIv7K7dCQv6eGdmMaS" data-title="每日算法---堆排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/heap-sort-1/" data-id="cuidO-XN5bZ5Mtv0vtxXAacd4" data-title="每日算法---堆排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1098,7 +1231,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/random-selection-1/" data-id="cuidH1IDamHv8aOet2FFm7JjZ" data-title="每日算法---随机选择算法" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/random-selection-1/" data-id="cuidJVAAbjGK87rWVWo2T52ww" data-title="每日算法---随机选择算法" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1157,7 +1290,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/quick-sort-1/" data-id="cuidsyhZxum4X_ZBPs6D0pQVb" data-title="每日算法---随机快速排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/quick-sort-1/" data-id="cuidpAxR39EN3n-qVvMB8_IqD" data-title="每日算法---随机快速排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1227,7 +1360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-2/" data-id="cuidxV35yDJu8YQmunfu-6G9I" data-title="每日算法---归并排序(拓)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-2/" data-id="cuid_S0VW__s2jc6KifYvYSJ9" data-title="每日算法---归并排序(拓)" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1285,7 +1418,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-1/" data-id="cuid-bxxvL69h2xllipdK3Qs5" data-title="每日算法---归并排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://crazera-yi.github.io/algorithm/merge-sort-1/" data-id="cuidpvGEf8onNdwaz4-lzZ1Vc" data-title="每日算法---归并排序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1299,256 +1432,12 @@
 
 
   
-    <article id="post-Linux/vim配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/linux/vim-setting/" class="article-date">
-  <time class="dt-published" datetime="2026-10-20T13:17:00.000Z" itemprop="datePublished">2026-10-20</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/linux/vim-setting/">如何把vim配置的和vscode一样好用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="在-Ubuntu-24-04-上把-Vim-配成像-VS-Code-一样好用：C-C-完整指南"><a href="#在-Ubuntu-24-04-上把-Vim-配成像-VS-Code-一样好用：C-C-完整指南" class="headerlink" title="在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南"></a>在 Ubuntu 24.04 上把 Vim 配成像 VS Code 一样好用：C&#x2F;C++ 完整指南</h1><p>Vim 刚装好时很轻便，但缺少现代 IDE 常见的代码补全、错误诊断、跳转和项目搜索。好消息是，我们可以通过插件和语言服务器，把这些开发体验接进 Vim。</p>
-<p>本文以 <strong>Ubuntu 24.04 + 原版 Vim + C&#x2F;C++</strong> 为例，逐步安装并配置：</p>
-<ul>
-<li><strong>代码补全</strong>：输入代码时显示类型、函数和成员建议。</li>
-<li><strong>语义诊断</strong>：在编辑时发现类型错误、头文件或编译参数问题。</li>
-<li><strong>代码导航</strong>：跳转到定义、查找引用、查看说明和重命名。</li>
-<li><strong>项目工具</strong>：文件树、模糊搜索、Git 操作和代码格式化。</li>
-</ul>
-<p>文中所说的“像 VS Code 一样”指常用编辑与语言服务体验接近，不代表完整复刻 VS Code 的图形界面、调试器和所有扩展。不同编程语言要接入各自的语言服务器；本文配置的是 C&#x2F;C++。</p>
-<h2 id="先看整体流程"><a href="#先看整体流程" class="headerlink" title="先看整体流程"></a>先看整体流程</h2><ol>
-<li>安装 Vim、编译工具、CMake、clangd 和项目依赖。</li>
-<li>准备符合 Coc 要求的 Node.js。</li>
-<li>用 vim-plug 安装和管理 Vim 插件。</li>
-<li>配置 Coc 与 C&#x2F;C++ 语言服务器 clangd。</li>
-<li>给 clangd 提供项目真实的编译参数。</li>
-<li>在 Vim 里验证补全、跳转、诊断和格式化。</li>
-</ol>
-<h2 id="第一步：安装基础工具"><a href="#第一步：安装基础工具" class="headerlink" title="第一步：安装基础工具"></a>第一步：安装基础工具</h2><p>在 Ubuntu 终端执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y vim git curl ca-certificates build-essential \</span><br><span class="line">  cmake clangd ripgrep</span><br></pre></td></tr></table></figure>
-
-<p>每个工具的用途：</p>
-<table>
-<thead>
-<tr>
-<th>工具</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>vim</code></td>
-<td>编辑器本身。Ubuntu 24.04 提供的 Vim 9.1 满足 Coc 所需的 Vim 版本。</td>
-</tr>
-<tr>
-<td><code>git</code>、<code>curl</code>、<code>ca-certificates</code></td>
-<td>下载插件、安装脚本和证书校验所需工具。</td>
-</tr>
-<tr>
-<td><code>build-essential</code></td>
-<td>GCC、G++、Make 等基础编译工具。</td>
-</tr>
-<tr>
-<td><code>cmake</code></td>
-<td>管理 C&#x2F;C++ 项目和生成构建规则。</td>
-</tr>
-<tr>
-<td><code>clangd</code></td>
-<td>C&#x2F;C++ 语言服务器，负责补全、跳转、诊断等语义功能。</td>
-</tr>
-<tr>
-<td><code>ripgrep</code></td>
-<td>提供 <code>rg</code> 命令，供后面通过 fzf.vim 搜索项目内容。</td>
-</tr>
-</tbody></table>
-<p>先确认工具在当前环境中可用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim --version | <span class="built_in">head</span> -n 1</span><br><span class="line"><span class="built_in">command</span> -v clangd</span><br><span class="line">clangd --version</span><br></pre></td></tr></table></figure>
-
-<p><strong>这一步解决什么问题？</strong> Vim 插件只是编辑器的扩展；编译器、语言服务器和项目库仍需要单独安装。把工具装在当前使用的 Ubuntu、WSL 或容器环境里很重要，因为 Vim 也必须能在同一环境中找到它们。</p>
-<h2 id="第二步：安装适用的-Node-js"><a href="#第二步：安装适用的-Node-js" class="headerlink" title="第二步：安装适用的 Node.js"></a>第二步：安装适用的 Node.js</h2><p>coc.nvim 通过 Node.js 运行语言扩展和连接语言服务器。它不是 Vim 本身的一部分，所以需要单独安装 Node.js。</p>
-<p>先检查版本：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --version</span><br></pre></td></tr></table></figure>
-
-<p>在本文核对时，Coc 官方安装页要求 <strong>Node.js ≥ 22.15.0</strong>、<strong>Vim ≥ 9.0.0438</strong>。这些最低版本可能随 Coc 更新而变化，安装前应查看<a target="_blank" rel="noopener" href="https://cocnvim.com/install">官方要求</a>。如果已有合适版本的 Node.js，可以跳过本步。</p>
-<p>如果没有 Node.js 或版本过旧，可以使用 nvm 管理用户级 Node 版本。以 nvm 官方安装脚本为例：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash</span><br></pre></td></tr></table></figure>
-
-<p>安装脚本完成后，关闭并重新打开终端，再运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nvm install --lts</span><br><span class="line">nvm <span class="built_in">alias</span> default <span class="string">&#x27;lts/*&#x27;</span></span><br><span class="line">node --version</span><br></pre></td></tr></table></figure>
-
-<p><strong>这一步解决什么问题？</strong> nvm 可以安装 Node LTS，而不替换 Ubuntu 管理的系统包。把安装出的 Node 设为默认版本后，之后从正常加载 nvm 的终端启动 Vim，Coc 就能找到 Node。</p>
-<h2 id="第三步：安装-vim-plug-管理插件"><a href="#第三步：安装-vim-plug-管理插件" class="headerlink" title="第三步：安装 vim-plug 管理插件"></a>第三步：安装 vim-plug 管理插件</h2><p>vim-plug 是一个 Vim 插件管理器。它读取 Vim 配置里的插件列表，并提供统一的安装、更新和移除命令。</p>
-<p>在终端运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fLo ~/.vim/autoload/plug.vim --create-dirs \</span><br><span class="line">  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</span><br></pre></td></tr></table></figure>
-
-<p>若已有 <code>~/.vimrc</code>，先备份：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">cp</span> -a <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc&quot;</span> <span class="string">&quot;<span class="variable">$HOME</span>/.vimrc.backup.<span class="subst">$(date +%Y%m%d-%H%M%S)</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure>
-
-<p>复制下面的配置到 <code>~/.vimrc</code>。若文件里已有其他设置，请先备份，再将需要的配置合并进去；不要把多个 <code>plug#begin()</code> 和 <code>plug#end()</code> 区块重复堆叠。</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> nocompatible</span><br><span class="line"><span class="keyword">set</span> encoding=utf-<span class="number">8</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">number</span></span><br><span class="line"><span class="keyword">set</span> nocursorline</span><br><span class="line"><span class="keyword">set</span> hidden</span><br><span class="line"><span class="keyword">set</span> mouse=<span class="keyword">a</span></span><br><span class="line"><span class="keyword">set</span> signcolumn=yes</span><br><span class="line"><span class="keyword">set</span> updatetime=<span class="number">300</span></span><br><span class="line"><span class="keyword">set</span> expandtab</span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> smartindent</span><br><span class="line"><span class="keyword">set</span> ignorecase</span><br><span class="line"><span class="keyword">set</span> smartcase</span><br><span class="line"><span class="keyword">set</span> splitright</span><br><span class="line"><span class="keyword">set</span> splitbelow</span><br><span class="line"><span class="comment">&quot; 用空格作为快捷键前缀</span></span><br><span class="line"><span class="keyword">let</span> mapleader = <span class="string">&quot; &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> plug#begin(<span class="string">&#x27;~/.vim/plugged&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 语言服务、补全和代码导航</span></span><br><span class="line">Plug <span class="string">&#x27;neoclide/coc.nvim&#x27;</span>, &#123;<span class="string">&#x27;branch&#x27;</span>: <span class="string">&#x27;release&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 项目文件树</span></span><br><span class="line">Plug <span class="string">&#x27;preservim/nerdtree&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 模糊搜索文件和项目内容</span></span><br><span class="line">Plug <span class="string">&#x27;junegunn/fzf&#x27;</span>, &#123;<span class="string">&#x27;do&#x27;</span>: &#123; -&gt; fzf#install() &#125;&#125;</span><br><span class="line">Plug <span class="string">&#x27;junegunn/fzf.vim&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; Git 仓库操作</span></span><br><span class="line">Plug <span class="string">&#x27;tpope/vim-fugitive&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> plug#end()</span><br><span class="line"></span><br><span class="line"><span class="keyword">filetype</span> plugin <span class="built_in">indent</span> <span class="keyword">on</span></span><br><span class="line"><span class="keyword">syntax</span> enable</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 补全菜单可见时用 Tab / Shift+Tab 移动；否则 Tab 保持原有用途</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;Tab&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#next(<span class="number">1</span>) : <span class="string">&quot;\&lt;Tab&gt;&quot;</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;S-Tab&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#prev(<span class="number">1</span>) : <span class="string">&quot;\&lt;C-h&gt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 菜单打开时用 Enter 接受补全；否则插入换行</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;CR&gt;</span></span><br><span class="line">      \ coc#pum#visible() ? coc#pum#confirm() : <span class="string">&quot;\&lt;C-g&gt;u\&lt;CR&gt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 插入模式下按 Ctrl+l 手动请求补全</span></span><br><span class="line"><span class="keyword">inoremap</span> <span class="symbol">&lt;silent&gt;</span><span class="symbol">&lt;expr&gt;</span> <span class="symbol">&lt;C-l&gt;</span> coc#refresh()</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 代码导航和说明,跳转、引用、文档</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> gd <span class="symbol">&lt;Plug&gt;</span>(coc-definition)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> gy <span class="symbol">&lt;Plug&gt;</span>(coc-<span class="built_in">type</span>-definition)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> <span class="keyword">gr</span> <span class="symbol">&lt;Plug&gt;</span>(coc-references)</span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> K :<span class="keyword">call</span> CocActionAsync(<span class="string">&#x27;doHover&#x27;</span>)<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 重命名、代码操作与格式化</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;leader&gt;</span>rn <span class="symbol">&lt;Plug&gt;</span>(coc-<span class="built_in">rename</span>)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">a</span> <span class="symbol">&lt;Plug&gt;</span>(coc-codeaction-<span class="built_in">cursor</span>)</span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">f</span> :<span class="keyword">call</span> CocActionAsync(<span class="string">&#x27;format&#x27;</span>)<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 上一个 / 下一个诊断</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> [d <span class="symbol">&lt;Plug&gt;</span>(coc-diagnostic-<span class="keyword">prev</span>)</span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;silent&gt;</span> ]d <span class="symbol">&lt;Plug&gt;</span>(coc-diagnostic-<span class="keyword">next</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 文件树、文件搜索和全文搜索</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span><span class="keyword">e</span> :NERDTreeToggle<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;C-p&gt;</span> :Files<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span>s :Rg<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 在 C/C++ 源文件和头文件间切换</span></span><br><span class="line"><span class="keyword">nnoremap</span> <span class="symbol">&lt;silent&gt;</span> <span class="symbol">&lt;leader&gt;</span>h :CocCommand clangd.switchSourceHeader<span class="symbol">&lt;CR&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这份配置各部分的作用：</p>
-<ul>
-<li><code>set number</code>、<code>set cursorline</code>、<code>set signcolumn=yes</code> 等设置行号、当前行和诊断图标区域。</li>
-<li><code>set expandtab</code>、<code>tabstop</code> 和 <code>shiftwidth</code> 统一缩进方式。</li>
-<li><code>plug#begin()</code> 与 <code>plug#end()</code> 之间的 <code>Plug</code> 行声明要安装哪些插件。</li>
-<li><code>coc.nvim</code> 是语言服务的编辑器端；<code>coc-clangd</code> 扩展稍后会把它连接到 clangd。</li>
-<li>NERDTree 提供文件树；fzf 和 ripgrep 提供快速搜索；Fugitive 提供 Git 操作。</li>
-<li>Coc 的按键映射负责菜单选择、函数跳转、重命名、诊断和格式化。</li>
-</ul>
-<h2 id="第四步：安装-Vim-插件"><a href="#第四步：安装-Vim-插件" class="headerlink" title="第四步：安装 Vim 插件"></a>第四步：安装 Vim 插件</h2><p>保存 <code>~/.vimrc</code>，退出并重新打开 Vim，然后运行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:PlugInstall</span><br></pre></td></tr></table></figure>
-
-<p>vim-plug 会按配置下载插件。安装完成后重新启动 Vim。</p>
-<p><strong>为什么要重启？</strong> Coc 的语言服务和扩展依赖 Vim 启动时加载的插件、Node 环境和配置。重新启动后再安装 Coc 扩展，能确认主插件已经正常加载。</p>
-<p>如果 <code>:Files</code> 或 <code>:Rg</code> 找不到命令，检查插件是否安装，以及系统是否安装了 ripgrep。fzf 的安装钩子也需要能够下载其可执行程序。</p>
-<h2 id="第五步：把-Coc-连接到-clangd"><a href="#第五步：把-Coc-连接到-clangd" class="headerlink" title="第五步：把 Coc 连接到 clangd"></a>第五步：把 Coc 连接到 clangd</h2><p>确认 <code>command -v clangd</code> 能显示实际路径后，在 Vim 中运行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:CocInstall coc-clangd</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后重启 Vim。<code>coc-clangd</code> 是 Coc 的 C&#x2F;C++ 扩展，它负责启动并管理 clangd 语言服务器。</p>
-<p>若 <code>clangd</code> 在系统的 <code>PATH</code> 中，通常无需手动写路径。若装了多个 clangd，或 Coc 找不到它，可以在 Vim 里执行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:CocConfig</span><br></pre></td></tr></table></figure>
-
-<p>根据 <code>command -v clangd</code> 查到的真实路径设置，例如：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;clangd.path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/clangd-18&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;clangd.arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;--background-index&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;--clang-tidy&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;inlayHint.enableParameter&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span><span class="comment">//不提示隐式转换,更简洁舒服,不会妨碍代码书写</span></span><br><span class="line">    <span class="attr">&quot;coc.preferences.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="comment">//使代码按作用域缩进</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>保存后运行 <code>:CocRestart</code>。</p>
-<p><strong>Coc 和 clangd 的分工：</strong> Coc 负责在 Vim 中呈现语言服务功能；clangd 负责解析 C&#x2F;C++ 代码和项目编译选项。二者接起来后，Vim 才能获得语义补全和准确诊断。</p>
-<h2 id="第六步：在-Vim-中体验-IDE-功能"><a href="#第六步：在-Vim-中体验-IDE-功能" class="headerlink" title="第六步：在 Vim 中体验 IDE 功能"></a>第六步：在 Vim 中体验 IDE 功能</h2><p>在项目根目录运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim src/main.cpp</span><br></pre></td></tr></table></figure>
-
-<p>首次打开大型项目时，clangd 会建立索引；等索引完成后再演示搜索和跳转。</p>
-<table>
-<thead>
-<tr>
-<th>功能</th>
-<th>操作</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>自动补全</td>
-<td>在插入模式输入代码</td>
-<td>由 Coc 扩展和 clangd 提供候选项。</td>
-</tr>
-<tr>
-<td>手动触发补全</td>
-<td>插入模式按 <code>Ctrl+l</code>，其中 L 是小写字母</td>
-<td>请求 Coc 刷新补全。</td>
-</tr>
-<tr>
-<td>选择与确认</td>
-<td>补全菜单打开时 <code>Tab</code> &#x2F; <code>Shift+Tab</code>，再按 <code>Enter</code></td>
-<td>上下移动并接受建议。</td>
-</tr>
-<tr>
-<td>跳转定义</td>
-<td>普通模式按 <code>gd</code></td>
-<td>跳到当前符号定义。</td>
-</tr>
-<tr>
-<td>返回原位置</td>
-<td>按 <code>Ctrl+o</code></td>
-<td>回到跳转前的光标位置。</td>
-</tr>
-<tr>
-<td>查找引用</td>
-<td>普通模式按 <code>gr</code></td>
-<td>查找当前符号在项目中的引用。</td>
-</tr>
-<tr>
-<td>查看说明</td>
-<td>普通模式按 <code>K</code></td>
-<td>显示符号类型或文档说明。</td>
-</tr>
-<tr>
-<td>重命名</td>
-<td>先按空格，再依次按 <code>r</code>、<code>n</code></td>
-<td>按语义重命名变量、函数等符号。</td>
-</tr>
-<tr>
-<td>格式化</td>
-<td>先按空格，再按 <code>f</code></td>
-<td>请求 clangd 格式化当前文件；项目规则可由 <code>.clang-format</code> 控制。</td>
-</tr>
-<tr>
-<td>上一个 &#x2F; 下一个诊断</td>
-<td>普通模式按 <code>[d</code> &#x2F; <code>]d</code></td>
-<td>在错误与警告之间移动。</td>
-</tr>
-<tr>
-<td>开关文件树</td>
-<td>先按空格，再按 <code>e</code></td>
-<td>显示或隐藏 NERDTree。</td>
-</tr>
-<tr>
-<td>搜索文件</td>
-<td>按 <code>Ctrl+p</code></td>
-<td>在项目文件中模糊查找。</td>
-</tr>
-<tr>
-<td>搜索项目内容</td>
-<td>先按空格，再按 <code>s</code></td>
-<td>通过 ripgrep 搜索文本。</td>
-</tr>
-<tr>
-<td>查看 Git 状态</td>
-<td>运行 <code>:Git</code></td>
-<td>使用 Fugitive 查看和操作仓库。</td>
-</tr>
-</tbody></table>
-<p>这里空格是配置里的 <code>&lt;leader&gt;</code> 键，所以 <code>空格 → r → n</code> 是依次按三个键，不是同时按住。</p>
-<h2 id="第七步：排查常见问题"><a href="#第七步：排查常见问题" class="headerlink" title="第七步：排查常见问题"></a>第七步：排查常见问题</h2><h3 id="没有补全"><a href="#没有补全" class="headerlink" title="没有补全"></a>没有补全</h3><p>先确认 Vim 在当前终端能找到 Node 和 clangd，再在 Vim 中执行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:CocInfo</span><br><span class="line">:CocList extensions</span><br><span class="line">:CocCommand workspace.showOutput clangd</span><br></pre></td></tr></table></figure>
-
-<p>检查 Coc 是否启动、<code>coc-clangd</code> 是否安装、clangd 路径是否有效。首次安装语言扩展后重启 Vim，或者运行 <code>:CocRestart</code>。</p>
-<h2 id="官方资料"><a href="#官方资料" class="headerlink" title="官方资料"></a>官方资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://cocnvim.com/install">coc.nvim 安装及运行要求</a></li>
-<li><a target="_blank" rel="noopener" href="https://cocnvim.com/extensions">coc.nvim 插件与语言支持</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/junegunn/vim-plug">vim-plug 安装与使用</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm">nvm 官方项目</a></li>
-<li><a target="_blank" rel="noopener" href="https://clangd.llvm.org/">clangd：C&#x2F;C++ 语言服务器</a></li>
-<li><a target="_blank" rel="noopener" href="https://clangd.llvm.org/installation#project-setup">clangd 项目设置与编译数据库</a></li>
-</ul>
-<blockquote>
-<p><strong>版本说明：</strong> Coc 和其他插件的最低运行条件会更新。本文按 2026 年 10 月核对的官方资料整理；实际部署时，请以官方文档当前内容为准。</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://crazera-yi.github.io/linux/vim-setting/" data-id="cuidCY7tojwHEash3L29XWOb5" data-title="如何把vim配置的和vscode一样好用" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
 
 </section>
         
@@ -1558,7 +1447,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jotting/">杂谈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-programming/">网络编程</a></li></ul>
     </div>
   </div>
 
@@ -1568,7 +1457,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Asio/" rel="tag">Asio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boost/" rel="tag">Boost</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpp/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jsoncpp/" rel="tag">jsoncpp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E9%A1%B5/" rel="tag">主页</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag">哈希表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" rel="tag">图形处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sorting/" rel="tag">排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag">搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" rel="tag">有序表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">环境配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag">程序设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag">网络编程</a></li></ul>
     </div>
   </div>
 
@@ -1578,7 +1467,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/sorting/" style="font-size: 15px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/algorithm/" style="font-size: 20px;">算法</a>
+      <a href="/tags/Asio/" style="font-size: 10px;">Asio</a> <a href="/tags/Boost/" style="font-size: 10px;">Boost</a> <a href="/tags/cpp/" style="font-size: 20px;">C++</a> <a href="/tags/linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/jsoncpp/" style="font-size: 10px;">jsoncpp</a> <a href="/tags/%E4%B8%BB%E9%A1%B5/" style="font-size: 10px;">主页</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" style="font-size: 10px;">图形处理</a> <a href="/tags/sorting/" style="font-size: 13.33px;">排序</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 10px;">搜索</a> <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" style="font-size: 10px;">有序表</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">服务器</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">环境配置</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">程序设计</a> <a href="/tags/algorithm/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">网络编程</a>
     </div>
   </div>
 
@@ -1600,6 +1489,14 @@
       <ul>
         
           <li>
+            <a href="/Jotting/char-iamge/">用C++实现符号画</a>
+          </li>
+        
+          <li>
+            <a href="/network/tcp-async_server-1/">如何用Boost.Asio库写一个自己的服务TCP异步服务器(上)</a>
+          </li>
+        
+          <li>
             <a href="/algorithm/hash-table-1/">每日算法---哈希表</a>
           </li>
         
@@ -1609,14 +1506,6 @@
         
           <li>
             <a href="/algorithm/heap-sort-1/">每日算法---堆排序</a>
-          </li>
-        
-          <li>
-            <a href="/algorithm/random-selection-1/">每日算法---随机选择算法</a>
-          </li>
-        
-          <li>
-            <a href="/algorithm/quick-sort-1/">每日算法---随机快速排序</a>
           </li>
         
       </ul>
