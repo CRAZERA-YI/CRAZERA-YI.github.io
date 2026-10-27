@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>每日算法---堆排序(题) - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="一. 合并K个有序链表题目12合并 k 个升序的链表并将结果作为一个升序的链表返回其头节点。  数据范围：节点总数  0 ≤ n ≤ 5000 0≤n≤5000，每个节点的val满足  ∣ v a l ∣ &lt; &#x3D; 1000 ∣val∣&lt;&#x3D;1000 要求：时间复杂度  O ( n l o g n ) O(nlogn) 思路既然都是有序链表,所以说第一个元素都是每个链表的最小值,所以就可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---堆排序(题)">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/heap-sort-2/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="一. 合并K个有序链表题目12合并 k 个升序的链表并将结果作为一个升序的链表返回其头节点。  数据范围：节点总数  0 ≤ n ≤ 5000 0≤n≤5000，每个节点的val满足  ∣ v a l ∣ &lt; &#x3D; 1000 ∣val∣&lt;&#x3D;1000 要求：时间复杂度  O ( n l o g n ) O(nlogn) 思路既然都是有序链表,所以说第一个元素都是每个链表的最小值,所以就可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-27T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T14:08:45.648Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/algorithm/">算法</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-10-27T18:00:00+08:00">
+      October 27, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">每日算法---堆排序(题)</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="一-合并K个有序链表"><a href="#一-合并K个有序链表" class="headerlink" title="一. 合并K个有序链表"></a>一. 合并K个有序链表</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">合并 k 个升序的链表并将结果作为一个升序的链表返回其头节点。  </span><br><span class="line">数据范围：节点总数  0 ≤ n ≤ 5000 0≤n≤5000，每个节点的val满足  ∣ v a l ∣ &lt; = 1000 ∣val∣&lt;=1000 要求：时间复杂度  O ( n l o g n ) O(nlogn)</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>既然都是有序链表,所以说第一个元素都是每个链表的最小值,所以就可以通过依次把小值放在前面,那样实现排序.如何实现呢?可以通过构造一个小根堆,每次出堆一个,进堆一个,做到出队的永远是剩下的里面的最小值.</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ListNode</span></span><br><span class="line">&#123;</span><br><span class="line">    ListNode *next;</span><br><span class="line">    <span class="type">int</span> data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">ListNode *<span class="title">mergeKLists</span><span class="params">(vector&lt;ListNode *&gt; &amp;lists)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 小根堆（C++ 的 priority_queue 默认是大根堆，需要自定义比较器）</span></span><br><span class="line">    <span class="comment">// 注意：这里使用 greater 类似的效果，用 lambda 实现</span></span><br><span class="line">    <span class="keyword">auto</span> cmp = [](ListNode *a, ListNode *b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a-&gt;data &gt; b-&gt;data; <span class="comment">// 注意方向：&gt; 表示小根堆</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 初始化一个小根堆//模板传入的值分别是,堆内数据类型,堆的构造方式,比较器类型.....构造函数传入比较函数()</span></span><br><span class="line">    priority_queue&lt;ListNode *, vector&lt;ListNode *&gt;, <span class="keyword">decltype</span>(cmp)&gt; <span class="built_in">heap</span>(cmp);</span><br><span class="line">    <span class="comment">// 先把所有的链表的头入堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> x : lists)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (x != <span class="literal">nullptr</span>)</span><br><span class="line">            heap.<span class="built_in">push</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (heap.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode *head = heap.<span class="built_in">top</span>();</span><br><span class="line">    heap.<span class="built_in">pop</span>();</span><br><span class="line">    ListNode *pre = head;</span><br><span class="line">    <span class="keyword">if</span> (pre-&gt;next != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        heap.<span class="built_in">push</span>(pre-&gt;next);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 一个个的出堆,合并,实现有序</span></span><br><span class="line">    <span class="keyword">while</span> (!heap.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        ListNode *cur = heap.<span class="built_in">top</span>();</span><br><span class="line">        heap.<span class="built_in">pop</span>();</span><br><span class="line">        pre-&gt;next = cur;</span><br><span class="line">        pre = cur;</span><br><span class="line">        <span class="keyword">if</span> (cur-&gt;next != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            heap.<span class="built_in">push</span>(cur-&gt;next);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="二-线段最多重合问题"><a href="#二-线段最多重合问题" class="headerlink" title="二. 线段最多重合问题"></a>二. 线段最多重合问题</h1><h2 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">描述 每一个线段都有start和end两个数据项，表示这条线段在X轴上从start位置开始到end位置结束。 给定一批线段，求所有重合区域中最多重合了几个线段，首尾相接的线段不算重合。 </span><br><span class="line">例如：线段[1,2]和线段[2.3]不重合。 线段[1,3]和线段[2,3]重合   </span><br><span class="line">输入描述： 第一行一个数N，表示有N条线段 接下来N行每行2个数，表示线段起始和终止位置 </span><br><span class="line">输出描述： 输出一个数，表示同一个位置最多重合多少条线段</span><br></pre></td></tr></table></figure>
+<h2 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h2><h2 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">MaxCoverLine</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> cmp = [](<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">    &#123; <span class="keyword">return</span> a &gt; b; &#125;;</span><br><span class="line">    priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, <span class="keyword">decltype</span>(cmp)&gt; <span class="built_in">heap</span>(cmp);</span><br><span class="line">    std::<span class="built_in">sort</span>(arry.<span class="built_in">begin</span>(), arry.<span class="built_in">end</span>(), [](vector&lt;<span class="type">int</span>&gt; a, vector&lt;<span class="type">int</span>&gt; b)</span><br><span class="line">              &#123; <span class="keyword">return</span> a[<span class="number">0</span>] &lt; b[<span class="number">0</span>]; &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>, n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 只要是不满足大于小根堆里面最小的一个的(因为只要不满足这个条件,那肯定不重合),全弹出,</span></span><br><span class="line">        <span class="keyword">while</span> (!heap.<span class="built_in">empty</span>() &amp;&amp; heap.<span class="built_in">top</span>() &lt;= arry[i][<span class="number">0</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            heap.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        heap.<span class="built_in">push</span>(arry[i][<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">// 当前堆的大小就是重合线段数量</span></span><br><span class="line">        ans = <span class="built_in">max</span>(ans, (<span class="type">int</span>)heap.<span class="built_in">size</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="三-让数组整体累加和减半的最少操作次数"><a href="#三-让数组整体累加和减半的最少操作次数" class="headerlink" title="三. 让数组整体累加和减半的最少操作次数"></a>三. 让数组整体累加和减半的最少操作次数</h1><h2 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">给你一个正整数数组 nums 。每一次操作中，你可以从 nums 中选择 任意 一个数并将它减小到 恰好 一半。（注意，在后续操作中你可以对减半过的数继续执行操作）</span><br><span class="line"></span><br><span class="line">请你返回将 nums 数组和 至少 减少一半的 最少 操作数。</span><br></pre></td></tr></table></figure>
+<h2 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h2><p>构造一个大根堆,每次出堆最大值,然后减半后再返回堆,直到总值减为&lt;&#x3D;一半</p>
+<h2 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">MinTimeBeHalf</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    priority_queue&lt;<span class="type">double</span>, vector&lt;<span class="type">double</span>&gt;, std::greater&lt;<span class="type">double</span>&gt;&gt; heap;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>(), ans = <span class="number">0</span>;</span><br><span class="line">    ;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += arry[i];</span><br><span class="line">        heap.<span class="built_in">push</span>(arry[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">double</span> halfsum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (halfsum &lt;= sum / <span class="number">2.0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">double</span> temp = heap.<span class="built_in">top</span>();</span><br><span class="line">        heap.<span class="built_in">pop</span>();</span><br><span class="line">        halfsum += (temp / <span class="number">2</span>);</span><br><span class="line">        heap.<span class="built_in">push</span>(temp / <span class="number">2</span>);</span><br><span class="line">        ans++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/algorithm/" class="tag">#算法</a>
+      
+      <a href="/tags/sorting/" class="tag">#排序</a>
+      
+      <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/Jotting/char-iamge/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">用C++实现符号画</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  </body>
+</html>
