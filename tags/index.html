@@ -185,39 +185,37 @@
   </div>
   <div class="tags">
     
-    <a href="/tags/%E4%B8%BB%E9%A1%B5/" class="tag">#主页<span class="count">1</span></a>
-    
-    <a href="/tags/cpp/" class="tag">#C++<span class="count">11</span></a>
+    <a href="/tags/cpp/" class="tag">#C++<span class="count">12</span></a>
     
     <a href="/tags/algorithm/" class="tag">#算法<span class="count">8</span></a>
-    
-    <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="tag">#哈希表<span class="count">1</span></a>
     
     <a href="/tags/sorting/" class="tag">#排序<span class="count">5</span></a>
     
     <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="tag">#二叉树<span class="count">1</span></a>
     
+    <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="tag">#哈希表<span class="count">1</span></a>
+    
+    <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题<span class="count">1</span></a>
+    
     <a href="/tags/%E6%9C%89%E5%BA%8F%E8%A1%A8/" class="tag">#有序表<span class="count">1</span></a>
     
     <a href="/tags/%E6%90%9C%E7%B4%A2/" class="tag">#搜索<span class="count">1</span></a>
     
-    <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="tag">#程序设计<span class="count">1</span></a>
-    
-    <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" class="tag">#图形处理<span class="count">1</span></a>
+    <a href="/tags/%E4%B8%BB%E9%A1%B5/" class="tag">#主页<span class="count">1</span></a>
     
     <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/" class="tag">#命令行<span class="count">1</span></a>
     
     <a href="/tags/C%E8%AF%AD%E8%A8%80/" class="tag">#C语言<span class="count">1</span></a>
     
-    <a href="/tags/Boost/" class="tag">#Boost<span class="count">1</span></a>
+    <a href="/tags/Boost/" class="tag">#Boost<span class="count">2</span></a>
     
-    <a href="/tags/Asio/" class="tag">#Asio<span class="count">1</span></a>
+    <a href="/tags/Asio/" class="tag">#Asio<span class="count">2</span></a>
     
-    <a href="/tags/jsoncpp/" class="tag">#jsoncpp<span class="count">1</span></a>
+    <a href="/tags/jsoncpp/" class="tag">#jsoncpp<span class="count">2</span></a>
     
-    <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="tag">#服务器<span class="count">1</span></a>
+    <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="tag">#服务器<span class="count">2</span></a>
     
-    <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="tag">#网络编程<span class="count">1</span></a>
+    <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="tag">#网络编程<span class="count">2</span></a>
     
     <a href="/tags/linux/" class="tag">#Linux<span class="count">1</span></a>
     
@@ -227,7 +225,9 @@
     
     <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="tag">#环境配置<span class="count">1</span></a>
     
-    <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题<span class="count">1</span></a>
+    <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="tag">#程序设计<span class="count">1</span></a>
+    
+    <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86/" class="tag">#图形处理<span class="count">1</span></a>
     
   </div>
 </div>
@@ -296,5 +296,40 @@
     
 
     
-  </body>
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
 </html>

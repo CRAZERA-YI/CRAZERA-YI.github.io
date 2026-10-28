@@ -203,7 +203,7 @@
 <ul>
 <li><strong>GitHub</strong>: <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI">CRAZERA-YI</a></li>
 <li><strong>Gitee</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/crazera">crazera</a></li>
-<li><strong>Email</strong>: <a href="mailto:&#x33;&#x35;&#x32;&#x39;&#57;&#55;&#x38;&#x35;&#52;&#49;&#x40;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;">3529978541@qq.com</a></li>
+<li><strong>Email</strong>: <a href="mailto:&#51;&#x35;&#x32;&#57;&#x39;&#55;&#x38;&#x35;&#52;&#x31;&#x40;&#113;&#113;&#46;&#99;&#x6f;&#x6d;">3529978541@qq.com</a></li>
 </ul>
 <hr>
 <p><em>本文档作为博客主页的置顶文章，内容会随时更新。</em></p>
@@ -306,5 +306,40 @@
     
 
     
-  </body>
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
 </html>

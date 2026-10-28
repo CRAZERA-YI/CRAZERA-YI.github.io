@@ -239,18 +239,18 @@
 
   <div class="container post-prev-next" data-pagefind-ignore>
     
-    <a href="/jotting/main-func-arg/" class="next">
+    <a href="/network/tcp-async_server-2/" class="next">
       <div class="text">
         <p class="label">Next</p>
-        <h3 class="title">C/C++里面的main函数的两个参数的秘密</h3>
+        <h3 class="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(二)</h3>
       </div>
     </a>
     
     
-    <a href="/jotting/char-image/" class="prev">
+    <a href="/jotting/main-func-arg/" class="prev">
       <div class="text">
         <p class="label">Previous</p>
-        <h3 class="title">用C++实现符号画</h3>
+        <h3 class="title">C/C++里面的main函数的两个参数的秘密</h3>
       </div>
     </a>
     
@@ -324,5 +324,40 @@
     
 
     
-  </body>
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
 </html>

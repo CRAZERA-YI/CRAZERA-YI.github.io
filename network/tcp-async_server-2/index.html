@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>如何用Boost.Asio库写一个自己的服务TCP异步服务器(二) - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="宏定义与自定义数据类型1. 宏定义const.h里面的宏定义,把那些固定值定义了,其他文件直接拿来用就行了 12345678910111213141516#ifndef __CONST_H#define __CONST_H&#x2F;&#x2F; 最大消息长度#define MAX_LEN 1024 * 2&#x2F;&#x2F; ID长度#define HEAD_ID_LEN 2&#x2F;&#x2F; 数据长度长度#define HEAD_DATA_L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何用Boost.Asio库写一个自己的服务TCP异步服务器(二)">
+<meta property="og:url" content="https://crazera-yi.github.io/network/tcp-async_server-2/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="宏定义与自定义数据类型1. 宏定义const.h里面的宏定义,把那些固定值定义了,其他文件直接拿来用就行了 12345678910111213141516#ifndef __CONST_H#define __CONST_H&#x2F;&#x2F; 最大消息长度#define MAX_LEN 1024 * 2&#x2F;&#x2F; ID长度#define HEAD_ID_LEN 2&#x2F;&#x2F; 数据长度长度#define HEAD_DATA_L">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-28T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-28T08:49:15.284Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="Asio">
+<meta property="article:tag" content="Boost">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="jsoncpp">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/network-programming/">网络编程</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-10-28T18:00:00+08:00">
+      October 28, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(二)</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="宏定义与自定义数据类型"><a href="#宏定义与自定义数据类型" class="headerlink" title="宏定义与自定义数据类型"></a>宏定义与自定义数据类型</h1><h2 id="1-宏定义"><a href="#1-宏定义" class="headerlink" title="1. 宏定义"></a>1. 宏定义</h2><p>const.h里面的宏定义,把那些固定值定义了,其他文件直接拿来用就行了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __CONST_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __CONST_H</span></span><br><span class="line"><span class="comment">// 最大消息长度</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_LEN 1024 * 2</span></span><br><span class="line"><span class="comment">// ID长度</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HEAD_ID_LEN 2</span></span><br><span class="line"><span class="comment">// 数据长度长度</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HEAD_DATA_LEN 2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HEAD_TOTAL_LEN 4</span></span><br><span class="line"><span class="comment">// 接受队列,发送队列最大值</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXRECVQUE 1000</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXSENDQUE 1000</span></span><br><span class="line"><span class="comment">// ID枚举</span></span><br><span class="line"><span class="keyword">enum</span> &#123; MSG_HELLO_WORLD = <span class="number">1001</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-自定义数据类型—MsgNode"><a href="#2-自定义数据类型—MsgNode" class="headerlink" title="2. 自定义数据类型—MsgNode"></a>2. 自定义数据类型—MsgNode</h2><h3 id="头文件"><a href="#头文件" class="headerlink" title="头文件"></a>头文件</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MsgNode.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __MSGNODE_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __MSGNODE_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/ip/tcp.hpp&gt;</span></span></span><br><span class="line"><span class="comment">// 需要用到里面的memset函数</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="comment">// 标准输入输出用于报错</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="comment">// 标定长度规则</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;const.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio.hpp&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 作为消息类的父类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MsgNode</span> &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MsgNode</span>(<span class="type">short</span> max_len) : _total_len(max_len), _cur_len(<span class="number">0</span>) &#123;</span><br><span class="line">        _data = <span class="keyword">new</span> <span class="type">char</span>[_total_len + <span class="number">1</span>]();</span><br><span class="line">        _data[_total_len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">MsgNode</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;消息体已被销毁&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">delete</span>[] _data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">memset</span>(_data, <span class="number">0</span>, _total_len);</span><br><span class="line">        _cur_len = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">short</span> _total_len;</span><br><span class="line">    <span class="type">short</span> _cur_len;</span><br><span class="line">    <span class="type">char</span> *_data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RecvNode</span> : <span class="keyword">public</span> MsgNode &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">RecvNode</span>(<span class="type">short</span> max_len, <span class="type">short</span> msg_id);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">short</span> _msg_id;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SendNode</span> : <span class="keyword">public</span> MsgNode &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SendNode</span>(<span class="type">const</span> <span class="type">char</span> *msg, <span class="type">short</span> max_len, <span class="type">short</span> msg_id);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">short</span> _msg_id;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="源文件"><a href="#源文件" class="headerlink" title="源文件"></a>源文件</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MsgNode.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;../include/MsgNode.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/detail/impl/socket_ops.ipp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="comment">// 接收不用附加额外的信息,所以不用添加</span></span><br><span class="line">RecvNode::<span class="built_in">RecvNode</span>(<span class="type">short</span> max_len, <span class="type">short</span> msg_id)</span><br><span class="line">    : <span class="built_in">MsgNode</span>(max_len), _msg_id(msg_id) &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//+HEAD_ID_LEN为了扩充四个字的长度来放置消息信息</span></span><br><span class="line">SendNode::<span class="built_in">SendNode</span>(<span class="type">const</span> <span class="type">char</span> *msg, <span class="type">short</span> max_len, <span class="type">short</span> msg_id)</span><br><span class="line">    : <span class="built_in">MsgNode</span>(max_len + HEAD_TOTAL_LEN), _msg_id(msg_id) &#123;</span><br><span class="line">    <span class="comment">// 转为网络字节序,防止大小端导致的数据错乱</span></span><br><span class="line">    <span class="type">short</span> msg_id_host =</span><br><span class="line">        boost::asio::detail::socket_ops::<span class="built_in">host_to_network_short</span>(msg_id);</span><br><span class="line">    <span class="built_in">memcpy</span>(_data, &amp;msg_id_host, HEAD_ID_LEN);</span><br><span class="line">    <span class="type">short</span> max_len_host =</span><br><span class="line">        boost::asio::detail::socket_ops::<span class="built_in">host_to_network_short</span>(max_len);</span><br><span class="line">    <span class="built_in">memcpy</span>(_data + HEAD_ID_LEN, &amp;max_len_host, HEAD_DATA_LEN);</span><br><span class="line">    <span class="comment">// 附加要发送的数据</span></span><br><span class="line">    <span class="built_in">memcpy</span>(_data + HEAD_TOTAL_LEN, msg, max_len);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>今天的代码实现了自定义消息体类型,为后续的数据处理,数据发送,数据接收打下基础</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/Boost/" class="tag">#Boost</a>
+      
+      <a href="/tags/Asio/" class="tag">#Asio</a>
+      
+      <a href="/tags/jsoncpp/" class="tag">#jsoncpp</a>
+      
+      <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="tag">#服务器</a>
+      
+      <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="tag">#网络编程</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/algorithm/heap-sort-2/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">每日算法---堆排序(题)</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
