@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>每日算法---桶排序与基数排序 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="桶排序(Bucket Sort)1. 简介摘自维基百科桶排序（英语：Bucket sort）或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶里。每个桶再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一般化(generalization)。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（O(n)）。 桶排序以下列程序进行：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---桶排序与基数排序">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/radix-sort-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="桶排序(Bucket Sort)1. 简介摘自维基百科桶排序（英语：Bucket sort）或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶里。每个桶再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一般化(generalization)。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（O(n)）。 桶排序以下列程序进行：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crazera-yi.github.io/">
+<meta property="article:published_time" content="2026-10-28T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-28T15:05:45.204Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crazera-yi.github.io/">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/algorithm/">算法</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-10-28T18:00:00+08:00">
+      October 28, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">每日算法---桶排序与基数排序</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="桶排序-Bucket-Sort"><a href="#桶排序-Bucket-Sort" class="headerlink" title="桶排序(Bucket Sort)"></a>桶排序(Bucket Sort)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A1%B6%E6%8E%92%E5%BA%8F">摘自维基百科</a><br>桶排序（英语：Bucket sort）或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶里。每个桶再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一般化(generalization)。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（O(n)）。</p>
+<p>桶排序以下列程序进行：</p>
+<ol>
+<li>设置一个定量的数组当作空桶子。</li>
+<li>寻访序列，并且把项目一个一个放到对应的桶子去。</li>
+<li>对每个不是空的桶子进行排序。</li>
+<li>从不是空的桶子里把项目再放回原来的序列中。</li>
+</ol>
+<h2 id="2-我的理解"><a href="#2-我的理解" class="headerlink" title="2. 我的理解"></a>2. 我的理解</h2><p>桶排序是非交换排序,利用最简单粗暴的统计法,完成排序,虽然比较快,但要是面对大数量级的数字的时候,就不太合适了.实现很简单,所以代码就不写了</p>
+<hr>
+<h1 id="基数排序-Radix-Sort"><a href="#基数排序-Radix-Sort" class="headerlink" title="基数排序(Radix Sort)"></a>基数排序(Radix Sort)</h1><h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F">摘自维基百科</a><br>基数排序（英语：Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。</p>
+<p>它是这样实现的：将所有待比较数值（正整数）统一为同样的数位长度，数位较短的数前面补零。然后，从最低位开始，依次进行一次排序。这样从最低位排序一直到最高位排序完成以后，数列就变成一个有序序列。</p>
+<p>基数排序的方式可以采用LSD（Least significant digital）或MSD（Most significant digital），LSD的排序方式由键值的最右边开始，而MSD则相反，由键值的最左边开始。<br><strong>老资历</strong><br>基数排序的发明可以追溯到1887年赫尔曼·何乐礼在打孔卡片制表机上的贡献。基数排序算法早在1923年被广泛运用在打孔卡的排序。<br><img src="/" alt="参考动画"></p>
+<h2 id="2-我的理解-1"><a href="#2-我的理解-1" class="headerlink" title="2. 我的理解"></a>2. 我的理解</h2><p>基数排序和桶排序相比于其他排序很特殊,基数排序属于是桶排序的进阶版,他并不是依赖交换进行排序,而且通过每个数位计数进行排序,所以对于低数量级的数,可以做到很快的速度</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><p>仅限制正数数组排序,如果需要实现负数表示,只需要把最小值找出来,然后数组里面的数字减去最小值,最后再分别加上最小值就可以了,下面展示的版本是最简单的,就不添加这个了,以及最大位数也可以通过函数内部实现,下面也是不实现了,直接通过传参获取</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要10个队列桶(先进先出) 分别储存0,1,2...8,9的数量</span></span><br><span class="line">vector&lt;queue&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">bucket</span>(<span class="number">10</span>);</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">RadixSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> maxdig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="type">int</span> offset = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//等到位数用完,排序完成</span></span><br><span class="line">    <span class="keyword">while</span> (maxdig &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">//首先取位,放入桶内</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            bucket[(arry[i] / offset) % <span class="number">10</span>].<span class="built_in">push</span>(arry[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        offset *= <span class="number">10</span>;</span><br><span class="line">        maxdig--;</span><br><span class="line">        <span class="comment">//根据桶顺序进行排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (!bucket[i].<span class="built_in">empty</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                arry[j++] = bucket[i].<span class="built_in">front</span>();</span><br><span class="line">                bucket[i].<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶版"><a href="#进阶版" class="headerlink" title="进阶版"></a>进阶版</h3><p>也是仅限正数排序,支持N进制调整,不需要一个个遍历桶了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> scale = <span class="number">10</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">help</span><span class="params">(<span class="number">10086</span>)</span></span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">cnt</span><span class="params">(scale)</span></span>;</span><br><span class="line"><span class="comment">// 记得让maxdig的位数和对应进制相对应</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">RadixSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arry, <span class="type">int</span> maxdig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="type">int</span> offset = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (maxdig &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">//重置计数器</span></span><br><span class="line">        <span class="built_in">fill</span>(cnt.<span class="built_in">begin</span>(), cnt.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">        <span class="comment">//计数位数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            cnt[(arry[i] / offset) % scale]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//累加前面小于的数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; scale; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            cnt[i] += cnt[i - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 根据计数器调整到辅助数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">        &#123;</span><br><span class="line">            help[--cnt[(arry[i] / offset) % scale]] = arry[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将辅助数组的数据拷贝到主数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            arry[i] = help[i];</span><br><span class="line">        &#125;</span><br><span class="line">        offset *= scale;</span><br><span class="line">        maxdig--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>作为为数不多不用交换的数组,实现原理还是很有趣,思路很值得的学习</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/algorithm/" class="tag">#算法</a>
+      
+      <a href="/tags/sorting/" class="tag">#排序</a>
+      
+      <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/network/tcp-async_server-2/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(二)</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/algorithm/heap-sort-2/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">每日算法---堆排序(题)</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
