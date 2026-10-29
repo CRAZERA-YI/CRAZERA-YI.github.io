@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>每日算法---异或运算 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="异或操作1. 简介异或操作是位运算的一种,运算规则是两个数字的相对的数位上,数字相同得0,不同得1,与异或相反的操作叫同或,其实就是异或运算取反,本文章不讲例: 1234 100101^011100-------- 111001 2. 异或运算的性质 异或运算就是无进位相加 异或运算满足交换律、结合律，也就是同一批数字，不管异或顺序是什么，最终的结果都是一个 0^n&#x3D;n，n^n&amp;#x3D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---异或运算">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/xor-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="异或操作1. 简介异或操作是位运算的一种,运算规则是两个数字的相对的数位上,数字相同得0,不同得1,与异或相反的操作叫同或,其实就是异或运算取反,本文章不讲例: 1234 100101^011100-------- 111001 2. 异或运算的性质 异或运算就是无进位相加 异或运算满足交换律、结合律，也就是同一批数字，不管异或顺序是什么，最终的结果都是一个 0^n&#x3D;n，n^n&amp;#x3D">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-29T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-29T06:50:11.216Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="骚操作">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/algorithm/">算法</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-10-29T18:00:00+08:00">
+      October 29, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">每日算法---异或运算</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="异或操作"><a href="#异或操作" class="headerlink" title="异或操作"></a>异或操作</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>异或操作是位运算的一种,运算规则是两个数字的相对的数位上,数字相同得0,不同得1,与异或相反的操作叫同或,其实就是异或运算取反,本文章不讲<br>例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> 100101</span><br><span class="line">^011100</span><br><span class="line">--------</span><br><span class="line"> 111001</span><br></pre></td></tr></table></figure>
+<h2 id="2-异或运算的性质"><a href="#2-异或运算的性质" class="headerlink" title="2. 异或运算的性质"></a>2. 异或运算的性质</h2><ol>
+<li>异或运算就是无进位相加</li>
+<li>异或运算满足交换律、结合律，也就是同一批数字，不管异或顺序是什么，最终的结果都是一个</li>
+<li>0^n&#x3D;n，n^n&#x3D;0</li>
+<li>整体异或和如果是x，整体中某个部分的异或和如果是y，那么剩下部分的异或和是x^y</li>
+</ol>
+<h2 id="2-用异或运算实现骚操作"><a href="#2-用异或运算实现骚操作" class="headerlink" title="2. 用异或运算实现骚操作"></a>2. 用异或运算实现骚操作</h2><h3 id="交换两个数"><a href="#交换两个数" class="headerlink" title="交换两个数"></a>交换两个数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Swap</span><span class="params">(<span class="type">int</span> &amp;a,<span class="type">int</span> &amp;b)</span></span>&#123;</span><br><span class="line">    a = a^b;</span><br><span class="line">    b = a^b;    <span class="comment">//此时的b == a^b^b   自己异或自己为0,任何数字异或0都等于自己,所以现在的b == a</span></span><br><span class="line">    a = a^b;    <span class="comment">//此时的a == a^a^b 同理  a=b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用这个写法的时候需要注意,传入的两个数字地址不能相同,如果是同一地址的数字异或交换,最后的结果就是两个全变成0</p>
+<h3 id="在规定范围的连续数组里面-找到缺失的一个数字"><a href="#在规定范围的连续数组里面-找到缺失的一个数字" class="headerlink" title="在规定范围的连续数组里面,找到缺失的一个数字"></a>在规定范围的连续数组里面,找到缺失的一个数字</h3><p>利用到了特性4</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">GetDeficiency</span><span class="params">(vector&lt;<span class="type">int</span>&gt; arry, <span class="type">int</span> begin)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> sum_1 = <span class="number">0</span>, sum_2 = <span class="number">0</span>, n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum_1 ^= arry[i];</span><br><span class="line">        sum_2 ^= begin;</span><br><span class="line">        begin++;</span><br><span class="line">    &#125;</span><br><span class="line">    sum_2 ^= begin;</span><br><span class="line">    <span class="keyword">return</span> sum_2 ^ sum_1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="数组中1种数出现了奇数次，其他的数都出现了偶数次，返回出现了奇数次的数"><a href="#数组中1种数出现了奇数次，其他的数都出现了偶数次，返回出现了奇数次的数" class="headerlink" title="数组中1种数出现了奇数次，其他的数都出现了偶数次，返回出现了奇数次的数"></a>数组中1种数出现了奇数次，其他的数都出现了偶数次，返回出现了奇数次的数</h3><p>这道题很有趣,其实自己和自己异或会得到0,那么扩展一下,只要是偶数个相同数字异或,那么结果肯定是0,奇数个相同数字异或,肯定是自己,那么,解题方法就一目了然了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">GetOdd</span><span class="params">(vector&lt;<span class="type">int</span>&gt; arry)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = arry.<span class="built_in">size</span>();</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i &lt; n ; i++)&#123;</span><br><span class="line">        ans ^= arry[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/algorithm/" class="tag">#算法</a>
+      
+      <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题</a>
+      
+      <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" class="tag">#位运算</a>
+      
+      <a href="/tags/%E9%AA%9A%E6%93%8D%E4%BD%9C/" class="tag">#骚操作</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/jotting/pdf-translate/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">PDF翻译工具--PDFMathTranslate</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
