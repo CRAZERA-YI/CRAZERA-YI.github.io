@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>每日算法---位运算 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="位运算性质貌似也没啥性质,也就and or not 三种运算,直接看题吧 判断一个数是不是2的幂首先,对于一个是2的幂的数字,用二进制表示的话,只有一位是1,比如64的二进制就是0010 0000,所以,只需要看这个数字是不是只有一个1,那就可以判断了 1234bool IsTwoPower(int n)&#123;    &#x2F;&#x2F;这段代码的意思就是,取出n的最右一位的1,与原来的n比较是否一致就行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---位运算">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/bit-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="位运算性质貌似也没啥性质,也就and or not 三种运算,直接看题吧 判断一个数是不是2的幂首先,对于一个是2的幂的数字,用二进制表示的话,只有一位是1,比如64的二进制就是0010 0000,所以,只需要看这个数字是不是只有一个1,那就可以判断了 1234bool IsTwoPower(int n)&#123;    &#x2F;&#x2F;这段代码的意思就是,取出n的最右一位的1,与原来的n比较是否一致就行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-29T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-29T13:41:02.928Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="骚操作">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/algorithm/">算法</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-10-29T18:00:00+08:00">
+      October 29, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">每日算法---位运算</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h1><h2 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h2><p>貌似也没啥性质,也就and or not 三种运算,直接看题吧</p>
+<h2 id="判断一个数是不是2的幂"><a href="#判断一个数是不是2的幂" class="headerlink" title="判断一个数是不是2的幂"></a>判断一个数是不是2的幂</h2><p>首先,对于一个是2的幂的数字,用二进制表示的话,只有一位是1,比如64的二进制就是0010 0000,所以,只需要看这个数字是不是只有一个1,那就可以判断了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">IsTwoPower</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="comment">//这段代码的意思就是,取出n的最右一位的1,与原来的n比较是否一致就行</span></span><br><span class="line">    <span class="keyword">return</span> n &gt; <span class="number">0</span> &amp;&amp; n==(n&amp;(~n<span class="number">+1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实上面的写法还可以简化,因为~n+1,取反加1这个写法就是求n的补码,计算机的整形的负数刚刚好也是通过补码表示,所以可以写成以下形式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isTwoPower</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> n &gt; <span class="number">0</span> &amp;&amp; n==(n&amp;-n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="判断一个数是不是3的幂"><a href="#判断一个数是不是3的幂" class="headerlink" title="判断一个数是不是3的幂"></a>判断一个数是不是3的幂</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isTwoPower</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="comment">//那串很奇怪的数字是3的19次方,是32位int能表示的最大3的幂次方</span></span><br><span class="line">    <span class="keyword">return</span> !(<span class="number">1162261467</span> % n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="返回大于等于n的最小的2的幂"><a href="#返回大于等于n的最小的2的幂" class="headerlink" title="返回大于等于n的最小的2的幂"></a>返回大于等于n的最小的2的幂</h2><p>思路很特别,想想对于一个非负数,他的最近的大于等于的二次幂的数字应该是其最高位再上一位唯一为一的数字吧,例如1010,离他最近的就是10000,所以一个数字最近的二次幂数字也等于,一个数字的最高位以前的位数全为一再加1的结果,也就是1111+1&#x3D;10000,有了这个思路就可以实现代码了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">nearTwoPower</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n &lt; <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">//如果小于1,那最近的也就是2的0次方了</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//防止本身就是2的幂的数字算错</span></span><br><span class="line">    n--;</span><br><span class="line"></span><br><span class="line">    n|=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    n|=n&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    n|=n&gt;&gt;<span class="number">4</span>;</span><br><span class="line">    n|=n&gt;&gt;<span class="number">8</span>;</span><br><span class="line">    n|=n&gt;&gt;<span class="number">16</span>;</span><br><span class="line">    <span class="keyword">return</span> n<span class="number">+1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="区间-left-right-内所有数字-的结果"><a href="#区间-left-right-内所有数字-的结果" class="headerlink" title="区间[left, right]内所有数字 &amp; 的结果"></a>区间[left, right]内所有数字 &amp; 的结果</h2><p>常规思路是,直接遍历一遍所有数字,但是还有更快的做法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">rangeBitwiseAnd</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">			right -= right &amp; -right;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> right;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>怎么理解这个做法呢,大概就是,对于一个数字,他要变成比它小1的数字,肯定需要退位,所以最低位的1就要被&amp;消失,以此类推,知道遇到&#x3D;&#x3D;left的,循环停止,这个比遍历快多了,这是每次都进行退位(&#x2F;2)实现的</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/algorithm/" class="tag">#算法</a>
+      
+      <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题</a>
+      
+      <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" class="tag">#位运算</a>
+      
+      <a href="/tags/%E9%AA%9A%E6%93%8D%E4%BD%9C/" class="tag">#骚操作</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/algorithm/xor-1/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">每日算法---异或运算</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/jotting/pdf-translate/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">PDF翻译工具--PDFMathTranslate</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
