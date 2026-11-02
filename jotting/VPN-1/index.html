@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>VPN的工作原理 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="VPN本文章仅仅科普,资料来源于网络.首先,什么是VPN,听的很多的,但是对于他的定义很多人可能是不是很清楚的 简介虚拟私人网络（英语：Virtual Private Network，缩写：VPN），也称虚拟专用网络，将专用网络延伸到公共网络上，使用户能够在共享或公共网络上发送和接收数据，就像他们的计算设备直接连接到专用网络上一样。VPN的好处包括增加专用网络的功能、安全性和管理，它提供了对公共网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VPN的工作原理">
+<meta property="og:url" content="https://crazera-yi.github.io/jotting/VPN-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="VPN本文章仅仅科普,资料来源于网络.首先,什么是VPN,听的很多的,但是对于他的定义很多人可能是不是很清楚的 简介虚拟私人网络（英语：Virtual Private Network，缩写：VPN），也称虚拟专用网络，将专用网络延伸到公共网络上，使用户能够在共享或公共网络上发送和接收数据，就像他们的计算设备直接连接到专用网络上一样。VPN的好处包括增加专用网络的功能、安全性和管理，它提供了对公共网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zh.wikipedia.org/wiki/%E8%99%9B%E6%93%AC%E7%A7%81%E4%BA%BA%E7%B6%B2%E8%B7%AF">
+<meta property="article:published_time" content="2026-11-02T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-02T15:03:12.204Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="VPN">
+<meta property="article:tag" content="科普">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zh.wikipedia.org/wiki/%E8%99%9B%E6%93%AC%E7%A7%81%E4%BA%BA%E7%B6%B2%E8%B7%AF">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/jotting/">杂谈</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-02T18:00:00+08:00">
+      November 2, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">VPN的工作原理</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h1><p>本文章仅仅科普,资料来源于网络.<br>首先,什么是VPN,听的很多的,但是对于他的定义很多人可能是不是很清楚的</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><img src="https://zh.wikipedia.org/wiki/%E8%99%9B%E6%93%AC%E7%A7%81%E4%BA%BA%E7%B6%B2%E8%B7%AF" alt="摘自维基百科"><br>虚拟私人网络（英语：Virtual Private Network，缩写：VPN），也称虚拟专用网络，将专用网络延伸到公共网络上，使用户能够在共享或公共网络上发送和接收数据，就像他们的计算设备直接连接到专用网络上一样。VPN的好处包括增加专用网络的功能、安全性和管理，它提供了对公共网络上无法访问的资源访问通常用于远程办公人员。加密很常见但不是VPN连接的固有部分。</p>
+<p>VPN是通过使用专用线路或在现有网络上使用隧道协议建立一个虚拟的点对点连接而形成的。可从公共 Internet 获得的 VPN可以提供广域网（WAN）的一些好处。 从用户的角度来看，可以远程访问专用网络中可用的资源。</p>
+<h2 id="通俗的讲"><a href="#通俗的讲" class="headerlink" title="通俗的讲"></a>通俗的讲</h2><p><strong>VPN</strong>本质上是在普通公网上,通过身份认证建立隧道,把原始数据包加密封装后传输,到隧道端点解密并转发给目标,从而让中间节点难以读取内容和真实内网地址,实现安全的远程通讯.VPN 不是翻墙的代名词.翻墙需要加密 + 混淆,而标准 VPN 只提供加密、不提供混淆,所以真正用于翻墙的往往是经过流量伪装改造的 VPN 或专门设计的抗审查隧道工具.人们习惯把这类工具统称为”VPN”,才造成了”VPN 就是翻墙”的错觉.</p>
+<h2 id="对于翻墙"><a href="#对于翻墙" class="headerlink" title="对于翻墙"></a>对于翻墙</h2><p>客户端与境外服务器建立加密隧道,由该服务器以自身 IP 代你访问目标网站,再把结果经隧道传回.你访问的是”境外服务器”,不是直接连目标 IP,目标网站看到的是服务器的 IP,不是你的.所以说,你的数据虽然被加密了,但是其实不是完全保密的,翻墙服务提供方其实是可以看到你的数据的.</p>
+<h2 id="其他办法"><a href="#其他办法" class="headerlink" title="其他办法"></a>其他办法</h2><p>其实除了VPN还有其他的翻墙手段,但是其实用的很少,比如境外的电话卡的国际漫游服务,tor网络(其实原理和VPN差不多),DNS修改(这个基本上没啥用,因为GWF会封ip),ssh(这个其实也就是用一台服务器转发流量而已,也差不多了,没啥区别)</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" class="tag">#计算机网络</a>
+      
+      <a href="/tags/VPN/" class="tag">#VPN</a>
+      
+      <a href="/tags/%E7%A7%91%E6%99%AE/" class="tag">#科普</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/network/tcp-async_server-3/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(三)</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/jotting/web-collection-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">实用网站分享</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
