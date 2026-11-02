@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>如何用Boost.Asio库写一个自己的服务TCP异步服务器(三) - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="CSession功能实现类功能Cession作为一个会话类,主要的作用其实就是实现和客户端的通信,所以最重要的也就是读函数和写函数,然后在读回调函数里面把接收到的消息传入逻辑队列,交给逻辑类处理后续,也防止了内部堵塞 CSession.h123456789101112131415161718192021222324252627282930313233343536373839404142434445">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何用Boost.Asio库写一个自己的服务TCP异步服务器(三)">
+<meta property="og:url" content="https://crazera-yi.github.io/network/tcp-async_server-3/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="CSession功能实现类功能Cession作为一个会话类,主要的作用其实就是实现和客户端的通信,所以最重要的也就是读函数和写函数,然后在读回调函数里面把接收到的消息传入逻辑队列,交给逻辑类处理后续,也防止了内部堵塞 CSession.h123456789101112131415161718192021222324252627282930313233343536373839404142434445">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-02T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-02T12:14:06.042Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="Asio">
+<meta property="article:tag" content="Boost">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="jsoncpp">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/network-programming/">网络编程</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-02T18:00:00+08:00">
+      November 2, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(三)</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="CSession功能实现"><a href="#CSession功能实现" class="headerlink" title="CSession功能实现"></a>CSession功能实现</h1><h2 id="类功能"><a href="#类功能" class="headerlink" title="类功能"></a>类功能</h2><p>Cession作为一个会话类,主要的作用其实就是实现和客户端的通信,所以最重要的也就是读函数和写函数,<br>然后在读回调函数里面把接收到的消息传入逻辑队列,交给逻辑类处理后续,也防止了内部堵塞</p>
+<h2 id="CSession-h"><a href="#CSession-h" class="headerlink" title="CSession.h"></a>CSession.h</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __CSESSION_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __CSESSION_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MsgNode.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;const.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/io_context.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/ip/tcp.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/system/detail/error_code.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CServer</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CSession</span> : <span class="keyword">public</span> std::enable_shared_from_this&lt;CSession&gt; &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// io_context需要用来初始化socket</span></span><br><span class="line">    <span class="built_in">CSession</span>(boost::asio::io_context &amp;io_context, CServer *server);</span><br><span class="line">    ~<span class="built_in">CSession</span>();</span><br><span class="line">    <span class="function">tcp::socket &amp;<span class="title">GetSocket</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">std::string &amp;<span class="title">GetUuid</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 开始通信</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Start</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 两个send函数的重载</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Send</span><span class="params">(<span class="type">char</span> *msg, <span class="type">short</span> max_length, <span class="type">short</span> msgid)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Send</span><span class="params">(std::string &amp;msg, <span class="type">short</span> msgid)</span></span>;</span><br><span class="line">    <span class="comment">// 关闭通信</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Close</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 获取当前的类的this指针</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;CSession&gt; <span class="title">SharedSelf</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 读和写的回调函数,至于为什么写函数没有用bytes_transferred,这是因为write内部用的async_send函数一次就可以传输完</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">HandleRead</span><span class="params">(boost::system::error_code &amp;error, <span class="type">size_t</span> bytes_transferred,</span></span></span><br><span class="line"><span class="params"><span class="function">                    shared_ptr&lt;CSession&gt; shared_self)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">HandleWrite</span><span class="params">(boost::system::error_code &amp;error,</span></span></span><br><span class="line"><span class="params"><span class="function">                     std::shared_ptr&lt;CSession&gt; shared_self)</span></span>;</span><br><span class="line">    std::string _uuid;</span><br><span class="line">    tcp::socket _socket;</span><br><span class="line">    <span class="type">char</span> _data[MAX_LENGTH];</span><br><span class="line">    CServer *_server;</span><br><span class="line">    <span class="type">bool</span> _b_close;</span><br><span class="line">    std::queue&lt;shared_ptr&lt;SendNode&gt;&gt; _send_que;</span><br><span class="line">    std::mutex _send_lock;</span><br><span class="line">    std::shared_ptr&lt;RecvNode&gt; _recv_msg_node;</span><br><span class="line">    <span class="type">bool</span> _b_head_parse;</span><br><span class="line">    std::shared_ptr&lt;MsgNode&gt; _recv_head_node;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 逻辑层所封装的类,LogicSystem使用这个类封装的信息进行处理</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LogicNode</span> &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">LogicNode</span>(shared_ptr&lt;CSession&gt;, shared_ptr&lt;RecvNode&gt;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    shared_ptr&lt;RecvNode&gt; _recvnode;</span><br><span class="line">    shared_ptr&lt;CSession&gt; _session;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h2><p>有些函数一眼看出来功能就不说了</p>
+<ol>
+<li><p><strong>构造函数</strong><br>主要是初始化CSession内部的_socket和传入外部的server来管理CSession,<br>然后再生成一个uuid,这玩意用于确认会话的身份,而且会话是要被放在一个定义在CServer的哈希表里面的(增加智能指针的引用),有了uuid才好管理.</p>
+</li>
+<li><p><strong>Start</strong><br>这个函数一句话说就是,用于会话的启动,有了第一个异步读函数,才能够启动后面的回调函数</p>
+</li>
+<li><p><strong>HandleWrite</strong><br>这个是写回调函数,内部实现是<code>boost::asio::async_write</code>,这个函数是boost库提供的异步读函数,能一次发完所有数据.这个回调函数也不只是只有这一点内容,其实还有锁和消息队列.锁的话,是为了防止入队顺序的错乱导致的数据混乱,队列就是为了让消息按顺序发送,并且提供一个缓冲区,要是不做一个队列的话,那么需要用到很多的异步回调函数来发送,性能开销就会变大.</p>
+</li>
+<li><p><strong>HandleRead</strong><br>这个才是重头戏,这个是整个类里面实现最为复杂的函数,首先要分段的取数据,首先提取头数据,根据bytes_transferred的是否被用光,来决定是否调用下一个回调函数,return当前的.然后要是是足够的,那就根据头数据来获取数据长度和数据id,然后再接收主数据部分,大概呢就是这么一个思想</p>
+</li>
+</ol>
+<h2 id="CSession-cpp"><a href="#CSession-cpp" class="headerlink" title="CSession.cpp"></a>CSession.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;../include/CSession.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;../include/CServer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;../include/const.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/detail/impl/socket_ops.ipp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio/registered_buffer.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/uuid/random_generator.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/uuid/uuid.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/uuid/uuid_io.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jsoncpp/json/json.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jsoncpp/json/reader.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jsoncpp/json/value.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LogicSystem</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CServer</span>;</span><br><span class="line"></span><br><span class="line">CSession::<span class="built_in">CSession</span>(boost::asio::io_context &amp;io_context, CServer *server)</span><br><span class="line">    : _socket(io_context), _server(server), _b_close(<span class="literal">false</span>),</span><br><span class="line">      _b_head_parse(</span><br><span class="line">          <span class="literal">false</span>) &#123; <span class="comment">// boost库自带的uuid生成器,就是包含头文件有点麻烦,random_generator()返回的是一个生成器对象,然后再接一个括号是调用伪函数</span></span><br><span class="line">    boost::uuids::uuid a_uuid = boost::uuids::<span class="built_in">random_generator</span>()();</span><br><span class="line">    _uuid = boost::uuids::<span class="built_in">to_string</span>(a_uuid);</span><br><span class="line">    _recv_head_node = <span class="built_in">make_shared</span>&lt;RecvNode&gt;(HEAD_TOTAL_LEN);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CSession::~<span class="built_in">CSession</span>() &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;会话已被销毁&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">tcp::socket &amp;<span class="title">CSession::GetSocket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _socket;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">std::string &amp;<span class="title">CSession::GetUuid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _uuid;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::Start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 当会话连接后,作为服务器端,是要提供服务的,所以肯定首先需要接收对端发送来的信息,首先启动一个读监听</span></span><br><span class="line">    <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">    _socket.<span class="built_in">async_read_some</span>(boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                            std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                      std::plvoid * saceholders::_1,</span><br><span class="line">                                      std::placeholders::_2, <span class="built_in">SharedSelf</span>()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::Send</span><span class="params">(std::string &amp;msg, <span class="type">short</span> msgid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 上个锁,对队列进行重复访问导致的队列发送混乱导致的切包和粘包</span></span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(_send_lock)</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> size = _send_que.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (size &gt;= MAX_SENDQUE) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;队列ID : &quot;</span> &lt;&lt; _uuid</span><br><span class="line">                  &lt;&lt; <span class="string">&quot;当前消息发送队列已满,队列上限为 : &quot;</span> &lt;&lt; MAX_SENDQUE</span><br><span class="line">                  &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 入队,等待发送</span></span><br><span class="line">    _send_que.<span class="built_in">push</span>(<span class="built_in">make_shared</span>&lt;SendNode&gt;(msg.<span class="built_in">c_str</span>(), msg.<span class="built_in">size</span>(), msgid));</span><br><span class="line">    <span class="comment">// 如果当前的队列有其他的异步发送函数正在发送,那就不管了,自然会发出去的,直接return</span></span><br><span class="line">    <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果没有,那就再次启动一个发送,发送当前消息和后续要发送的消息</span></span><br><span class="line">    <span class="comment">// 值得注意的是我们自定义的回调读函数和写函数,两者参数数量不同,本质是因为内部实现所用的函数种类有差别</span></span><br><span class="line">    <span class="keyword">auto</span> &amp;msgnode = _send_que.<span class="built_in">front</span>();</span><br><span class="line">    boost::asio::<span class="built_in">async_write</span>(</span><br><span class="line">        _socket, boost::asio::<span class="built_in">buffer</span>(msgnode-&gt;_data, msgnode-&gt;_total_len),</span><br><span class="line">        std::<span class="built_in">bind</span>(&amp;CSession::HandleWrite, <span class="keyword">this</span>, std::placeholders::_1,</span><br><span class="line">                  <span class="built_in">SharedSelf</span>()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载Send函数,本质原理没区别,就是传入的数据变成了C风格的字符串</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::Send</span><span class="params">(<span class="type">char</span> *msg, <span class="type">short</span> max_length, <span class="type">short</span> msgid)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(_send_lock)</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> size = _send_que.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (size &gt; MAX_SENDQUE) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;队列ID : &quot;</span> &lt;&lt; _uuid</span><br><span class="line">                  &lt;&lt; <span class="string">&quot;当前消息发送队列已满,队列上限为 : &quot;</span> &lt;&lt; MAX_SENDQUE</span><br><span class="line">                  &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _send_que.<span class="built_in">push</span>(<span class="built_in">make_shared</span>&lt;SendNode&gt;(msg, max_length, msgid));</span><br><span class="line">    <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> &amp;msgnode = _send_que.<span class="built_in">front</span>();</span><br><span class="line">    boost::asio::<span class="built_in">async_write</span>(</span><br><span class="line">        _socket, boost::asio::<span class="built_in">buffer</span>(msgnode-&gt;_data, msgnode-&gt;_total_len),</span><br><span class="line">        std::<span class="built_in">bind</span>(&amp;CSession::HandleWrite, <span class="keyword">this</span>, std::placeholders::_1,</span><br><span class="line">                  <span class="built_in">SharedSelf</span>()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::Close</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    _socket.<span class="built_in">close</span>();</span><br><span class="line">    _b_close = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取this指针,为什么要用这个方法,详细解释要说到shared_ptr的内部实现,就不说了,反正是为了避免多次释放</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;CSession&gt; <span class="title">CSession::SharedSelf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">shared_from_this</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写回调相比于读回调要简单得多,所以先实现吧</span></span><br><span class="line"><span class="comment">// 写回调有两个参数,一个是error,一个是this指针</span></span><br><span class="line"><span class="comment">// 第一个是asio库所规定的,后一个是为了做一个伪闭包,增加this引用,防止重复释放导致内存泄露</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::HandleWrite</span><span class="params">(<span class="type">const</span> boost::system::error_code &amp;error,</span></span></span><br><span class="line"><span class="params"><span class="function">                           std::shared_ptr&lt;CSession&gt; shared_self)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!error) &#123;</span><br><span class="line">            _send_que.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="keyword">if</span> (!_send_que.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">                <span class="keyword">auto</span> &amp;msgnode = _send_que.<span class="built_in">front</span>();</span><br><span class="line">                boost::asio::<span class="built_in">async_write</span>(</span><br><span class="line">                    _socket,</span><br><span class="line">                    boost::asio::<span class="built_in">buffer</span>(msgnode-&gt;_data, msgnode-&gt;_total_len),</span><br><span class="line">                    std::<span class="built_in">bind</span>(&amp;CSession::HandleWrite, <span class="keyword">this</span>,</span><br><span class="line">                              std::placeholders::_1, shared_self));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;出了点错误,错误信息 : &quot;</span> &lt;&lt; error.<span class="built_in">message</span>()</span><br><span class="line">                      &lt;&lt; std::endl;</span><br><span class="line">            <span class="built_in">Close</span>();</span><br><span class="line">            _server-&gt;<span class="built_in">ClearSession</span>(_uuid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (std::exception &amp;e) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;出了点错误,错误信息 : &quot;</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是这个服务里里面算是最难的一个函数了,因为用到的函数类型和写函数不一样,所以步骤要麻烦点</span></span><br><span class="line"><span class="comment">// 用了分次读取的策略,为了数据能被高效的处理</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CSession::HandleRead</span><span class="params">(<span class="type">const</span> boost::system::error_code &amp;error,</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="type">size_t</span> bytes_transferred,</span></span></span><br><span class="line"><span class="params"><span class="function">                          std::shared_ptr&lt;CSession&gt; shared_self)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!error) &#123;</span><br><span class="line">            <span class="comment">// 用于计数已经接收了多少数据,便于控制偏移</span></span><br><span class="line">            <span class="type">int</span> copy_len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (bytes_transferred &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!_b_head_parse) &#123;</span><br><span class="line">                    <span class="comment">// 接收头数据,要是数据不够,继续接收</span></span><br><span class="line">                    <span class="keyword">if</span> (_recv_head_node-&gt;_cur_len + bytes_transferred &lt;</span><br><span class="line">                        HEAD_TOTAL_LEN) &#123;</span><br><span class="line">                        <span class="comment">// 先存一部分</span></span><br><span class="line">                        <span class="built_in">memcpy</span>(_recv_head_node-&gt;_data +</span><br><span class="line">                                   _recv_head_node-&gt;_cur_len,</span><br><span class="line">                               _data + copy_len, bytes_transferred);</span><br><span class="line">                        _recv_head_node-&gt;_cur_len += bytes_transferred;</span><br><span class="line">                        <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                        _socket.<span class="built_in">async_read_some</span>(</span><br><span class="line">                            boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                            std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                      std::placeholders::_1,</span><br><span class="line">                                      std::placeholders::_2, shared_self));</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 要是接收到的数据长度大于头数据长度,那就看看还有多少没接收</span></span><br><span class="line">                    <span class="type">int</span> head_remain =</span><br><span class="line">                        HEAD_TOTAL_LEN - _recv_head_node-&gt;_cur_len;</span><br><span class="line">                    <span class="built_in">memcpy</span>(_recv_head_node-&gt;_data + _recv_head_node-&gt;_cur_len,</span><br><span class="line">                           _data + copy_len, head_remain);</span><br><span class="line">                    copy_len += head_remain;</span><br><span class="line">                    bytes_transferred -= head_remain;</span><br><span class="line">                    <span class="comment">// 其实这行代码没啥必要了,但是还是写上吧hhh</span></span><br><span class="line">                    _recv_head_node-&gt;_cur_len += head_remain;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 解析消息长度和消息ID</span></span><br><span class="line">                    <span class="type">unsigned</span> <span class="type">short</span> msg_id = <span class="number">0</span>;</span><br><span class="line">                    <span class="built_in">memcpy</span>(&amp;msg_id, _recv_head_node-&gt;_data, HEAD_ID_LEN);</span><br><span class="line">                    <span class="comment">// 网络字节序转为本地字节序</span></span><br><span class="line">                    msg_id =</span><br><span class="line">                        boost::asio::detail::socket_ops::<span class="built_in">network_to_host_short</span>(</span><br><span class="line">                            msg_id);</span><br><span class="line">                    std::cout &lt;&lt; <span class="string">&quot;接收到的ID为 : &quot;</span> &lt;&lt; msg_id &lt;&lt; std::endl;</span><br><span class="line">                    <span class="keyword">if</span> (msg_id &gt; MAX_LENGTH) &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;ID不合法 ,当前ID为 : &quot;</span> &lt;&lt; msg_id</span><br><span class="line">                                  &lt;&lt; std::endl;</span><br><span class="line">                        _server-&gt;<span class="built_in">ClearSession</span>(_uuid);</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 同上</span></span><br><span class="line">                    <span class="type">short</span> msg_len = <span class="number">0</span>;</span><br><span class="line">                    <span class="built_in">memcpy</span>(&amp;msg_len, _recv_head_node-&gt;_data + HEAD_ID_LEN,</span><br><span class="line">                           HEAD_DATA_LEN);</span><br><span class="line">                    msg_len =</span><br><span class="line">                        boost::asio::detail::socket_ops::<span class="built_in">network_to_host_short</span>(</span><br><span class="line">                            msg_len);</span><br><span class="line">                    std::cout &lt;&lt; <span class="string">&quot;接收到的数据长度为 : &quot;</span> &lt;&lt; msg_len</span><br><span class="line">                              &lt;&lt; std::endl;</span><br><span class="line">                    <span class="keyword">if</span> (msg_len &gt; MAX_LENGTH) &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;数据长度不合法 ,当前长度为 : &quot;</span> &lt;&lt; msg_len</span><br><span class="line">                                  &lt;&lt; std::endl;</span><br><span class="line">                        _server-&gt;<span class="built_in">ClearSession</span>(_uuid);</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 开始准备接收数据</span></span><br><span class="line">                    _recv_msg_node = <span class="built_in">make_shared</span>&lt;RecvNode&gt;(msg_len, msg_id);</span><br><span class="line">                    <span class="comment">// 如果不够的的话,先接收一部分,然后结束这个回调,再调用一个回调</span></span><br><span class="line">                    <span class="keyword">if</span> (bytes_transferred &lt; msg_len) &#123;</span><br><span class="line">                        <span class="built_in">memcpy</span>(_recv_msg_node-&gt;_data + _recv_msg_node-&gt;_cur_len,</span><br><span class="line">                               _data + copy_len, bytes_transferred);</span><br><span class="line">                        _recv_head_node-&gt;_cur_len += bytes_transferred;</span><br><span class="line">                        <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                        _socket.<span class="built_in">async_read_some</span>(</span><br><span class="line">                            boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                            std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                      std::placeholders::_1,</span><br><span class="line">                                      std::placeholders::_2, shared_self));</span><br><span class="line">                        <span class="comment">// 不进头解析分支</span></span><br><span class="line">                        _b_head_parse = <span class="literal">true</span>;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 要是数据够的话,直接接受完</span></span><br><span class="line">                    <span class="built_in">memcpy</span>(_recv_msg_node-&gt;_data + _recv_msg_node-&gt;_cur_len +</span><br><span class="line">                               copy_len,</span><br><span class="line">                           _data, msg_len);</span><br><span class="line">                    _recv_msg_node-&gt;_cur_len += msg_len;</span><br><span class="line">                    copy_len += msg_len;</span><br><span class="line">                    bytes_transferred -= msg_len;</span><br><span class="line">                    _recv_msg_node-&gt;_data[_recv_msg_node-&gt;_total_len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">                    std::cout &lt;&lt; <span class="string">&quot;接收到的数据为 : &quot;</span> &lt;&lt; _recv_msg_node-&gt;_data</span><br><span class="line">                              &lt;&lt; std::endl;</span><br><span class="line">                    <span class="comment">// 将收到的数据传入事件队列</span></span><br><span class="line">                    LogicSystem::<span class="built_in">GetInstance</span>()-&gt;<span class="built_in">PostMsgToQue</span>(</span><br><span class="line">                        <span class="built_in">make_shared</span>&lt;LogicNode&gt;(<span class="built_in">shared_from_this</span>(),</span><br><span class="line">                                               _recv_msg_node));</span><br><span class="line">                    <span class="comment">// 继续读下一份数据</span></span><br><span class="line">                    _b_head_parse = <span class="literal">false</span>;</span><br><span class="line">                    _recv_head_node-&gt;<span class="built_in">Clear</span>();</span><br><span class="line">                    <span class="comment">// 要是bytes_transferred不够了,那就结束这个回调,再次接收数据,进行处理</span></span><br><span class="line">                    <span class="keyword">if</span> (bytes_transferred &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                        _socket.<span class="built_in">async_read_some</span>(</span><br><span class="line">                            boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                            std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                      std::placeholders::_1,</span><br><span class="line">                                      std::placeholders::_2, shared_self));</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 要是_b_head_parse == true</span></span><br><span class="line">                <span class="comment">// 那就表明头已经接收完毕,那就接收上次没有接受完的数据</span></span><br><span class="line">                <span class="type">short</span> remain_msg =</span><br><span class="line">                    _recv_msg_node-&gt;_total_len - _recv_msg_node-&gt;_cur_len;</span><br><span class="line">                _recv_msg_node-&gt;_cur_len += bytes_transferred;</span><br><span class="line">                <span class="comment">// 不够就先接收,然后结束这个回调,调新的回调</span></span><br><span class="line">                <span class="comment">// 其实和上面一样,要是bytes_transferred用完了就重开一个回调</span></span><br><span class="line">                <span class="keyword">if</span> (remain_msg &lt; bytes_transferred) &#123;</span><br><span class="line">                    <span class="built_in">memcpy</span>(_recv_msg_node-&gt;_data + _recv_msg_node-&gt;_cur_len,</span><br><span class="line">                           _data + copy_len, bytes_transferred);</span><br><span class="line">                    <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                    _socket.<span class="built_in">async_read_some</span>(</span><br><span class="line">                        boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                        std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                  std::placeholders::_1, std::placeholders::_2,</span><br><span class="line">                                  shared_self));</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 要是没用完,那就一次接受完</span></span><br><span class="line">                <span class="built_in">memcpy</span>(_recv_msg_node-&gt;_data + _recv_msg_node-&gt;_cur_len,</span><br><span class="line">                       _data + copy_len, remain_msg);</span><br><span class="line">                bytes_transferred -= remain_msg;</span><br><span class="line">                _recv_msg_node-&gt;_cur_len += remain_msg;</span><br><span class="line">                <span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                copy_len += remain_msg;</span><br><span class="line">                _recv_msg_node-&gt;_data[_recv_msg_node-&gt;_total_len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">                std::cout &lt;&lt; <span class="string">&quot;接收到的数据为 : &quot;</span> &lt;&lt; _recv_msg_node-&gt;_data</span><br><span class="line">                          &lt;&lt; std::endl;</span><br><span class="line">                <span class="comment">// 投递进入逻辑队列</span></span><br><span class="line">                LogicSystem::<span class="built_in">GetInstance</span>()-&gt;<span class="built_in">PostMsgToQue</span>(</span><br><span class="line">                    <span class="built_in">make_shared</span>&lt;LogicNode&gt;(<span class="built_in">shared_from_this</span>(), _recv_msg_node));</span><br><span class="line">                <span class="comment">// 继续下一轮</span></span><br><span class="line">                _b_head_parse = <span class="literal">false</span>;</span><br><span class="line">                _recv_head_node-&gt;<span class="built_in">Clear</span>();</span><br><span class="line">                <span class="keyword">if</span> (bytes_transferred &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                    ::<span class="built_in">memset</span>(_data, <span class="number">0</span>, MAX_LENGTH);</span><br><span class="line">                    _socket.<span class="built_in">async_read_some</span>(</span><br><span class="line">                        boost::asio::<span class="built_in">buffer</span>(_data, MAX_LENGTH),</span><br><span class="line">                        std::<span class="built_in">bind</span>(&amp;CSession::HandleRead, <span class="keyword">this</span>,</span><br><span class="line">                                  std::placeholders::_1, std::placeholders::_2,</span><br><span class="line">                                  shared_self));</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;出了一点错误,错误信息 : &quot;</span> &lt;&lt; error.<span class="built_in">message</span>()</span><br><span class="line">                      &lt;&lt; std::endl;</span><br><span class="line">            <span class="built_in">Close</span>();</span><br><span class="line">            _server-&gt;<span class="built_in">ClearSession</span>(_uuid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (std::exception &amp;e) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;出了一点错误,错误信息 : &quot;</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>CSession类是这个项目里面最重要的类,所有要理解起来还是有点难度,下一期实现CServer类,CServer类其实就是个连接接收器和会话管理器,也是一个很重要的类.</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/Boost/" class="tag">#Boost</a>
+      
+      <a href="/tags/Asio/" class="tag">#Asio</a>
+      
+      <a href="/tags/jsoncpp/" class="tag">#jsoncpp</a>
+      
+      <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="tag">#服务器</a>
+      
+      <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="tag">#网络编程</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/jotting/web-collection-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">实用网站分享</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
