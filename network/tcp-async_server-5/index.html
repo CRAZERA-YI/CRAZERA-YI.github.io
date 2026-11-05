@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>如何用Boost.Asio库写一个自己的服务TCP异步服务(五) - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="Singleton功能实现类功能Singleton类如其名,是一个单例模式类,实际是作为后续单例模式的类的父类所存在的.至于什么是单例模式,简单如下所示 单例模式简介摘自维基百科在面向对象编程中，单例模式（英语：singleton pattern），是一种常用的创建型软件设计模式。在应用这个模式时，单例对象的类必须保证只有一个实例存在。许多时候整个系统只需要拥有一个的全局对象，这样有利于我们协调系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何用Boost.Asio库写一个自己的服务TCP异步服务(五)">
+<meta property="og:url" content="https://crazera-yi.github.io/network/tcp-async_server-5/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="Singleton功能实现类功能Singleton类如其名,是一个单例模式类,实际是作为后续单例模式的类的父类所存在的.至于什么是单例模式,简单如下所示 单例模式简介摘自维基百科在面向对象编程中，单例模式（英语：singleton pattern），是一种常用的创建型软件设计模式。在应用这个模式时，单例对象的类必须保证只有一个实例存在。许多时候整个系统只需要拥有一个的全局对象，这样有利于我们协调系">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-05T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-05T09:20:37.407Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="Asio">
+<meta property="article:tag" content="Boost">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="jsoncpp">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/network-programming/">网络编程</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-05T18:00:00+08:00">
+      November 5, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">如何用Boost.Asio库写一个自己的服务TCP异步服务(五)</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="Singleton功能实现"><a href="#Singleton功能实现" class="headerlink" title="Singleton功能实现"></a>Singleton功能实现</h1><h2 id="类功能"><a href="#类功能" class="headerlink" title="类功能"></a>类功能</h2><p>Singleton类如其名,是一个单例模式类,实际是作为后续单例模式的类的父类所存在的.至于什么是单例模式,简单如下所示</p>
+<h3 id="单例模式简介"><a href="#单例模式简介" class="headerlink" title="单例模式简介"></a>单例模式简介</h3><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F">摘自维基百科</a><br>在面向对象编程中，单例模式（英语：singleton pattern），是一种常用的创建型软件设计模式。在应用这个模式时，单例对象的类必须保证只有一个实例存在。许多时候整个系统只需要拥有一个的全局对象，这样有利于我们协调系统整体的行为。比如在某个服务器程序中，该服务器的配置信息存放在一个文件中，这些配置数据由一个单例对象统一读取，然后服务进程中的其他对象再通过这个单例对象获取这些配置信息。这种方式简化了在复杂环境下的配置管理。</p>
+<h2 id="Singleton-h"><a href="#Singleton-h" class="headerlink" title="Singleton.h"></a>Singleton.h</h2><p>其实存粹实现一个单例模式是很简单的,但是要使用好这玩意还是有点门槛的,后续的logicsytem就是以这个作为父类进行实现的</p>
+<figure class="highlight plaintext"><figcaption><span>__SINGLETON_H</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#define __SINGLETON_H</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;memory&gt;</span><br><span class="line">#include &lt;mutex&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line">template &lt;typename T&gt; class Singleton &#123;</span><br><span class="line">  protected:</span><br><span class="line">    // 拷贝构造全部删除,防止外部获取第二个单例</span><br><span class="line">    // 至于为什么单例模式不把构造函数设为私有,这是因为,这个类需要作为父类</span><br><span class="line">    // 要是设为私有了,子类没法继承了</span><br><span class="line">    Singleton() = default;</span><br><span class="line">    Singleton(const Singleton&lt;T&gt; &amp;) = delete;</span><br><span class="line">    Singleton &amp;operator=(const Singleton&lt;T&gt; &amp;st) = delete;</span><br><span class="line">    // 唯一单例</span><br><span class="line">    static std::shared_ptr&lt;T&gt; _instance;</span><br><span class="line"></span><br><span class="line">  public:</span><br><span class="line">    static std::shared_ptr&lt;T&gt; GetInstance() &#123;</span><br><span class="line">        static std::once_flag s_flag;</span><br><span class="line">        // 这个lambda表达式只执行一次,而且保证了线程安全</span><br><span class="line">        std::call_once(s_flag, [&amp;]() &#123; _instance = make_shared&lt;T&gt;(new T); &#125;);</span><br><span class="line">        return _instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void PrintAddress() &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;当前单例的地址为 : &quot; &lt;&lt; _instance.get() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~Singleton() &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;当前单例已被销毁&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">// 类内static变量只能在类外定义</span><br><span class="line">template &lt;typename T&gt; std::shared_ptr&lt;T&gt; Singleton&lt;T&gt;::_instance = nullptr;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单例模式的实现在一定程度上保证了线程安全与资源利用,下一期将要实现LogicSytem类,实现这个项目里面的逻辑处理部分</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/Boost/" class="tag">#Boost</a>
+      
+      <a href="/tags/Asio/" class="tag">#Asio</a>
+      
+      <a href="/tags/jsoncpp/" class="tag">#jsoncpp</a>
+      
+      <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="tag">#服务器</a>
+      
+      <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="tag">#网络编程</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/network/tcp-async_server-4/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">如何用Boost.Asio库写一个自己的服务TCP异步服务器(四)</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
