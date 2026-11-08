@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(一)：条款1 理解模板类型推导 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="总引言其实对于这本书,我觉得很罗嗦,因为来说,看这本书的应该是有点C++基础的人,但是作者写了比较多的没必要的话,所以我这里就只把我觉得每一个条款里面比较重要的点,讲出来 条款1：理解模板类型推导一句话：模板类型推导不是“把实参类型直接当成 T”，而是拿实参类型去匹配 ParamType 的形状。形状不同，结果差很多。 1. 编译器到底在推什么把函数模板看成这样： 1234template&lt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(一)：条款1 理解模板类型推导">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-1-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="总引言其实对于这本书,我觉得很罗嗦,因为来说,看这本书的应该是有点C++基础的人,但是作者写了比较多的没必要的话,所以我这里就只把我觉得每一个条款里面比较重要的点,讲出来 条款1：理解模板类型推导一句话：模板类型推导不是“把实参类型直接当成 T”，而是拿实参类型去匹配 ParamType 的形状。形状不同，结果差很多。 1. 编译器到底在推什么把函数模板看成这样： 1234template&lt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-08T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-08T12:54:58.280Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-08T18:00:00+08:00">
+      November 8, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(一)：条款1 理解模板类型推导</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="总引言"><a href="#总引言" class="headerlink" title="总引言"></a>总引言</h1><p>其实对于这本书,我觉得很罗嗦,因为来说,看这本书的应该是有点C++基础的人,但是作者写了比较多的没必要的话,所以我这里就只把我觉得每一个条款里面比较重要的点,讲出来</p>
+<h1 id="条款1：理解模板类型推导"><a href="#条款1：理解模板类型推导" class="headerlink" title="条款1：理解模板类型推导"></a>条款1：理解模板类型推导</h1><p>一句话：模板类型推导不是“把实参类型直接当成 <code>T</code>”，而是拿实参类型去匹配 <code>ParamType</code> 的形状。形状不同，结果差很多。</p>
+<h2 id="1-编译器到底在推什么"><a href="#1-编译器到底在推什么" class="headerlink" title="1. 编译器到底在推什么"></a>1. 编译器到底在推什么</h2><p>把函数模板看成这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(ParamType param)</span></span>;   <span class="comment">// 声明</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(expr);                   <span class="comment">// 调用：编译器要同时推出 T 和 ParamType</span></span><br></pre></td></tr></table></figure>
+
+<p>编译期，编译器用 <code>expr</code> 推出两个类型：一个是 <code>T</code>，一个是 <code>ParamType</code>。这两个类型经常不一样，因为 <code>ParamType</code> 往往带着 <code>const</code>、<code>&amp;</code>、<code>&amp;&amp;</code>、<code>*</code> 这些“装饰”。</p>
+<p>最经典的反例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>;    <span class="comment">// ParamType 是 const T&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">f</span>(x);                      <span class="comment">// T 推成 int，但 param 的类型是 const int&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>T</code> 不是 <code>const int&amp;</code>，<code>param</code> 才是。先记住这一点，后面的规则都是围绕它展开的。</p>
+<h2 id="2-三种情形"><a href="#2-三种情形" class="headerlink" title="2. 三种情形"></a>2. 三种情形</h2><p><code>ParamType</code> 的形态决定了用哪套规则，一共三种：</p>
+<ol>
+<li><code>ParamType</code> 是指针或引用，但不是万能引用；</li>
+<li><code>ParamType</code> 是万能引用（<code>T&amp;&amp;</code>）；</li>
+<li><code>ParamType</code> 既不是指针也不是引用（按值传递）。</li>
+</ol>
+<h3 id="情形1：指针或引用，但不是万能引用"><a href="#情形1：指针或引用，但不是万能引用" class="headerlink" title="情形1：指针或引用，但不是万能引用"></a>情形1：指针或引用，但不是万能引用</h3><p>规则只有两步：</p>
+<ol>
+<li>如果 <code>expr</code> 的类型是引用，先把引用部分丢掉；</li>
+<li>用剩下的类型去匹配 <code>ParamType</code>，确定 <code>T</code>。</li>
+</ol>
+<p>先看 <code>T&amp;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp; param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">27</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(x);    <span class="comment">// T = int,        param = int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(cx);   <span class="comment">// T = const int,  param = const int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(rx);   <span class="comment">// T = const int,  param = const int&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li><code>cx</code> 和 <code>rx</code> 的 <code>const</code> 会被保留，<code>T</code> 推成 <code>const int</code>，<code>param</code> 是 <code>const int&amp;</code>。所以把 <code>const</code> 对象传给 <code>T&amp;</code> 模板是安全的：调用方拿到的仍然是“不能改”的引用。</li>
+<li><code>rx</code> 虽然是引用，但推导时引用被忽略，<code>T</code> 不是 <code>const int&amp;</code>，而是 <code>const int</code>。</li>
+<li>对非万能的右值引用参数（比如 <code>void f(std::vector&lt;T&gt;&amp;&amp;)</code>），推导逻辑和左值引用一样，只是只能绑定右值。</li>
+<li>加入在左值引用里面传入右值,编译器会直接报错</li>
+</ul>
+<p>再看 <code>const T&amp;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(x);    <span class="comment">// T = int, param = const int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(cx);   <span class="comment">// T = int, param = const int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(rx);   <span class="comment">// T = int, param = const int&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>param</code> 本身已经是 reference-to-<code>const</code>，<code>const</code> 不需要再被推导进 <code>T</code>。这是很多人第一次会猜错的地方。</p>
+<p>指针 <code>T*</code> 同理：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T* param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">27</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* px = &amp;x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(&amp;x);   <span class="comment">// T = int,       param = int*</span></span><br><span class="line"><span class="built_in">f</span>(px);   <span class="comment">// T = const int, param = const int*</span></span><br></pre></td></tr></table></figure>
+
+<p>指针指向对象的 <code>const</code> 会保留；指针自身的顶层 <code>const</code> 在按值传递时会被忽略，见情形3。</p>
+<h3 id="情形2：万能引用"><a href="#情形2：万能引用" class="headerlink" title="情形2：万能引用"></a>情形2：万能引用</h3><p>顾名思义,万能引用既可以传入左值也可以传入右值<br><code>T&amp;&amp;</code> 只有在 <code>T</code> 需要推导时才是万能引用。像 <code>void f(Widget&amp;&amp;)</code>、<code>std::vector&lt;T&gt;&amp;&amp;</code> 这种都不是，它们只是普通的右值引用。</p>
+<p>万能引用的规则：</p>
+<ul>
+<li>实参是 <strong>lvalue(左值)</strong>：<code>T</code> 和 <code>ParamType</code> 都推导为左值引用。这是模板推导里唯一会把 <code>T</code> 推成引用的情形，也是“声明像右值引用、推导结果却是左值引用”的情形。</li>
+<li>实参是 <strong>rvalue(右值)</strong>：按情形1的普通规则处理。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">27</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(x);    <span class="comment">// x 是 lvalue:  T = int&amp;,        param = int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(cx);   <span class="comment">// cx 是 lvalue: T = const int&amp;,  param = const int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(rx);   <span class="comment">// rx 是 lvalue: T = const int&amp;,  param = const int&amp;</span></span><br><span class="line"><span class="built_in">f</span>(<span class="number">27</span>);   <span class="comment">// 27 是 rvalue: T = int,         param = int&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>背后的机制是引用折叠：<code>T</code> 推成 <code>int&amp;</code> 后，<code>T&amp;&amp;</code> 就变成 <code>int&amp; &amp;&amp;</code>，折叠成 <code>int&amp;</code>。完整推导在条款24，这里只要记住“左值特殊、右值普通”。</p>
+<p>关键点：只有万能引用会区分左值和右值。普通的 <code>T&amp;</code> 不区分，而且不能绑定右值；<code>const T&amp;</code> 虽然也不区分，但可以绑定右值。</p>
+<h3 id="情形3：按值传递"><a href="#情形3：按值传递" class="headerlink" title="情形3：按值传递"></a>情形3：按值传递</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;   <span class="comment">// param 是按值传递</span></span><br></pre></td></tr></table></figure>
+
+<p>规则：</p>
+<ol>
+<li>和之前一样，<code>expr</code> 是引用就忽略引用；</li>
+<li>忽略引用后，如果还带 <code>const</code> 或 <code>volatile</code>，也一并忽略。</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">27</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(x);    <span class="comment">// T = int, param = int</span></span><br><span class="line"><span class="built_in">f</span>(cx);   <span class="comment">// T = int, param = int</span></span><br><span class="line"><span class="built_in">f</span>(rx);   <span class="comment">// T = int, param = int</span></span><br></pre></td></tr></table></figure>
+
+<p>为什么可以忽略 <code>const</code>：<code>param</code> 是一个独立的副本，<code>cx</code> 不能改，不代表副本不能改。</p>
+<p>但只忽略顶层 <code>const/volatile</code>。如果是指向 <code>const</code> 的指针，指针指向内容的 <code>const</code> 会保留：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* <span class="type">const</span> ptr = <span class="string">&quot;Fun with pointers&quot;</span>;  <span class="comment">// const 指针，指向 const char</span></span><br><span class="line"><span class="built_in">f</span>(ptr);   <span class="comment">// T = const char*, param = const char*</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是：指针本身的 <code>const</code> 被忽略，<code>const char</code> 里的 <code>const</code> 保留。</p>
+<h2 id="3-数组实参"><a href="#3-数组实参" class="headerlink" title="3. 数组实参"></a>3. 数组实参</h2><p>数组在很多场合会退化成指向首元素的指针，但推导结果要看参数形式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span> name[] = <span class="string">&quot;J. P. Briggs&quot;</span>;  <span class="comment">// 类型是 const char[13]</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* ptrToName = name;        <span class="comment">// 数组退化成指针</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;</span><br><span class="line"><span class="built_in">f</span>(name);   <span class="comment">// T = const char*（按值：退化成指针）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp; param)</span></span>;</span><br><span class="line"><span class="built_in">f</span>(name);   <span class="comment">// T = const char[13]，param = const char (&amp;)[13]</span></span><br></pre></td></tr></table></figure>
+
+<p>按引用传数组时，数组类型（包括长度）被完整保留。利用这一点可以在编译期求数组长度：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, std::<span class="type">size_t</span> N&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">constexpr</span> std::<span class="type">size_t</span> <span class="title">arraySize</span><span class="params">(T (&amp;)[N])</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> N;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> keyVals[] = &#123; <span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">35</span> &#125;;   <span class="comment">// 7 个元素</span></span><br><span class="line"><span class="type">int</span> mappedVals[<span class="built_in">arraySize</span>(keyVals)];            <span class="comment">// 也是 7 个</span></span><br><span class="line"></span><br><span class="line">std::array&lt;<span class="type">int</span>, arraySize(keyVals)&gt; mappedVals2;</span><br></pre></td></tr></table></figure>
+
+<p>（<code>constexpr</code> 见条款15，<code>noexcept</code> 见条款14。）</p>
+<h2 id="4-函数实参"><a href="#4-函数实参" class="headerlink" title="4. 函数实参"></a>4. 函数实参</h2><p>函数类型也会退化成函数指针，规则和数组一样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">someFunc</span><span class="params">(<span class="type">int</span>, <span class="type">double</span>)</span></span>;   <span class="comment">// 类型是 void(int, double)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f1</span><span class="params">(T param)</span></span>;             <span class="comment">// 按值</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f2</span><span class="params">(T&amp; param)</span></span>;            <span class="comment">// 按引用</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">f1</span>(someFunc);   <span class="comment">// T = void(*)(int, double)，param 也是函数指针</span></span><br><span class="line"><span class="built_in">f2</span>(someFunc);   <span class="comment">// T = void(int, double)，param = void(&amp;)(int, double)</span></span><br></pre></td></tr></table></figure>
+
+<p>实际项目里这个区别很少造成问题，但既然知道了数组退化，函数退化也顺手记住。</p>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li>引用实参推导时按非引用处理，引用被忽略。</li>
+<li>万能引用参数对左值特殊：<code>T</code> 和 <code>param</code> 都成为左值引用。</li>
+<li>按值参数忽略实参的顶层 <code>const/volatile</code>。</li>
+<li>数组名和函数名在按值推导时退化成指针；用引用接收时保留原类型。</li>
+<li>推导结果由 <code>expr</code> 的类型和 <code>ParamType</code> 的形式共同决定。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-1-2/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款2 理解auto类型推导</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-1-4/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款4 学会查看推导类型</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

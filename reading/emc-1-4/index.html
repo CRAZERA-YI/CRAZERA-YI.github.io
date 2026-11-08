@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(一)：条款4 学会查看推导类型 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款4：学会查看推导类型这篇就提到了,之前几篇文章说到的查看类型的函数了,其实不是很好用,而且我感觉也没啥用.那些查类型的技巧,我觉得也没啥用,看个乐呵 1. 编辑时：IDEIDE 的代码编辑器通常会在鼠标悬停时显示变量、参数、函数的类型： 1234const int theAnswer &#x3D; 42;auto x &#x3D; theAnswer;    &#x2F;&#x2F; IDE 显示 intauto y &#x3D; &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(一)：条款4 学会查看推导类型">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-1-4/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款4：学会查看推导类型这篇就提到了,之前几篇文章说到的查看类型的函数了,其实不是很好用,而且我感觉也没啥用.那些查类型的技巧,我觉得也没啥用,看个乐呵 1. 编辑时：IDEIDE 的代码编辑器通常会在鼠标悬停时显示变量、参数、函数的类型： 1234const int theAnswer &#x3D; 42;auto x &#x3D; theAnswer;    &#x2F;&#x2F; IDE 显示 intauto y &#x3D; &amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-08T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-08T13:25:11.559Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-08T18:00:00+08:00">
+      November 8, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(一)：条款4 学会查看推导类型</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款4：学会查看推导类型"><a href="#条款4：学会查看推导类型" class="headerlink" title="条款4：学会查看推导类型"></a>条款4：学会查看推导类型</h1><p>这篇就提到了,之前几篇文章说到的查看类型的函数了,其实不是很好用,而且我感觉也没啥用.那些查类型的技巧,我觉得也没啥用,看个乐呵</p>
+<h2 id="1-编辑时：IDE"><a href="#1-编辑时：IDE" class="headerlink" title="1. 编辑时：IDE"></a>1. 编辑时：IDE</h2><p>IDE 的代码编辑器通常会在鼠标悬停时显示变量、参数、函数的类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> theAnswer = <span class="number">42</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> x = theAnswer;    <span class="comment">// IDE 显示 int</span></span><br><span class="line"><span class="keyword">auto</span> y = &amp;theAnswer;   <span class="comment">// IDE 显示 const int*</span></span><br></pre></td></tr></table></figure>
+
+<p>前提是代码基本处于可编译状态。IDE 能显示类型，是因为它内部跑着一个编译器（至少是编译器前端）；代码连解析都过不了，它也就推不出类型。</p>
+<p>简单类型像 <code>int</code>，IDE 的信息一般够用。但遇到复杂类型，IDE 可能显示出一堆实现细节，反而不如不看。</p>
+<h2 id="2-编译时：TD-技巧"><a href="#2-编译时：TD-技巧" class="headerlink" title="2. 编译时：TD 技巧"></a>2. 编译时：TD 技巧</h2><p>让编译器把类型带进错误信息里，是一个很有效的办法。先声明一个只声明、不定义的类模板：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TD</span>;   <span class="comment">// TD == &quot;Type Displayer&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后故意用它实例化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TD&lt;<span class="keyword">decltype</span>(x)&gt; xType;   <span class="comment">// 触发错误，错误信息里带出 x 的类型</span></span><br><span class="line">TD&lt;<span class="keyword">decltype</span>(y)&gt; yType;   <span class="comment">// 同上，带出 y 的类型</span></span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>TD</code> 没有定义，实例化必然报错，而错误信息会写出模板实参。GCC&#x2F;Clang 的错误大概是这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: aggregate &#x27;TD&lt;int&gt; xType&#x27; has incomplete type and cannot be defined</span><br><span class="line">error: aggregate &#x27;TD&lt;const int*&gt; yType&#x27; has incomplete type and cannot be defined</span><br></pre></td></tr></table></figure>
+
+<p>MSVC 的形式不同，但信息一样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: &#x27;xType&#x27; uses undefined class &#x27;TD&lt;int&gt;&#x27;</span><br><span class="line">error: &#x27;yType&#x27; uses undefined class &#x27;TD&lt;const int *&gt;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>变量名写成 <code>xType</code>、<code>yType</code> 这种形式，是为了在长长的错误信息里一眼定位。这个方法利用的是 <code>decltype</code>，所以它显示的是完整的类型，引用和 <code>const</code> 都不会被剥掉。</p>
+<h2 id="3-运行时：typeid"><a href="#3-运行时：typeid" class="headerlink" title="3. 运行时：typeid"></a>3. 运行时：typeid</h2><p>运行时打印类型，最直接的是 <code>typeid</code>,要使用这玩意得包含这个头文件<code>#include &lt;typeinfo&gt;</code>,其实这玩意不准啊,但是他是标准库的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="keyword">typeid</span>(x).<span class="built_in">name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">std::cout &lt;&lt; <span class="keyword">typeid</span>(y).<span class="built_in">name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>typeid</code> 返回 <code>std::type_info</code> 对象，<code>name()</code> 给出一个 C 风格字符串。标准不保证这个字符串“好看”，但各家实现通常尽量帮忙：</p>
+<ul>
+<li>GCC&#x2F;Clang 输出 mangled 名：<code>i</code> 表示 <code>int</code>，<code>PKi</code> 表示 pointer to <code>const int</code>。可以用 <code>c++filt</code> 解码。</li>
+<li>MSVC 输出比较直白：<code>int</code>、<code>int const *</code>。</li>
+</ul>
+<p>对简单类型，这没问题。但复杂场景下，<code>typeid</code> 会骗人。看这个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>;          <span class="comment">// 被调用的模板</span></span><br><span class="line"></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; <span class="comment">// 工厂函数</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>();     <span class="comment">// vw 用工厂返回值初始化</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">  <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]);                     <span class="comment">// 调用 f</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>f</code> 里打印类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;T =     &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).<span class="built_in">name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;param = &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(param).<span class="built_in">name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GCC&#x2F;Clang 输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T =     PK6Widget</span><br><span class="line">param = PK6Widget</span><br></pre></td></tr></table></figure>
+
+<p>MSVC 输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T =     class Widget const *</span><br><span class="line">param = class Widget const *</span><br></pre></td></tr></table></figure>
+
+<p>看起来 <code>T</code> 和 <code>param</code> 是同一个类型。但 <code>param</code> 的声明是 <code>const T&amp;</code>，<code>T</code> 是 <code>const Widget*</code>，所以 <code>param</code> 的真实类型应该是 <code>const Widget* const&amp;</code>，和 <code>T</code> 不一样。</p>
+<p>为什么错？因为 <code>std::type_info::name</code> 的标准要求把类型当成“按值传给模板”来处理。按条款1 的规则，引用会被剥掉；剥掉引用后如果还有顶层 <code>const</code>，也会被剥掉。于是 <code>param</code> 的 <code>const Widget* const&amp;</code> 先变成 <code>const Widget* const</code>，再变成 <code>const Widget*</code>，最后和 <code>T</code> 显示成一样。</p>
+<p>所以：<code>typeid</code> 可以用来粗略看类型，但不要拿它验证引用和顶层 <code>const</code>。</p>
+<h2 id="4-运行时：Boost-TypeIndex"><a href="#4-运行时：Boost-TypeIndex" class="headerlink" title="4. 运行时：Boost.TypeIndex"></a>4. 运行时：Boost.TypeIndex</h2><p>如果要准确、可读地打印完整类型，可以用 Boost.TypeIndex：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/type_index.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">using</span> boost::typeindex::type_id_with_cvr;</span><br><span class="line"></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;T =     &quot;</span></span><br><span class="line">            &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;T&gt;().<span class="built_in">pretty_name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;param = &quot;</span></span><br><span class="line">            &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;<span class="keyword">decltype</span>(param)&gt;().<span class="built_in">pretty_name</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>type_id_with_cvr</code> 里的 <code>cvr</code> 就是 <code>const</code>、<code>volatile</code>、reference：它不会剥掉这些限定符。<code>pretty_name()</code> 返回人类可读的字符串。</p>
+<p>还是上面那个 <code>f(&amp;vw[0])</code> 的例子，GCC&#x2F;Clang 下输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T =     Widget const*</span><br><span class="line">param = Widget const* const&amp;</span><br></pre></td></tr></table></figure>
+
+<p>MSVC 下形式略有不同，内容一致：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T =     class Widget const *</span><br><span class="line">param = class Widget const * const &amp;</span><br></pre></td></tr></table></figure>
+
+<p>这才是 <code>param</code> 的真实类型。Boost 不是标准库的一部分，但它是跨平台、开源、许可证友好的第三方库，实际项目里用起来没什么负担。</p>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li>推导出的类型可以用 IDE、编译器错误信息、Boost.TypeIndex 等工具查看。</li>
+<li>有些工具的结果可能既不好读也不准确，所以理解 C++ 的类型推导规则仍然是必要的。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-1-1/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款1 理解模板类型推导</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/network/tcp-async_server-5/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">如何用Boost.Asio库写一个自己的服务TCP异步服务(五)</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

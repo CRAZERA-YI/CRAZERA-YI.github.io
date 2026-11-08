@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(一)：条款2 理解auto类型推导 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款2：理解 auto 类型推导一句话：auto 推导基本上就是模板类型推导，只有一个例外——花括号初始化。 1. auto 和模板的对应关系把 auto 当成模板里的 T，把变量声明中的类型说明符当成 ParamType，两者就一一对应了： 123auto x &#x3D; 27;          &#x2F;&#x2F; 类型说明符就是 autoconst auto cx &#x3D; x;    &#x2F;&#x2F; 类型说明符是 const">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(一)：条款2 理解auto类型推导">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-1-2/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款2：理解 auto 类型推导一句话：auto 推导基本上就是模板类型推导，只有一个例外——花括号初始化。 1. auto 和模板的对应关系把 auto 当成模板里的 T，把变量声明中的类型说明符当成 ParamType，两者就一一对应了： 123auto x &#x3D; 27;          &#x2F;&#x2F; 类型说明符就是 autoconst auto cx &#x3D; x;    &#x2F;&#x2F; 类型说明符是 const">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-08T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-08T13:00:18.982Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-08T18:00:00+08:00">
+      November 8, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(一)：条款2 理解auto类型推导</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款2：理解-auto-类型推导"><a href="#条款2：理解-auto-类型推导" class="headerlink" title="条款2：理解 auto 类型推导"></a>条款2：理解 auto 类型推导</h1><p>一句话：<code>auto</code> 推导基本上就是模板类型推导，只有一个例外——花括号初始化。</p>
+<h2 id="1-auto-和模板的对应关系"><a href="#1-auto-和模板的对应关系" class="headerlink" title="1. auto 和模板的对应关系"></a>1. auto 和模板的对应关系</h2><p>把 <code>auto</code> 当成模板里的 <code>T</code>，把变量声明中的类型说明符当成 <code>ParamType</code>，两者就一一对应了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">27</span>;          <span class="comment">// 类型说明符就是 auto</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> cx = x;    <span class="comment">// 类型说明符是 const auto</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; rx = x;   <span class="comment">// 类型说明符是 const auto&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>编译器在推导时，相当于为每个声明编了一个模板并调用它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">func_for_x</span><span class="params">(T param)</span></span>;          <span class="comment">// 对应 auto x = 27;</span></span><br><span class="line"><span class="built_in">func_for_x</span>(<span class="number">27</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">func_for_cx</span><span class="params">(<span class="type">const</span> T param)</span></span>;   <span class="comment">// 对应 const auto cx = x;</span></span><br><span class="line"><span class="built_in">func_for_cx</span>(x);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">func_for_rx</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>;  <span class="comment">// 对应 const auto&amp; rx = x;</span></span><br><span class="line"><span class="built_in">func_for_rx</span>(x);</span><br></pre></td></tr></table></figure>
+
+<p>所以条款1 的三种情形可以原样搬过来：</p>
+<ul>
+<li>情形1：类型说明符是指针或引用，但不是万能引用；</li>
+<li>情形2：类型说明符是万能引用；</li>
+<li>情形3：类型说明符既不是指针也不是引用。</li>
+</ul>
+<h2 id="2-三种情形照搬"><a href="#2-三种情形照搬" class="headerlink" title="2. 三种情形照搬"></a>2. 三种情形照搬</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">27</span>;          <span class="comment">// 情形3：int</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> cx = x;    <span class="comment">// 情形3：const int</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; rx = x;   <span class="comment">// 情形1：const int&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; uref1 = x;     <span class="comment">// 情形2：x 是 lvalue，uref1 是 int&amp;</span></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; uref2 = cx;    <span class="comment">// 情形2：cx 是 const lvalue，uref2 是 const int&amp;</span></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; uref3 = <span class="number">27</span>;    <span class="comment">// 情形2：27 是 rvalue，uref3 是 int&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>auto&amp;&amp;</code> 和模板里的 <code>T&amp;&amp;</code> 一样，也是万能引用：左值推成左值引用，右值推成右值引用。</p>
+<p>数组和函数的退化规则也一样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span> name[] = <span class="string">&quot;R. N. Briggs&quot;</span>;   <span class="comment">// const char[13]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> arr1 = name;    <span class="comment">// arr1 是 const char*</span></span><br><span class="line"><span class="keyword">auto</span>&amp; arr2 = name;   <span class="comment">// arr2 是 const char (&amp;)[13]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">someFunc</span><span class="params">(<span class="type">int</span>, <span class="type">double</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> func1 = someFunc;   <span class="comment">// func1 是 void(*)(int, double)</span></span><br><span class="line"><span class="keyword">auto</span>&amp; func2 = someFunc;  <span class="comment">// func2 是 void(&amp;)(int, double)</span></span><br></pre></td></tr></table></figure>
+
+<p>到这里，<code>auto</code> 和模板推导就是同一枚硬币的两面。</p>
+<h2 id="3-唯一的例外：花括号"><a href="#3-唯一的例外：花括号" class="headerlink" title="3. 唯一的例外：花括号"></a>3. 唯一的例外：花括号</h2><p>C++11 支持统一初始化，于是声明一个初值为 27 的 <code>int</code> 有四种写法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x1 = <span class="number">27</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">x2</span><span class="params">(<span class="number">27</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> x3 = &#123; <span class="number">27</span> &#125;;</span><br><span class="line"><span class="type">int</span> x4&#123; <span class="number">27</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>把 <code>int</code> 换成 <code>auto</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x1 = <span class="number">27</span>;      <span class="comment">// int</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">x2</span><span class="params">(<span class="number">27</span>)</span></span>;       <span class="comment">// int</span></span><br><span class="line"><span class="keyword">auto</span> x3 = &#123; <span class="number">27</span> &#125;;  <span class="comment">// std::initializer_list&lt;int&gt;</span></span><br><span class="line"><span class="keyword">auto</span> x4&#123; <span class="number">27</span> &#125;;     <span class="comment">// 按 C++11/14 标准：std::initializer_list&lt;int&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>前两个仍然是 <code>int</code>，后两个按 C++11&#x2F;14 标准会变成 <code>std::initializer_list&lt;int&gt;</code>，里面只有一个元素 27。这就是 <code>auto</code> 推导和模板推导的唯一实质区别：</p>
+<blockquote>
+<p>当 <code>auto</code> 声明的变量用花括号初始化时，推导出的类型是 <code>std::initializer_list&lt;T&gt;</code>；模板推导不会这样假设。</p>
+</blockquote>
+<p>如果花括号里的元素类型不一致，<code>T</code> 就推不出来，代码直接报错：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x5 = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3.0</span> &#125;;   <span class="comment">// 错误：无法为 initializer_list&lt;T&gt; 推出唯一的 T</span></span><br></pre></td></tr></table></figure>
+
+<p>这里其实发生了两层推导：先把 <code>x5</code> 推成 <code>std::initializer_list&lt;T&gt;</code>，再对 <code>T</code> 做模板推导。元素类型不一致，第二层就失败了。</p>
+<p>这也是为什么有些开发者只在必要时才给初始化器加花括号——什么时候算“必要时”，见条款7。</p>
+<p>模板没有这条特殊规则：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(&#123; <span class="number">11</span>, <span class="number">23</span>, <span class="number">9</span> &#125;);   <span class="comment">// 错误：T 推不出来</span></span><br></pre></td></tr></table></figure>
+
+<p>除非模板参数本身写成 <code>std::initializer_list&lt;T&gt;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::initializer_list&lt;T&gt; initList)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(&#123; <span class="number">11</span>, <span class="number">23</span>, <span class="number">9</span> &#125;);   <span class="comment">// OK：T = int，initList 是 std::initializer_list&lt;int&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>书中作者也提到，他找不到一个令人信服的理由解释“为什么 <code>auto</code> 要对花括号特殊对待”，但规则就是规则。我猜的话可能是因为花括号有特殊的初始化意义,对于某些数据类型花括号内的数据会作为容器内的内容物,这时候就是作为初始化列表被使用的.</p>
+<h2 id="4-C-14-的-auto-返回值和-lambda-参数"><a href="#4-C-14-的-auto-返回值和-lambda-参数" class="headerlink" title="4. C++14 的 auto 返回值和 lambda 参数"></a>4. C++14 的 auto 返回值和 lambda 参数</h2><p>C++14 允许用 <code>auto</code> 声明函数返回类型，也允许 lambda 参数用 <code>auto</code>。但这两处用的是<strong>模板推导</strong>，不是 <code>auto</code> 推导，所以不能直接返回或传入裸花括号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">createInitList</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;;   <span class="comment">// 错误：无法为 &#123;1, 2, 3&#125; 推出类型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> resetV = [&amp;v](<span class="type">const</span> <span class="keyword">auto</span>&amp; newValue) &#123; v = newValue; &#125;;  <span class="comment">// C++14</span></span><br><span class="line"><span class="built_in">resetV</span>(&#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;);   <span class="comment">// 错误：无法推出 newValue 的类型</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，只有“变量声明 + 花括号”这一种组合会得到 <code>std::initializer_list</code>。函数返回类型和 lambda 参数里的 <code>auto</code> 都按模板规则走，花括号推不出来就是推不出来。</p>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li><code>auto</code> 推导通常等同模板推导：<code>auto</code> 当 <code>T</code>，类型说明符当 <code>ParamType</code>。</li>
+<li>唯一例外：C++11&#x2F;14 中，花括号初始化时 <code>auto</code> 会把类型推成 <code>std::initializer_list&lt;T&gt;</code>（C++17 起规则有变化，见上）。</li>
+<li>函数返回类型和 lambda 参数里的 <code>auto</code> 走模板推导，不能返回&#x2F;传入裸花括号。</li>
+<li>C++11&#x2F;14 下写 <code>auto x{...}</code> 要格外小心，尤其是你本来想要一个普通变量的时候。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-1-3/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款3 理解decltype</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-1-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款1 理解模板类型推导</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
