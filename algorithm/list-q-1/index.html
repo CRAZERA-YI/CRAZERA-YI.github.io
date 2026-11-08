@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>每日算法---链表(题_上) - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="链表(题)引言其实链表的很多题放到线性表里面完成就很容易,但是如果规定了,只能用链表用很少的额外空间实现,那么难度就上来了,需要一些巧思了.然后,题有点多,这篇文章先做三道题,下篇再来三道 1. 返回两个无环链表相交的第一个节点如下图所示 12341-&gt;2-&gt;3-&gt;4-&gt;null      ^       |1&#x27;-&gt;2&#x27;- 那就返回3这个节点 解题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日算法---链表(题_上)">
+<meta property="og:url" content="https://crazera-yi.github.io/algorithm/list-q-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="链表(题)引言其实链表的很多题放到线性表里面完成就很容易,但是如果规定了,只能用链表用很少的额外空间实现,那么难度就上来了,需要一些巧思了.然后,题有点多,这篇文章先做三道题,下篇再来三道 1. 返回两个无环链表相交的第一个节点如下图所示 12341-&gt;2-&gt;3-&gt;4-&gt;null      ^       |1&#x27;-&gt;2&#x27;- 那就返回3这个节点 解题">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-08T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-08T13:57:28.133Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="链表">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/algorithm/">算法</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-08T22:00:00+08:00">
+      November 8, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">每日算法---链表(题_上)</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="链表-题"><a href="#链表-题" class="headerlink" title="链表(题)"></a>链表(题)</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>其实链表的很多题放到线性表里面完成就很容易,但是如果规定了,只能用链表用很少的额外空间实现,那么难度就上来了,需要一些巧思了.<br>然后,题有点多,这篇文章先做三道题,下篇再来三道</p>
+<h3 id="1-返回两个无环链表相交的第一个节点"><a href="#1-返回两个无环链表相交的第一个节点" class="headerlink" title="1. 返回两个无环链表相交的第一个节点"></a>1. 返回两个无环链表相交的第一个节点</h3><p>如下图所示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1-&gt;2-&gt;3-&gt;4-&gt;null</span><br><span class="line">      ^ </span><br><span class="line">      |</span><br><span class="line">1&#x27;-&gt;2&#x27;-</span><br></pre></td></tr></table></figure>
+<p>那就返回3这个节点</p>
+<h4 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h4><p>假如,两个无环链表有交点,同时出发,但是不同时的到达null,在都过交点之后,一定会走过相同的步数到尾巴上,不同的部分那就是相交前,那是否可以通过把那部分差距消除,那样两个就是同步前进的,那样只用比较每一步到的地方是否相同,就可以判断是否为交点</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// template &lt;typename T&gt;</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ListNode</span></span><br><span class="line">&#123;</span><br><span class="line">    ListNode *next;</span><br><span class="line">    <span class="type">int</span> data;</span><br><span class="line">    <span class="comment">// T data;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">ListNode *<span class="title">IntersectionNode</span><span class="params">(ListNode *list_head_1, ListNode *list_head_2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> diff = <span class="number">0</span>, cnt_1 = <span class="number">0</span>, cnt_2 = <span class="number">0</span>;</span><br><span class="line">    ListNode *temp = list_head_1;</span><br><span class="line">    <span class="keyword">while</span> (temp != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = temp-&gt;next;</span><br><span class="line">        cnt_1++;</span><br><span class="line">    &#125;</span><br><span class="line">    temp = list_head_2;</span><br><span class="line">    <span class="keyword">while</span> (temp != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = temp-&gt;next;</span><br><span class="line">        cnt_2++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (cnt_1 == <span class="number">0</span> || cnt_2 == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    diff = cnt_1 - cnt_2;</span><br><span class="line">    <span class="keyword">if</span> (diff &gt;= <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (diff &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            list_head_1 = list_head_1-&gt;next;</span><br><span class="line">            diff--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        diff = std::<span class="built_in">abs</span>(diff);</span><br><span class="line">        <span class="keyword">while</span> (diff &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            list_head_2 = list_head_2-&gt;next;</span><br><span class="line">            diff--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (list_head_1 != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (list_head_1 == list_head_2)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> list_head_1;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            list_head_1 = list_head_1-&gt;next;</span><br><span class="line">            list_head_2 = list_head_2-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-每k个节点一组翻转链表"><a href="#2-每k个节点一组翻转链表" class="headerlink" title="2. 每k个节点一组翻转链表"></a>2. 每k个节点一组翻转链表</h3><p>足够k个的部分就翻转,不足保持原样</p>
+<h4 id="解题思路-1"><a href="#解题思路-1" class="headerlink" title="解题思路"></a>解题思路</h4><p>其实思路很简单,翻转再连接,主要是代码写起来有点难度</p>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ListNode</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> val;        <span class="comment">// 节点值</span></span><br><span class="line">    ListNode *next; <span class="comment">// 指向下一个节点的指针</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 前置声明（C++ 要求先声明后使用）</span></span><br><span class="line"><span class="comment">// teamEnd：从开始节点 s 往下数 k 个，返回这一组的结束节点（不足 k 个返回 nullptr）</span></span><br><span class="line"><span class="function">ListNode *<span class="title">teamEnd</span><span class="params">(ListNode *s, <span class="type">int</span> k)</span></span>;</span><br><span class="line"><span class="comment">// reverse：翻转 [s, e] 区间内的节点（包含 s 和 e），并把 s 接到 e 原本的下一个节点上</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">reverse</span><span class="params">(ListNode *s, ListNode *e)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数：每 k 个节点一组进行翻转</span></span><br><span class="line"><span class="function">ListNode *<span class="title">reverseKGroup</span><span class="params">(ListNode *head, <span class="type">int</span> k)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// start 表示当前这一组的开始节点</span></span><br><span class="line">    ListNode *start = head;</span><br><span class="line">    <span class="comment">// end 表示当前这一组的结束节点（从 start 往后数第 k 个节点）</span></span><br><span class="line">    ListNode *end = <span class="built_in">teamEnd</span>(start, k);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果第一组不足 k 个节点，则整条链表都不需要翻转，直接返回原头节点</span></span><br><span class="line">    <span class="keyword">if</span> (end == <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第一组很特殊：因为翻转后这一组的结束节点 end 会变成新的头节点</span></span><br><span class="line">    <span class="comment">// 所以先把新的头节点记录下来</span></span><br><span class="line">    head = end;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 翻转第一组 [start, end]，翻转后 start 变成这一组的尾节点</span></span><br><span class="line">    <span class="built_in">reverse</span>(start, end);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lastTeamEnd 记录上一组翻转后的尾节点</span></span><br><span class="line">    <span class="comment">// 翻转后 start 就是第一组的尾节点，所以它就是&quot;上一组的结尾节点&quot;</span></span><br><span class="line">    ListNode *lastTeamEnd = start;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环处理后面的每一组</span></span><br><span class="line">    <span class="keyword">while</span> (lastTeamEnd-&gt;next != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 当前组的开始节点 = 上一组尾节点的下一个节点</span></span><br><span class="line">        start = lastTeamEnd-&gt;next;</span><br><span class="line">        <span class="comment">// 找当前组的结束节点（从 start 往后数第 k 个）</span></span><br><span class="line">        end = <span class="built_in">teamEnd</span>(start, k);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果当前组不足 k 个节点，则剩余部分保持原样，直接返回结果</span></span><br><span class="line">        <span class="keyword">if</span> (end == <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 翻转当前组 [start, end]，翻转后 start 变成当前组的尾节点</span></span><br><span class="line">        <span class="built_in">reverse</span>(start, end);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把上一组的尾节点接到当前组翻转后的头节点（即 end）上</span></span><br><span class="line">        lastTeamEnd-&gt;next = end;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 当前组的尾节点（start）成为新的&quot;上一组结尾节点&quot;，继续下一轮</span></span><br><span class="line">        lastTeamEnd = start;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从开始节点 s 往下数 k 个，找到并返回这一组的结束节点</span></span><br><span class="line"><span class="comment">// 如果剩余节点不足 k 个（中途遇到 nullptr），则返回 nullptr</span></span><br><span class="line"><span class="function">ListNode *<span class="title">teamEnd</span><span class="params">(ListNode *s, <span class="type">int</span> k)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 先 --k 再判断：因为 s 本身就算第 1 个节点，所以只需要再往后走 k-1 步</span></span><br><span class="line">    <span class="keyword">while</span> (--k != <span class="number">0</span> &amp;&amp; s != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        s = s-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">reverse</span><span class="params">(ListNode *s, ListNode *e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    e = e-&gt;next;</span><br><span class="line"></span><br><span class="line">    ListNode *pre = <span class="literal">nullptr</span>;  <span class="comment">// 前一个节点，初始为 nullptr</span></span><br><span class="line">    ListNode *cur = s;        <span class="comment">// 当前节点，从 s 开始</span></span><br><span class="line">    ListNode *next = <span class="literal">nullptr</span>; <span class="comment">// 用于暂存下一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cur != e)</span><br><span class="line">    &#123;</span><br><span class="line">        next = cur-&gt;next; <span class="comment">// 先保存下一个节点</span></span><br><span class="line">        cur-&gt;next = pre;  <span class="comment">// 当前节点指向前一个节点（反转指针方向）</span></span><br><span class="line">        pre = cur;        <span class="comment">// pre 前进到当前节点</span></span><br><span class="line">        cur = next;       <span class="comment">// cur 前进到下一个节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环结束后，pre 是翻转后的新头节点（即原 e），cur == e（下一组的开始节点）</span></span><br><span class="line">    <span class="comment">// 此时 s 变成了这一段的尾节点，需要把它接到下一组的开始节点上</span></span><br><span class="line">    s-&gt;next = e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-复制带随机指针的链表"><a href="#3-复制带随机指针的链表" class="headerlink" title="3. 复制带随机指针的链表"></a>3. 复制带随机指针的链表</h3><p>随机指针,顾名思义,多一个指针节点,等可能的指向任意存在节点和nullptr</p>
+<h4 id="解题思路-2"><a href="#解题思路-2" class="headerlink" title="解题思路"></a>解题思路</h4><p>解法很神奇,反正我是想不到的,把原来的链表过一遍,过的过程中,在每个节点的后一个放一个n’节点,这下就好办了,以1’为例,首先看1的random指针指的哪个,那我直接用1’指向random-&gt;next,那个节点肯定也是对应的节点的n’节点,以此类推,每一个random’都链接了对应的n’节点,然后把n’节点链表分离出来,就成功复制了</p>
+<h4 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    Node *next;</span><br><span class="line">    Node *random;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> Node *<span class="title">copyRandomList</span><span class="params">(Node *head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node *cur = head;</span><br><span class="line">    Node *next = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 1 -&gt; 2 -&gt; 3 -&gt; ...</span></span><br><span class="line">    <span class="comment">// 变成 : 1 -&gt; 1&#x27; -&gt; 2 -&gt; 2&#x27; -&gt; 3 -&gt; 3&#x27; -&gt; ...</span></span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        next = cur-&gt;next;</span><br><span class="line">        cur-&gt;next = <span class="keyword">new</span> <span class="built_in">Node</span>(cur-&gt;val);</span><br><span class="line">        cur-&gt;next-&gt;next = next;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    cur = head;</span><br><span class="line">    Node *copy = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 利用上面新老节点的结构关系，设置每一个新节点的random指针</span></span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        next = cur-&gt;next-&gt;next;</span><br><span class="line">        copy = cur-&gt;next;</span><br><span class="line">        copy-&gt;random = cur-&gt;random != <span class="literal">nullptr</span> ? cur-&gt;random-&gt;next : <span class="literal">nullptr</span>;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    Node *ans = head-&gt;next;</span><br><span class="line">    cur = head;</span><br><span class="line">    <span class="comment">// 新老链表分离 : 老链表重新连在一起，新链表重新连在一起</span></span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        next = cur-&gt;next-&gt;next;</span><br><span class="line">        copy = cur-&gt;next;</span><br><span class="line">        cur-&gt;next = next;</span><br><span class="line">        copy-&gt;next = next != <span class="literal">nullptr</span> ? next-&gt;next : <span class="literal">nullptr</span>;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回新链表的头节点</span></span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/algorithm/" class="tag">#算法</a>
+      
+      <a href="/tags/%E5%88%B7%E9%A2%98/" class="tag">#刷题</a>
+      
+      <a href="/tags/%E9%93%BE%E8%A1%A8/" class="tag">#链表</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-1-3/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(一)：条款3 理解decltype</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
