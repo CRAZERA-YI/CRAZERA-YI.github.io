@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(二)：条款5 优先选用 auto - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款5：优先选用 auto，而非显式类型声明一句话：能用 auto 就用 auto。少打字只是表面好处，更重要的是它让变量类型跟着初始化表达式走，避开未初始化、隐式转换和类型不匹配。 1. auto 必须初始化123int x1;        &#x2F;&#x2F; 局部变量，可能未初始化auto x2;       &#x2F;&#x2F; 错误：auto 变量必须有初始化器auto x3 &#x3D; 0;   &#x2F;&#x2F; 正确：x3 是 in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(二)：条款5 优先选用 auto">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-2-5/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款5：优先选用 auto，而非显式类型声明一句话：能用 auto 就用 auto。少打字只是表面好处，更重要的是它让变量类型跟着初始化表达式走，避开未初始化、隐式转换和类型不匹配。 1. auto 必须初始化123int x1;        &#x2F;&#x2F; 局部变量，可能未初始化auto x2;       &#x2F;&#x2F; 错误：auto 变量必须有初始化器auto x3 &#x3D; 0;   &#x2F;&#x2F; 正确：x3 是 in">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-09T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-09T04:22:45.433Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-09T12:00:00+08:00">
+      November 9, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(二)：条款5 优先选用 auto</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款5：优先选用-auto，而非显式类型声明"><a href="#条款5：优先选用-auto，而非显式类型声明" class="headerlink" title="条款5：优先选用 auto，而非显式类型声明"></a>条款5：优先选用 auto，而非显式类型声明</h1><p>一句话：能用 <code>auto</code> 就用 <code>auto</code>。少打字只是表面好处，更重要的是它让变量类型跟着初始化表达式走，避开未初始化、隐式转换和类型不匹配。</p>
+<h2 id="1-auto-必须初始化"><a href="#1-auto-必须初始化" class="headerlink" title="1. auto 必须初始化"></a>1. auto 必须初始化</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x1;        <span class="comment">// 局部变量，可能未初始化</span></span><br><span class="line"><span class="keyword">auto</span> x2;       <span class="comment">// 错误：auto 变量必须有初始化器</span></span><br><span class="line"><span class="keyword">auto</span> x3 = <span class="number">0</span>;   <span class="comment">// 正确：x3 是 int，值明确</span></span><br></pre></td></tr></table></figure>
+
+<p><code>auto</code> 的类型从初始化器推导,所以语法上不允许没有初始化的情况,这直接消灭了一类未初始化变量的问题。</p>
+<h2 id="2-少写冗长类型"><a href="#2-少写冗长类型" class="headerlink" title="2. 少写冗长类型"></a>2. 少写冗长类型</h2><p>以前从迭代器取元素，类型要这么写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> It&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dwim</span><span class="params">(It b, It e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (b != e) &#123;</span><br><span class="line">    <span class="comment">//迭代器萃取器,typename必须加,不加这个关键字编译器无法分辨value_type是类型还是枚举或是类</span></span><br><span class="line">    <span class="keyword">typename</span> std::iterator_traits&lt;It&gt;::value_type</span><br><span class="line">      currValue = *b;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>auto</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> It&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dwim</span><span class="params">(It b, It e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (b != e) &#123;</span><br><span class="line">    <span class="comment">//这个写法就很方便了</span></span><br><span class="line">    <span class="keyword">auto</span> currValue = *b;   <span class="comment">// 类型就是 *b 的值类型</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>闭包类型只有编译器知道，根本写不出来，所以 <code>auto</code> 是最自然的选择（否则就得用 <code>std::function</code> 之类的类型擦除）,但是function函数相比于lambda表达式还是太复杂了,不如lambda表达式方便：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> derefUPLess =                        <span class="comment">// C++11</span></span><br><span class="line">  [](<span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp; p1,</span><br><span class="line">     <span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp; p2)</span><br><span class="line">  &#123; <span class="keyword">return</span> *p1 &lt; *p2; &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>C++14 的 lambda 参数也能用 <code>auto</code>，于是可以写泛型 lambda：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> derefLess =                          <span class="comment">// C++14</span></span><br><span class="line">  [](<span class="type">const</span> <span class="keyword">auto</span>&amp; p1, <span class="type">const</span> <span class="keyword">auto</span>&amp; p2)</span><br><span class="line">  &#123; <span class="keyword">return</span> *p1 &lt; *p2; &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-保存闭包：auto-比-std-function-好"><a href="#3-保存闭包：auto-比-std-function-好" class="headerlink" title="3. 保存闭包：auto 比 std::function 好"></a>3. 保存闭包：auto 比 std::function 好</h2><p><code>std::function</code> 是 C++11 标准库里的模板，可以把它理解成“能存任何可调用对象的函数指针”。用它保存上面的闭包，要先把签名写出来：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">bool</span>(<span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp;,</span><br><span class="line">                   <span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp;)&gt;</span><br><span class="line">  derefUPLess = [](<span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp; p1,</span><br><span class="line">                   <span class="type">const</span> std::unique_ptr&lt;Widget&gt;&amp; p2)</span><br><span class="line">                  &#123; <span class="keyword">return</span> *p1 &lt; *p2; &#125;;</span><br></pre></td></tr></table></figure>
+<p>其实还可以用函数指针初始化</p>
+<h2 id="4-避免“类型捷径”"><a href="#4-避免“类型捷径”" class="headerlink" title="4. 避免“类型捷径”"></a>4. 避免“类型捷径”</h2><h3 id="4-1-size-type-不是-unsigned"><a href="#4-1-size-type-不是-unsigned" class="headerlink" title="4.1 size_type 不是 unsigned"></a>4.1 size_type 不是 unsigned</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v;</span><br><span class="line">...</span><br><span class="line"><span class="type">unsigned</span> sz = v.<span class="built_in">size</span>();   <span class="comment">// 看起来没问题</span></span><br></pre></td></tr></table></figure>
+
+<p><code>v.size()</code> 的返回类型是 <code>std::vector&lt;int&gt;::size_type</code>，不是 <code>unsigned</code>。在 32 位 Windows 上两者都是 32 位，所以能正常工作；但在 64 位 Windows 上，<code>unsigned</code> 是 32 位，<code>size_type</code> 是 64 位，可能截断。其实这种问题算是老生常谈了,不只是这个类型有这个问题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sz = v.<span class="built_in">size</span>();   <span class="comment">// sz 的类型就是 std::vector&lt;int&gt;::size_type</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-unordered-map-的元素类型"><a href="#4-2-unordered-map-的元素类型" class="headerlink" title="4.2 unordered_map 的元素类型"></a>4.2 unordered_map 的元素类型</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::unordered_map&lt;std::string, <span class="type">int</span>&gt; m;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> std::pair&lt;std::string, <span class="type">int</span>&gt;&amp; p : m)</span><br><span class="line">&#123;</span><br><span class="line">  ...   <span class="comment">// 对 p 做点什么</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码看起来没问题，实际上每次循环都会创建一个临时 <code>std::pair&lt;std::string, int&gt;</code>，再把 <code>p</code> 绑定到这个临时对象上。因为 <code>unordered_map</code> 的元素类型是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;<span class="type">const</span> std::string, <span class="type">int</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>键是 <code>const</code> 的，和 <code>std::pair&lt;std::string, int&gt;</code> 不是同一个类型，编译器只能做转换。结果就是：每次迭代都拷贝一份 pair，循环结束临时对象就销毁；如果你取 <code>p</code> 的地址，拿到的是临时对象的地址，不是容器元素的地址。</p>
+<p>用 <code>auto</code> 就不会有这个问题：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; p : m)</span><br><span class="line">&#123;</span><br><span class="line">  ...   <span class="comment">// p 直接绑定到容器元素</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不仅少一次拷贝，<code>&amp;p</code> 也一定指向 <code>m</code> 里的元素。</p>
+<p>这两个例子说明：手写类型时，只要和真实类型有一点偏差，编译器就可能悄悄插入转换。用 <code>auto</code> 让目标类型和初始化表达式保持一致，这类因为手写类型偏差导致的问题就消失了。</p>
+<h2 id="5-可读性和重构"><a href="#5-可读性和重构" class="headerlink" title="5. 可读性和重构"></a>5. 可读性和重构</h2><p><code>auto</code> 是选项，不是强制。如果你觉得显式类型更清楚、更好维护，继续用显式类型没问题。</p>
+<p><code>auto</code> 对重构也更友好。比如一个函数原来返回 <code>int</code>，后来改成返回 <code>long</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute</span><span class="params">()</span></span>;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">auto</span> result = <span class="built_in">compute</span>();   <span class="comment">// 函数返回类型变了，这里自动跟着变</span></span><br></pre></td></tr></table></figure>
+<p>如果 <code>result</code> 写的是 <code>int</code>，那所有调用点都得找出来改。</p>
+<h2 id="6-代价"><a href="#6-代价" class="headerlink" title="6. 代价"></a>6. 代价</h2><p><code>auto</code> 不是没有坑，主要是两个：</p>
+<ul>
+<li>花括号初始化：<code>auto x = {27};</code> 会推成 <code>std::initializer_list&lt;int&gt;</code>，详见条款2。</li>
+<li>代理类：<code>auto</code> 可能推出 <code>std::vector&lt;bool&gt;::reference</code> 这类代理类型，详见条款6。</li>
+</ul>
+<p>另外，在公开接口、类的数据成员、需要靠类型表达设计意图的地方，显式类型往往更合适。<code>auto</code> 最适合局部变量，尤其是类型又长又显然的地方。</p>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li><code>auto</code> 变量必须初始化，能避免未初始化变量的问题。</li>
+<li><code>auto</code> 能避免类型不匹配导致的隐式转换、可移植性和效率问题。</li>
+<li><code>auto</code> 能少打字，也方便重构：初始化表达式的类型变了，变量类型自动跟着变。</li>
+<li>保存闭包优先用 <code>auto</code>，<code>std::function</code> 通常更大、更慢。</li>
+<li><code>auto</code> 也有坑：花括号（条款2）和代理类（条款6）。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-2-6/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(二)：条款6 显式类型初始化器</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/algorithm/list-q-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">每日算法---链表(题_上)</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

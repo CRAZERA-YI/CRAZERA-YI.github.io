@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(二)：条款6 显式类型初始化器 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款6：当 auto 推导出非预期类型时，使用显式类型初始化器1. 一个看起来无害的改动假设有一个函数，返回 std::vector&lt;bool&gt;，每一位表示 Widget 是否具备某个特性： 1std::vector&lt;bool&gt; features(const Widget&amp; w);  第 5 位表示 Widget 是否有高优先级。假设 processWidget 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(二)：条款6 显式类型初始化器">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-2-6/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款6：当 auto 推导出非预期类型时，使用显式类型初始化器1. 一个看起来无害的改动假设有一个函数，返回 std::vector&lt;bool&gt;，每一位表示 Widget 是否具备某个特性： 1std::vector&lt;bool&gt; features(const Widget&amp; w);  第 5 位表示 Widget 是否有高优先级。假设 processWidget 的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-09T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-09T04:49:08.332Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-09T18:00:00+08:00">
+      November 9, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(二)：条款6 显式类型初始化器</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款6：当-auto-推导出非预期类型时，使用显式类型初始化器"><a href="#条款6：当-auto-推导出非预期类型时，使用显式类型初始化器" class="headerlink" title="条款6：当 auto 推导出非预期类型时，使用显式类型初始化器"></a>条款6：当 auto 推导出非预期类型时，使用显式类型初始化器</h1><h2 id="1-一个看起来无害的改动"><a href="#1-一个看起来无害的改动" class="headerlink" title="1. 一个看起来无害的改动"></a>1. 一个看起来无害的改动</h2><p>假设有一个函数，返回 <code>std::vector&lt;bool&gt;</code>，每一位表示 <code>Widget</code> 是否具备某个特性：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">features</span><span class="params">(<span class="type">const</span> Widget&amp; w)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>第 5 位表示 <code>Widget</code> 是否有高优先级。假设 <code>processWidget</code> 的第二个参数是 <code>bool</code>，下面这段代码没问题：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Widget w;</span><br><span class="line">...</span><br><span class="line"><span class="type">bool</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>];   <span class="comment">// highPriority 是 bool</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority);       <span class="comment">// 正常</span></span><br></pre></td></tr></table></figure>
+
+<p>现在把 <code>bool</code> 换成 <code>auto</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>];   <span class="comment">// highPriority 不是 bool！</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority);       <span class="comment">// 未定义行为</span></span><br></pre></td></tr></table></figure>
+
+<p>代码照样能编译，但行为不可预测。</p>
+<h2 id="2-为什么-std-vector-特殊"><a href="#2-为什么-std-vector-特殊" class="headerlink" title="2. 为什么 std::vector 特殊"></a>2. 为什么 std::vector<bool> 特殊</h2><p><code>std::vector&lt;bool&gt;</code> 为了省空间，把每个 <code>bool</code> 按位打包，一个 bit 存一个值。但 C++ 不允许“指向 bit 的引用”，所以它的 <code>operator[]</code> 不能返回 <code>bool&amp;</code>，只能返回一个代理对象：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">bool</span>&gt;::reference</span><br></pre></td></tr></table></figure>
+<p>这个代理类内部通常保存“指向某个机器字的指针 + 该 bit 在字里的偏移”，并且提供到 <code>bool</code> 的隐式转换，让它在大多数场合看起来像 <code>bool&amp;</code>。<br>用 <code>bool</code> 接收时：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+
+<p>流程是：<code>features(w)</code> 返回一个临时 <code>std::vector&lt;bool&gt;</code>，<code>operator[]</code> 返回代理对象，代理对象立即隐式转换成 <code>bool</code>，存进 <code>highPriority</code>。转换发生在临时对象还活着的时候，没问题。</p>
+<p>用 <code>auto</code> 接收时：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+
+<p><code>auto</code> 推导出的类型是 <code>std::vector&lt;bool&gt;::reference</code>，不是 <code>bool</code>。<code>highPriority</code> 是代理对象的一个副本；在常见实现中，代理对象里保存的指针指向 <code>features(w)</code> 返回的那个临时 <code>std::vector&lt;bool&gt;</code>。</p>
+<h2 id="3-代理类"><a href="#3-代理类" class="headerlink" title="3. 代理类"></a>3. 代理类</h2><p><code>std::vector&lt;bool&gt;::reference</code> 是**代理类（proxy class）**的一个例子：代理类存在的目的，是模拟或增强另一个类型的行为。</p>
+<p>代理类分两类：</p>
+<ul>
+<li><strong>看得见的代理</strong>：<code>std::shared_ptr</code>、<code>std::unique_ptr</code>。你知道它们是智能指针，也知道自己在用什么。</li>
+<li><strong>看不见的代理</strong>：<code>std::vector&lt;bool&gt;::reference</code>、<code>std::bitset::reference</code>，以及很多数值库里的表达式模板。</li>
+</ul>
+<p>表达式模板的典型例子是矩阵运算：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Matrix sum = m1 + m2 + m3 + m4;</span><br></pre></td></tr></table></figure>
+
+<p>为了提高效率，<code>operator+</code> 可能不返回 <code>Matrix</code>，而返回一个 <code>Sum&lt;Matrix, Matrix&gt;</code> 这样的代理对象。代理对象记住整个表达式，等到赋值给 <code>Matrix</code> 时才真正计算。这样能避免中间结果和多次遍历，但它也是“看不见的代理”。</p>
+<p>这类代理通常假设自己只活在一个语句里。用 <code>auto</code> 把它存成一个变量，就打破了这个假设，可能留下悬空引用或悬空指针。</p>
+<h2 id="4-怎么识别代理"><a href="#4-怎么识别代理" class="headerlink" title="4. 怎么识别代理"></a>4. 怎么识别代理</h2><p>代理类本来就想“隐身”，但也不是完全无迹可寻：</p>
+<ul>
+<li><strong>看文档</strong>：库如果用了代理，通常会在文档里说明。</li>
+<li><strong>看函数签名</strong>：<code>std::vector&lt;bool&gt;</code> 的 <code>operator[]</code> 返回 <code>reference</code>，而不是 <code>bool&amp;</code>；普通的 <code>std::vector&lt;T&gt;</code> 返回 <code>T&amp;</code>。返回类型不寻常，就是一个信号。</li>
+<li><strong>看头文件</strong>：代理类通常出现在客户端会调用的函数返回类型里，头文件很难完全藏住。</li>
+<li><strong>调试和单元测试</strong>：很多人是在追查诡异的编译错误或错误结果时才发现代理的。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">Allocator</span>&gt;</span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">vector</span>&lt;<span class="type">bool</span>, Allocator&gt; &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">reference</span> &#123; ... &#125;;</span><br><span class="line">    reference <span class="keyword">operator</span>[](size_type n);   <span class="comment">// 注意：不是 bool&amp;</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-解决办法：显式类型初始化器"><a href="#5-解决办法：显式类型初始化器" class="headerlink" title="5. 解决办法：显式类型初始化器"></a>5. 解决办法：显式类型初始化器</h2><p>不要因为代理就放弃 <code>auto</code>。<code>auto</code> 没错，错的是它推导出的类型不是你想要的。强制它推导成目标类型即可：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> highPriority = <span class="keyword">static_cast</span>&lt;<span class="type">bool</span>&gt;(<span class="built_in">features</span>(w)[<span class="number">5</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>features(w)[5]</code> 仍然返回代理对象，但 <code>static_cast&lt;bool&gt;</code> 把整个表达式的类型变成了 <code>bool</code>，于是 <code>auto</code> 推导出 <code>bool</code>。转换在临时 <code>std::vector&lt;bool&gt;</code> 还活着的时候完成，代理里的指针被安全地解引用，取到第 5 位的值。</p>
+<p>这个写法就是书里说的<strong>显式类型初始化器惯用法</strong>（explicitly typed initializer idiom）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="keyword">static_cast</span>&lt;T&gt;(expr);</span><br></pre></td></tr></table></figure>
+
+<p>矩阵的例子同理：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sum = <span class="keyword">static_cast</span>&lt;Matrix&gt;(m1 + m2 + m3 + m4);</span><br></pre></td></tr></table></figure>
+
+<p><code>m1 + m2 + m3 + m4</code> 可能返回一个嵌套的表达式模板代理，<code>static_cast&lt;Matrix&gt;</code> 强制它先算出真正的 <code>Matrix</code>，再交给 <code>auto</code>。</p>
+<h2 id="6-不只是代理：表达“我故意转换”"><a href="#6-不只是代理：表达“我故意转换”" class="headerlink" title="6. 不只是代理：表达“我故意转换”"></a>6. 不只是代理：表达“我故意转换”</h2><p>显式类型初始化器还有第二个用途：告诉读代码的人，这个类型转换是故意的，不是疏忽。</p>
+<p>比如一个返回 <code>double</code> 的函数，你确定 <code>float</code> 的精度够用，并且在意内存：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">double</span> <span class="title">calcEpsilon</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> ep = <span class="built_in">calcEpsilon</span>();                  <span class="comment">// 隐式 double -&gt; float</span></span><br><span class="line"><span class="keyword">auto</span> ep = <span class="keyword">static_cast</span>&lt;<span class="type">float</span>&gt;(<span class="built_in">calcEpsilon</span>()); <span class="comment">// 明确：我就是要 float</span></span><br></pre></td></tr></table></figure>
+
+<p>再比如，用一个 0.0 到 1.0 的 <code>double</code> 计算容器下标，并确定结果能放进 <code>int</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> index = d * c.<span class="built_in">size</span>();                  <span class="comment">// 隐式 double -&gt; int</span></span><br><span class="line"><span class="keyword">auto</span> index = <span class="keyword">static_cast</span>&lt;<span class="type">int</span>&gt;(d * c.<span class="built_in">size</span>()); <span class="comment">// 明确：我就是要 int</span></span><br></pre></td></tr></table></figure>
+<p>两种写法结果一样，但后者把“故意降精度&#x2F;截断”的意图写在了脸上。</p>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li>“看不见的”代理类型会让 <code>auto</code> 推导出非预期的类型，<code>std::vector&lt;bool&gt;::reference</code> 是最常见的例子。</li>
+<li>显式类型初始化器 <code>auto x = static_cast&lt;T&gt;(expr);</code> 能强制 <code>auto</code> 推导出你想要的类型。</li>
+<li>它也能用来明确表达“我故意做这个类型转换”，让代码意图更清楚。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-2-5/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(二)：条款5 优先选用 auto</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
