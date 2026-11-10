@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款7 区分 () 和 {} - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款7：区分 () 和 {} 创建对象花括号初始化最通用、禁止窄化转换、还能避开 most vexing parse，但它有一个问题——只要类有 std::initializer_list 构造函数，花括号就会强烈优先选择它。虽然说花括号好,但是我直观感觉,还是小括号用的多 1. 三种初始化语法1234int x(0);      &#x2F;&#x2F; 圆括号int y &#x3D; 0;     &#x2F;&#x2F; 等号int z&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款7 区分 () 和 {}">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-7/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款7：区分 () 和 {} 创建对象花括号初始化最通用、禁止窄化转换、还能避开 most vexing parse，但它有一个问题——只要类有 std::initializer_list 构造函数，花括号就会强烈优先选择它。虽然说花括号好,但是我直观感觉,还是小括号用的多 1. 三种初始化语法1234int x(0);      &#x2F;&#x2F; 圆括号int y &#x3D; 0;     &#x2F;&#x2F; 等号int z&amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-10T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-10T02:43:09.835Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-10T12:00:00+08:00">
+      November 10, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款7 区分 () 和 {}</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款7：区分-和-创建对象"><a href="#条款7：区分-和-创建对象" class="headerlink" title="条款7：区分 () 和 {} 创建对象"></a>条款7：区分 <code>()</code> 和 <code>{}</code> 创建对象</h1><p>花括号初始化最通用、禁止窄化转换、还能避开 most vexing parse，但它有一个问题——只要类有 <code>std::initializer_list</code> 构造函数，花括号就会强烈优先选择它。虽然说花括号好,但是我直观感觉,还是小括号用的多</p>
+<h2 id="1-三种初始化语法"><a href="#1-三种初始化语法" class="headerlink" title="1. 三种初始化语法"></a>1. 三种初始化语法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="number">0</span>)</span></span>;      <span class="comment">// 圆括号</span></span><br><span class="line"><span class="type">int</span> y = <span class="number">0</span>;     <span class="comment">// 等号</span></span><br><span class="line"><span class="type">int</span> z&#123;<span class="number">0</span>&#125;;      <span class="comment">// 花括号</span></span><br><span class="line"><span class="type">int</span> w = &#123;<span class="number">0</span>&#125;;   <span class="comment">// 等号 + 花括号（通常和纯花括号一样）</span></span><br></pre></td></tr></table></figure>
+
+<p>C++11 把花括号推广成“统一初始化”（uniform initialization），书里更愿意叫它 <strong>braced initialization</strong>（花括号初始化）。</p>
+<p>花括号能用在很多圆括号用不了的地方：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>&#125;;   <span class="comment">// 直接指定初始元素</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">int</span> x&#123;<span class="number">0</span>&#125;;     <span class="comment">// 非静态数据成员默认值：可以</span></span><br><span class="line">  <span class="type">int</span> y = <span class="number">0</span>;    <span class="comment">// 也可以</span></span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">z</span><span class="params">(<span class="number">0</span>)</span></span>;     <span class="comment">// 错误：圆括号不行</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>不可拷贝的对象（比如 <code>std::atomic</code>）也能用花括号或圆括号初始化，但不能用 <code>=</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai1&#123;<span class="number">0</span>&#125;;   <span class="comment">// OK</span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">ai2</span><span class="params">(<span class="number">0</span>)</span></span>;   <span class="comment">// OK</span></span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai3 = <span class="number">0</span>;  <span class="comment">// 错误,实际上atomic是一个模板类,你用一个int给模板类复制,当然不行了,</span></span><br><span class="line">                           <span class="comment">//除非内部重载了=运算符,但是这个属于是拷贝构造</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-花括号的三个优点"><a href="#2-花括号的三个优点" class="headerlink" title="2. 花括号的三个优点"></a>2. 花括号的三个优点</h2><ol>
+<li><strong>适用范围最广</strong>：三种写法里，只有花括号几乎哪里都能用。</li>
+<li><strong>禁止窄化转换</strong>：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> x, y, z;</span><br><span class="line"><span class="type">int</span> sum1&#123;x + y + z&#125;;   <span class="comment">// 错误：double 的和不一定能放进 int</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum2</span><span class="params">(x + y + z)</span></span>;   <span class="comment">// OK：截断</span></span><br><span class="line"><span class="type">int</span> sum3 = x + y + z;  <span class="comment">// OK：截断</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>免疫 most vexing parse(令人厌烦的解析)</strong>：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(<span class="number">10</span>)</span></span>;   <span class="comment">// 调用带参构造函数</span></span><br><span class="line"><span class="function">Widget <span class="title">w2</span><span class="params">()</span></span>;     <span class="comment">// 不是定义对象，而是声明一个函数,这个确实有点烦,编译器会优先认为这是一个函数声明...</span></span><br><span class="line">Widget w3&#123;&#125;;     <span class="comment">// 调用无参构造函数，没有歧义</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-大坑：initializer-list-构造函数"><a href="#3-大坑：initializer-list-构造函数" class="headerlink" title="3. 大坑：initializer_list 构造函数"></a>3. 大坑：initializer_list 构造函数</h2><p>如果类没有 <code>std::initializer_list</code> 构造函数，圆括号和花括号通常等价：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b);</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(<span class="number">10</span>, <span class="literal">true</span>)</span></span>;   <span class="comment">// 第一个构造函数</span></span><br><span class="line">Widget w2&#123;<span class="number">10</span>, <span class="literal">true</span>&#125;;   <span class="comment">// 也是第一个</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">(<span class="number">10</span>, <span class="number">5.0</span>)</span></span>;    <span class="comment">// 第二个</span></span><br><span class="line">Widget w4&#123;<span class="number">10</span>, <span class="number">5.0</span>&#125;;    <span class="comment">// 也是第二个</span></span><br></pre></td></tr></table></figure>
+
+<p>但只要加了 <code>std::initializer_list</code> 构造函数，花括号就会<strong>强烈优先</strong>选它，哪怕它不是最佳匹配,<br>最典型的当然是vector容器,既支持构造函数初始化,也支持C风格的数组初始化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b);</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d);</span><br><span class="line">  <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">long</span> <span class="type">double</span>&gt; il);   <span class="comment">// 新增</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Widget w2&#123;<span class="number">10</span>, <span class="literal">true</span>&#125;;   <span class="comment">// 调用 initializer_list 构造函数</span></span><br><span class="line">                       <span class="comment">// 10 和 true 都转成 long double</span></span><br><span class="line">Widget w4&#123;<span class="number">10</span>, <span class="number">5.0</span>&#125;;    <span class="comment">// 同样调用 initializer_list 构造函数</span></span><br></pre></td></tr></table></figure>
+
+<p>更离谱的是，连拷贝构造和移动构造都可能被劫持：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">long</span> <span class="type">double</span>&gt; il);</span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">float</span><span class="params">()</span> <span class="type">const</span></span>;   <span class="comment">// 能转成 float</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w5</span><span class="params">(w4)</span></span>;              <span class="comment">// 圆括号：拷贝构造</span></span><br><span class="line">Widget w6&#123;w4&#125;;              <span class="comment">// 花括号：调用 initializer_list 构造</span></span><br><span class="line">                            <span class="comment">// w4 -&gt; float -&gt; long double</span></span><br><span class="line"><span class="function">Widget <span class="title">w7</span><span class="params">(std::move(w4))</span></span>;   <span class="comment">// 圆括号：移动构造</span></span><br><span class="line">Widget w8&#123;std::<span class="built_in">move</span>(w4)&#125;;   <span class="comment">// 花括号：还是 initializer_list 构造,毕竟,你就算传入的是一个int常数,那不也是一个右值吗,还不是照样调用初始化列表构造,更不用说std::move了</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="窄化时也不会退回普通重载"><a href="#窄化时也不会退回普通重载" class="headerlink" title="窄化时也不会退回普通重载"></a>窄化时也不会退回普通重载</h3><p>如果 <code>initializer_list</code> 构造函数的元素类型是 <code>bool</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b);</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d);</span><br><span class="line">  <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">bool</span>&gt; il);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Widget w&#123;<span class="number">10</span>, <span class="number">5.0</span>&#125;;   <span class="comment">// 错误：int/double 到 bool 是窄化</span></span><br></pre></td></tr></table></figure>
+
+<p>编译器会忽略前两个构造函数（第二个本来还是精确匹配），执意尝试 <code>initializer_list&lt;bool&gt;</code>；但 <code>10</code> 和 <code>5.0</code> 转 <code>bool</code> 都是窄化，花括号里禁止窄化，于是代码直接报错,这样做其实是好事,避免了语法的混乱<br>只有当实参根本无法转换成 <code>initializer_list</code> 的元素类型时，才会退回普通重载：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b);</span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d);</span><br><span class="line">  <span class="built_in">Widget</span>(std::initializer_list&lt;std::string&gt; il);   <span class="comment">// 元素类型是 string</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(<span class="number">10</span>, <span class="literal">true</span>)</span></span>;   <span class="comment">// 第一个构造函数</span></span><br><span class="line">Widget w2&#123;<span class="number">10</span>, <span class="literal">true</span>&#125;;   <span class="comment">// 也是第一个：int/bool 转不成 string</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-空花括号"><a href="#4-空花括号" class="headerlink" title="4. 空花括号"></a>4. 空花括号</h2><p>空花括号表示“没有参数”，调用默认构造函数，而不是“空的 <code>initializer_list</code>”：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>();</span><br><span class="line">  <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">int</span>&gt; il);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Widget w1;      <span class="comment">// 默认构造</span></span><br><span class="line">Widget w2&#123;&#125;;    <span class="comment">// 也是默认构造</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">()</span></span>;    <span class="comment">// most vexing parse：声明函数</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想用空列表调用 <code>initializer_list</code> 构造函数，要把空花括号当成参数传进去,空花括号本身就是一个列表,所以会被隐式转换为最符合的初始化列表类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget <span class="title">w4</span><span class="params">(&#123;&#125;)</span></span>;   <span class="comment">// 调用 initializer_list 构造，列表为空</span></span><br><span class="line">Widget w5&#123;&#123;&#125;&#125;;   <span class="comment">// 同上</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-最典型的例子：std-vector"><a href="#5-最典型的例子：std-vector" class="headerlink" title="5. 最典型的例子：std::vector"></a>5. 最典型的例子：std::vector</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">v1</span><span class="params">(<span class="number">10</span>, <span class="number">20</span>)</span></span>;   <span class="comment">// 10 个元素，每个都是 20</span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v2&#123;<span class="number">10</span>, <span class="number">20</span>&#125;;   <span class="comment">// 2 个元素：10 和 20</span></span><br></pre></td></tr></table></figure>
+
+<p>同样两个数，圆括号和花括号的含义完全不同。<code>std::vector</code> 同时有“指定大小和初值”的构造函数和 <code>initializer_list</code> 构造函数，所以它是这个问题最著名的受害者。</p>
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li>花括号是最通用的初始化语法，禁止窄化转换，免疫 most vexing parse。</li>
+<li>构造函数重载决议时，花括号会尽可能匹配 <code>std::initializer_list</code> 参数，哪怕其他构造函数看起来更合适。</li>
+<li><code>std::vector&lt;int&gt; v1(10, 20)</code> 和 <code>v2{10, 20}</code> 是两个完全不同的结果。</li>
+<li>模板内部创建对象时，圆括号和花括号的选择可能无法两全。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-2-6/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(二)：条款6 显式类型初始化器</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
