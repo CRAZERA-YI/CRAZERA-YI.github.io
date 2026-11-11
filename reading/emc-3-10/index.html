@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款10 优先用限定作用域枚举 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款10：优先用限定作用域枚举，而不是未限定作用域枚举enum class 不会把枚举名泄漏到外层作用域，也不会让枚举值偷偷转换成整数；只有需要隐式转成 size_t 访问 tuple 这类少数场景，才考虑未限定作用域枚举。 1. 名字泄漏C++98 的 enum，枚举名和枚举类型在同一个作用域： 123enum Color &#123; black, white, red &#125;;   &#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款10 优先用限定作用域枚举">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-10/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款10：优先用限定作用域枚举，而不是未限定作用域枚举enum class 不会把枚举名泄漏到外层作用域，也不会让枚举值偷偷转换成整数；只有需要隐式转成 size_t 访问 tuple 这类少数场景，才考虑未限定作用域枚举。 1. 名字泄漏C++98 的 enum，枚举名和枚举类型在同一个作用域： 123enum Color &#123; black, white, red &#125;;   &#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-11T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-11T13:57:19.032Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-11T18:00:00+08:00">
+      November 11, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款10 优先用限定作用域枚举</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款10：优先用限定作用域枚举，而不是未限定作用域枚举"><a href="#条款10：优先用限定作用域枚举，而不是未限定作用域枚举" class="headerlink" title="条款10：优先用限定作用域枚举，而不是未限定作用域枚举"></a>条款10：优先用限定作用域枚举，而不是未限定作用域枚举</h1><p><code>enum class</code> 不会把枚举名泄漏到外层作用域，也不会让枚举值偷偷转换成整数；只有需要隐式转成 <code>size_t</code> 访问 <code>tuple</code> 这类少数场景，才考虑未限定作用域枚举。</p>
+<h2 id="1-名字泄漏"><a href="#1-名字泄漏" class="headerlink" title="1. 名字泄漏"></a>1. 名字泄漏</h2><p>C++98 的 <code>enum</code>，枚举名和枚举类型在同一个作用域：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123; black, white, red &#125;;   <span class="comment">// black/white/red 和 Color 同作用域</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>;                 <span class="comment">// 错误：white 已经被枚举占用了</span></span><br></pre></td></tr></table></figure>
+
+<p>C++11 的 <code>enum class</code> 把枚举名限定在枚举类型内部：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> &#123; black, white, red &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>;                 <span class="comment">// OK</span></span><br><span class="line">Color c = Color::white;             <span class="comment">// 必须带 Color::</span></span><br><span class="line"><span class="keyword">auto</span> c2 = Color::white;             <span class="comment">// 也可以</span></span><br></pre></td></tr></table></figure>
+
+<p>这就是“限定作用域”（scoped）和“未限定作用域”（unscoped）的区别。因为用 <code>enum class</code> 声明，它有时也被叫作 enum class。</p>
+<h2 id="2-更强的类型"><a href="#2-更强的类型" class="headerlink" title="2. 更强的类型"></a>2. 更强的类型</h2><p>未限定作用域枚举会隐式转换成整数，甚至浮点数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123; black, white, red &#125;;</span><br><span class="line">Color c = red;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (c &lt; <span class="number">14.5</span>) &#123; ... &#125;               <span class="comment">// 因为编译器大概会把枚举的成员当成int来算,所以枚举能和double比较也很合理了,</span></span><br><span class="line">                                    <span class="comment">// 但是我们其实是不希望这种事情发生的</span></span><br><span class="line"><span class="keyword">auto</span> factors = <span class="built_in">primeFactors</span>(c);     <span class="comment">// Color 传给需要 size_t 的函数</span></span><br></pre></td></tr></table></figure>
+
+<p><code>enum class</code> 没有这种隐式转换：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> &#123; black, white, red &#125;;</span><br><span class="line">Color c = Color::red;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (c &lt; <span class="number">14.5</span>) &#123; ... &#125;               <span class="comment">// 错误,换到限定枚举就没办法隐式转换了</span></span><br><span class="line"><span class="keyword">auto</span> factors = <span class="built_in">primeFactors</span>(c);     <span class="comment">// 错误,同上</span></span><br></pre></td></tr></table></figure>
+
+<p>真要转换，必须显式 cast：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">static_cast</span>&lt;<span class="type">double</span>&gt;(c) &lt; <span class="number">14.5</span>) &#123; ... &#125;</span><br><span class="line"><span class="keyword">auto</span> factors = <span class="built_in">primeFactors</span>(<span class="keyword">static_cast</span>&lt;std::<span class="type">size_t</span>&gt;(c)); <span class="comment">//显式依旧可行</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-前向声明和底层类型"><a href="#3-前向声明和底层类型" class="headerlink" title="3. 前向声明和底层类型"></a>3. 前向声明和底层类型</h2><p><code>enum class</code> 可以前向声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Status</span>;                   <span class="comment">// OK</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">continueProcessing</span><span class="params">(Status s)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>未限定作用域枚举不能直接前向声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span>;                          <span class="comment">// 错误</span></span><br></pre></td></tr></table></figure>
+
+<p>原因是编译器要先知道枚举的底层整数类型，才能确定大小。<code>enum class</code> 的默认底层类型是 <code>int</code>，所以总能前向声明；未限定作用域枚举没有默认底层类型，编译器通常会选能容纳所有枚举值的最小类型。<br>可以显式指定底层类型，指定后未限定作用域枚举也能前向声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Status</span> : std::<span class="type">uint32_t</span>;   <span class="comment">// 底层类型 uint32_t,类似位域,虽然不咋类似,但是语法很像</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> : std::<span class="type">uint8_t</span>;           <span class="comment">// 未限定作用域，但可以前向声明</span></span><br></pre></td></tr></table></figure>
+
+<p>定义时也可以写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Status</span> : std::<span class="type">uint32_t</span> &#123;</span><br><span class="line">  good = <span class="number">0</span>,</span><br><span class="line">  failed = <span class="number">1</span>,</span><br><span class="line">  incomplete = <span class="number">100</span>,</span><br><span class="line">  corrupt = <span class="number">200</span>,</span><br><span class="line">  audited = <span class="number">500</span>,</span><br><span class="line">  indeterminate = <span class="number">0xFFFFFFFF</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>底层类型明确的另一个好处是减少编译依赖：头文件里只前向声明枚举，枚举定义变化时，包含该头文件的代码不必全部重编译。</p>
+<h2 id="4-少数适合未限定作用域枚举的场景：tuple-字段"><a href="#4-少数适合未限定作用域枚举的场景：tuple-字段" class="headerlink" title="4. 少数适合未限定作用域枚举的场景：tuple 字段"></a>4. 少数适合未限定作用域枚举的场景：tuple 字段</h2><p><code>std::tuple</code> 的字段用下标访问，代码里只写数字很难读：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UserInfo =</span><br><span class="line">  std::tuple&lt;std::string,      <span class="comment">// name</span></span><br><span class="line">             std::string,      <span class="comment">// email</span></span><br><span class="line">             std::<span class="type">size_t</span>&gt;;     <span class="comment">// reputation</span></span><br><span class="line"></span><br><span class="line">UserInfo uInfo;</span><br><span class="line"><span class="keyword">auto</span> val = std::<span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(uInfo); <span class="comment">// 1 是 email，但你得记住</span></span><br></pre></td></tr></table></figure>
+
+<p>用未限定作用域枚举给下标起名：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">UserInfoFields</span> &#123; uiName, uiEmail, uiReputation &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> val = std::<span class="built_in">get</span>&lt;uiEmail&gt;(uInfo);   <span class="comment">// 清楚多了</span></span><br></pre></td></tr></table></figure>
+
+<p>这里能编译，是因为 <code>UserInfoFields</code> 会隐式转换成 <code>std::size_t</code>，而 <code>std::get</code> 的模板参数需要 <code>size_t</code>。</p>
+<p>用 <code>enum class</code> 就得多写一层转换：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">UserInfoFields</span> &#123; uiName, uiEmail, uiReputation &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> val = std::get&lt;</span><br><span class="line">  <span class="keyword">static_cast</span>&lt;std::<span class="type">size_t</span>&gt;(UserInfoFields::uiEmail)</span><br><span class="line">&gt;(uInfo);</span><br></pre></td></tr></table></figure>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li>C++98 风格的 <code>enum</code> 现在叫未限定作用域枚举；枚举名会泄漏到外层作用域。</li>
+<li><code>enum class</code> 的枚举名只在枚举内部可见，转换成其他类型必须显式 cast。</li>
+<li>两种枚举都可以指定底层类型；<code>enum class</code> 默认底层类型是 <code>int</code>，未限定作用域枚举没有默认底层类型。</li>
+<li><code>enum class</code> 总能前向声明；未限定作用域枚举只有指定底层类型后才能前向声明。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/network/protobuf-tutorial-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">图片贴合地图的实现</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
