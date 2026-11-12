@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款12 声明 override - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款12：声明覆盖函数时加上 override虚函数“看起来像覆盖”不等于真的覆盖；把每个派生类覆盖函数都标上 override，让编译器替你检查签名是否完全匹配。 1. 覆盖的条件派生类函数要真正覆盖基类虚函数，必须同时满足：  基类函数是 virtual； 名字相同（析构函数除外）； 参数类型完全相同； const 限定相同； 返回类型和异常规格兼容； C++11 还要求引用限定符（&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款12 声明 override">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-12/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款12：声明覆盖函数时加上 override虚函数“看起来像覆盖”不等于真的覆盖；把每个派生类覆盖函数都标上 override，让编译器替你检查签名是否完全匹配。 1. 覆盖的条件派生类函数要真正覆盖基类虚函数，必须同时满足：  基类函数是 virtual； 名字相同（析构函数除外）； 参数类型完全相同； const 限定相同； 返回类型和异常规格兼容； C++11 还要求引用限定符（&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-12T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T03:19:16.859Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-12T18:00:00+08:00">
+      November 12, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款12 声明 override</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款12：声明覆盖函数时加上-override"><a href="#条款12：声明覆盖函数时加上-override" class="headerlink" title="条款12：声明覆盖函数时加上 override"></a>条款12：声明覆盖函数时加上 override</h1><p>虚函数“看起来像覆盖”不等于真的覆盖；把每个派生类覆盖函数都标上 <code>override</code>，让编译器替你检查签名是否完全匹配。</p>
+<h2 id="1-覆盖的条件"><a href="#1-覆盖的条件" class="headerlink" title="1. 覆盖的条件"></a>1. 覆盖的条件</h2><p>派生类函数要真正覆盖基类虚函数，必须同时满足：</p>
+<ul>
+<li>基类函数是 <code>virtual</code>；</li>
+<li>名字相同（析构函数除外）；</li>
+<li>参数类型完全相同；</li>
+<li><code>const</code> 限定相同；</li>
+<li>返回类型和异常规格兼容；</li>
+<li>C++11 还要求引用限定符（<code>&amp;</code>&#x2F;<code>&amp;&amp;</code>）相同。</li>
+</ul>
+<p>任何一条不满足，派生类函数就只是“另一个函数”，不会参与动态绑定。代码通常仍然合法，所以编译器不一定会提醒你。</p>
+<h2 id="2-四个“看起来对，其实没覆盖”的例子"><a href="#2-四个“看起来对，其实没覆盖”的例子" class="headerlink" title="2. 四个“看起来对，其实没覆盖”的例子"></a>2. 四个“看起来对，其实没覆盖”的例子</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf2</span><span class="params">(<span class="type">int</span> x)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;</span>;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf1</span><span class="params">()</span></span>;              <span class="comment">// 少了 const</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf2</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> x)</span></span>; <span class="comment">// 参数类型不同</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;&amp;</span>;            <span class="comment">// 引用限定符不同</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="type">const</span></span>;                 <span class="comment">// 基类 mf4 不是 virtual</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>补充一下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个叫成员函数引用限定符</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> &amp;</span>;  <span class="comment">// 只能被左值对象调用</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> &amp;&amp;</span>;  <span class="comment">//  同理,只能被右值对象调用</span></span><br></pre></td></tr></table></figure>
+
+<p>四个函数都没有覆盖基类版本：</p>
+<ul>
+<li><code>mf1</code>：基类是 <code>const</code>，派生类不是。</li>
+<li><code>mf2</code>：基类参数是 <code>int</code>，派生类是 <code>unsigned int</code>。</li>
+<li><code>mf3</code>：基类是左值限定 <code>&amp;</code>，派生类是右值限定 <code>&amp;&amp;</code>。</li>
+<li><code>mf4</code>：基类根本没声明 <code>virtual</code>。</li>
+</ul>
+<p>这段代码可能编译通过，某些编译器即使开了警告也不报。运行时通过基类指针调用，调到的仍是基类版本。</p>
+<h2 id="3-用-override-让编译器检查"><a href="#3-用-override-让编译器检查" class="headerlink" title="3. 用 override 让编译器检查"></a>3. 用 override 让编译器检查</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf2</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> x)</span> <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;&amp; <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这样写会直接编译失败，因为这四个函数都没有覆盖任何基类虚函数。这正是我们想要的效果。</p>
+<p>修正后：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf2</span><span class="params">(<span class="type">int</span> x)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;</span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="type">const</span></span>;        <span class="comment">// 加上 virtual</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf2</span><span class="params">(<span class="type">int</span> x)</span> <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">mf3</span><span class="params">()</span> &amp; <span class="keyword">override</span></span>;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">override</span></span>;       <span class="comment">// 这里不写 virtual 也行</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>mf4</code> 的修复还包括把基类的 <code>mf4</code> 声明为 <code>virtual</code>。覆盖错误不一定只发生在派生类，基类也可能写错。</p>
+<h2 id="4-override-是上下文关键字"><a href="#4-override-是上下文关键字" class="headerlink" title="4. override 是上下文关键字"></a>4. override 是上下文关键字</h2><p><code>override</code> 只在成员函数声明末尾才有特殊含义。旧代码里如果有名为 <code>override</code> 的函数，仍然合法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Warning</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">override</span><span class="params">()</span></span>;   <span class="comment">// C++98 和 C++11 都合法</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>类似地，<code>final</code> 也是上下文关键字：加在虚函数后面表示禁止进一步覆盖，加在类后面表示禁止被继承。</p>
+<h2 id="5-引用限定符：让-this-区分左值和右值"><a href="#5-引用限定符：让-this-区分左值和右值" class="headerlink" title="5. 引用限定符：让 *this 区分左值和右值"></a>5. 引用限定符：让 *this 区分左值和右值</h2><p>C++11 允许成员函数在参数列表后加 <code>&amp;</code> 或 <code>&amp;&amp;</code>，限定它只能在左值或右值对象上调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">doWork</span><span class="params">()</span> &amp;</span>;    <span class="comment">// 只在 *this 是左值时可用</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">doWork</span><span class="params">()</span> &amp;&amp;</span>;   <span class="comment">// 只在 *this 是右值时可用</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">Widget w;</span><br><span class="line">w.doWork();            <span class="comment">// 调用 &amp; 版本</span></span><br><span class="line"><span class="built_in">makeWidget</span>().doWork(); <span class="comment">// 调用 &amp;&amp; 版本</span></span><br></pre></td></tr></table></figure>
+
+<p>这和对参数写 <code>Widget&amp;</code>&#x2F;<code>Widget&amp;&amp;</code> 是同一个思路，只不过限定的是成员函数里的 <code>*this</code>。</p>
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li>覆盖函数时一律写 <code>override</code>，让编译器检查签名。</li>
+<li>覆盖要求：虚函数、同名、同参数、同 <code>const</code>、兼容返回类型、同引用限定符。</li>
+<li><code>override</code> 和 <code>final</code> 是上下文关键字，不会破坏旧代码里的同名标识符。</li>
+<li>成员函数引用限定符 <code>&amp;</code>&#x2F;<code>&amp;&amp;</code> 可以区分 <code>*this</code> 是左值还是右值。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/qt-proj-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">图片贴合地图的实现</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

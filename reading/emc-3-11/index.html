@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款11 优先用删除函数 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款11：优先用删除函数，而不是私有未定义函数C++98 用“声明成 private 但不定义”来禁用函数，错误要等到链接期；C++11 的 &#x3D; delete 直接在编译期把调用拦下来，而且任何函数都能删。提一嘴,delete还能在移动构造的时候有点用,到时候再说 1. C++98 的做法：私有且不定义标准库的 basic_ios 不允许拷贝，C++98 的写法是： 12345678templat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款11 优先用删除函数">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-11/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款11：优先用删除函数，而不是私有未定义函数C++98 用“声明成 private 但不定义”来禁用函数，错误要等到链接期；C++11 的 &#x3D; delete 直接在编译期把调用拦下来，而且任何函数都能删。提一嘴,delete还能在移动构造的时候有点用,到时候再说 1. C++98 的做法：私有且不定义标准库的 basic_ios 不允许拷贝，C++98 的写法是： 12345678templat">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T03:14:36.262Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-12T12:00:00+08:00">
+      November 12, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款11 优先用删除函数</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款11：优先用删除函数，而不是私有未定义函数"><a href="#条款11：优先用删除函数，而不是私有未定义函数" class="headerlink" title="条款11：优先用删除函数，而不是私有未定义函数"></a>条款11：优先用删除函数，而不是私有未定义函数</h1><p>C++98 用“声明成 private 但不定义”来禁用函数，错误要等到链接期；C++11 的 <code>= delete</code> 直接在编译期把调用拦下来，而且任何函数都能删。<br>提一嘴,delete还能在移动构造的时候有点用,到时候再说</p>
+<h2 id="1-C-98-的做法：私有且不定义"><a href="#1-C-98-的做法：私有且不定义" class="headerlink" title="1. C++98 的做法：私有且不定义"></a>1. C++98 的做法：私有且不定义</h2><p>标准库的 <code>basic_ios</code> 不允许拷贝，C++98 的写法是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">charT</span>, <span class="keyword">class</span> <span class="title class_">traits</span> = char_traits&lt;charT&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> basic_ios : <span class="keyword">public</span> ios_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">basic_ios</span>(<span class="type">const</span> basic_ios&amp;);            <span class="comment">// 只声明，不定义</span></span><br><span class="line">  basic_ios&amp; <span class="keyword">operator</span>=(<span class="type">const</span> basic_ios&amp;); <span class="comment">// 只声明，不定义</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>声明为 <code>private</code>：外部调用者无权访问。</li>
+<li>不定义：如果成员函数或 <code>friend</code> 仍然调用它，链接时会因为找不到定义而失败。</li>
+</ul>
+<p>问题是错误发现得太晚：编译能过，链接才报错。</p>
+<h2 id="2-C-11-的做法：-delete"><a href="#2-C-11-的做法：-delete" class="headerlink" title="2. C++11 的做法：&#x3D; delete"></a>2. C++11 的做法：&#x3D; delete</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">charT</span>, <span class="keyword">class</span> <span class="title class_">traits</span> = char_traits&lt;charT&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> basic_ios : <span class="keyword">public</span> ios_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">basic_ios</span>(<span class="type">const</span> basic_ios&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  basic_ios&amp; <span class="keyword">operator</span>=(<span class="type">const</span> basic_ios&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>被删除的函数在任何地方都不能用，包括成员函数和 <code>friend</code>。错误在编译期就出现，不用等到链接。</p>
+<h2 id="3-为什么删除函数通常声明为-public"><a href="#3-为什么删除函数通常声明为-public" class="headerlink" title="3. 为什么删除函数通常声明为 public"></a>3. 为什么删除函数通常声明为 public</h2><p>C++ 在检查“能不能调用”时，先看访问权限，再看是否被删除。如果删除函数是 <code>private</code>，有些编译器只会抱怨“这是 private”，而不告诉你“它已经被删除了”，错误信息更差。</p>
+<p>所以惯例是：<strong>删除函数声明为 public</strong>。这样错误信息会直接说“调用了被删除的函数”。</p>
+<h2 id="4-任何函数都能删"><a href="#4-任何函数都能删" class="headerlink" title="4. 任何函数都能删"></a>4. 任何函数都能删</h2><p><code>private</code> 只能用于成员函数；<code>= delete</code> 可以用于任何函数，包括非成员函数。</p>
+<p>比如一个只接受整数的函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLucky</span><span class="params">(<span class="type">int</span> number)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>但 <code>char</code>、<code>bool</code>、<code>double</code> 都能隐式转成 <code>int</code>，于是这些调用都能编译：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="string">&#x27;a&#x27;</span>)) ...    <span class="comment">// &#x27;a&#x27; 算幸运数字吗？</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="literal">true</span>)) ...   <span class="comment">// true 算吗？</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="number">3.5</span>)) ...    <span class="comment">// 要不要先截断成 3？</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这些类型都不该接受，就删除对应的重载：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLucky</span><span class="params">(<span class="type">int</span> number)</span></span>;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLucky</span><span class="params">(<span class="type">char</span>)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLucky</span><span class="params">(<span class="type">bool</span>)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLucky</span><span class="params">(<span class="type">double</span>)</span> </span>= <span class="keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+
+<p>现在：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="string">&#x27;a&#x27;</span>)) ...    <span class="comment">// 错误：调用被删除的函数</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="literal">true</span>)) ...   <span class="comment">// 错误</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">isLucky</span>(<span class="number">3.5f</span>)) ...   <span class="comment">// 错误</span></span><br></pre></td></tr></table></figure>
+<p>除非用显式类型转换<br>注意为什么删除 <code>double</code> 也能拦住 <code>float</code>：<code>float</code> 转 <code>int</code> 和转 <code>double</code> 都能走，但 C++ 优先选转 <code>double</code>，于是调用的是被删除的 <code>double</code> 重载。</p>
+<p>关键点：<strong>被删除的函数仍然参与重载决议</strong>。它们不是不存在，而是“存在但一选就报错”。</p>
+<h2 id="5-删除模板特化"><a href="#5-删除模板特化" class="headerlink" title="5. 删除模板特化"></a>5. 删除模板特化</h2><p>假设有一个处理指针的模板：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">processPointer</span><span class="params">(T* ptr)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>void*</code> 不能解引用、不能加减，<code>char*</code> 通常表示 C 字符串而不是单个字符，这两类指针往往需要特殊处理。可以删除这些特化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">processPointer</span>&lt;<span class="type">void</span>&gt;(<span class="type">void</span>*) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">processPointer</span>&lt;<span class="type">char</span>&gt;(<span class="type">char</span>*) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">processPointer</span>&lt;<span class="type">const</span> <span class="type">void</span>&gt;(<span class="type">const</span> <span class="type">void</span>*) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">processPointer</span>&lt;<span class="type">const</span> <span class="type">char</span>&gt;(<span class="type">const</span> <span class="type">char</span>*) = <span class="keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果还想彻底一点，<code>const volatile void*</code>、<code>const volatile char*</code> 以及 <code>wchar_t</code>、<code>char16_t</code>、<code>char32_t</code> 等字符类型的指针也可以删。</p>
+<h3 id="成员函数模板的特化不能改访问级别"><a href="#成员函数模板的特化不能改访问级别" class="headerlink" title="成员函数模板的特化不能改访问级别"></a>成员函数模板的特化不能改访问级别</h3><p>如果 <code>processPointer</code> 是类 <code>Widget</code> 的成员模板，C++98 的“私有且不定义”做法行不通：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">  <span class="type">void</span> <span class="title">processPointer</span><span class="params">(T* ptr)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">template</span>&lt;&gt;                                  <span class="comment">// 错误</span></span><br><span class="line">  <span class="type">void</span> <span class="built_in">processPointer</span>&lt;<span class="type">void</span>&gt;(<span class="type">void</span>*);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>写的有点绕,大概意思就是,假如想要通过把特定类型的模板定义在private里面实现禁用是行不通的,只有通过delete才行<br>模板特化必须写在类外（命名空间作用域），不能给它单独的访问级别。删除函数没有这个问题，因为它不需要不同的访问级别：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">  <span class="type">void</span> <span class="title">processPointer</span><span class="params">(T* ptr)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> Widget::<span class="built_in">processPointer</span>&lt;<span class="type">void</span>&gt;(<span class="type">void</span>*) = <span class="keyword">delete</span>;   <span class="comment">// 仍然是 public，但已删除</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li>优先用 <code>= delete</code>，不要再用 C++98 的“声明为 private 且不定义”。</li>
+<li>被删除的函数在编译期就不可用，错误比链接期更早、更清楚。</li>
+<li>任何函数都可以删除，包括非成员函数和模板特化。</li>
+<li>被删除的函数仍然参与重载决议，所以可以用它精确拦截某些类型。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/qt-proj-1/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">图片贴合地图的实现</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-3-10/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款10 优先用限定作用域枚举</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
