@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款15：尽可能使用 constexpr一句话：constexpr 对象是“编译期已知的 const”，constexpr 函数在实参是编译期常量时给出编译期结果，否则退化成普通运行时函数。能用就用，但要把它当成接口承诺。 1. constexpr 对象constexpr 对象既是 const，值又在编译期已知： 123456int sz;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-15/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款15：尽可能使用 constexpr一句话：constexpr 对象是“编译期已知的 const”，constexpr 函数在实参是编译期常量时给出编译期结果，否则退化成普通运行时函数。能用就用，但要把它当成接口承诺。 1. constexpr 对象constexpr 对象既是 const，值又在编译期已知： 123456int sz;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-13T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-13T03:16:41.900Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-13T22:00:00+08:00">
+      November 13, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款15：尽可能使用-constexpr"><a href="#条款15：尽可能使用-constexpr" class="headerlink" title="条款15：尽可能使用 constexpr"></a>条款15：尽可能使用 constexpr</h1><p>一句话：<code>constexpr</code> 对象是“编译期已知的 const”，<code>constexpr</code> 函数在实参是编译期常量时给出编译期结果，否则退化成普通运行时函数。能用就用，但要把它当成接口承诺。</p>
+<h2 id="1-constexpr-对象"><a href="#1-constexpr-对象" class="headerlink" title="1. constexpr 对象"></a>1. constexpr 对象</h2><p><code>constexpr</code> 对象既是 <code>const</code>，值又在编译期已知：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> sz;                              <span class="comment">// 非 constexpr</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> arraySize1 = sz;      <span class="comment">// 错误：sz 的值编译期未知</span></span><br><span class="line">std::array&lt;<span class="type">int</span>, sz&gt; data1;           <span class="comment">// 错误：同上</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> arraySize2 = <span class="number">10</span>;      <span class="comment">// OK</span></span><br><span class="line">std::array&lt;<span class="type">int</span>, arraySize2&gt; data2;   <span class="comment">// OK</span></span><br></pre></td></tr></table></figure>
+
+<p>编译期常量可以用在需要“整数常量表达式”的地方：数组大小、模板实参、枚举值、对齐说明符等。</p>
+<p><code>const</code> 没有这个保证：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="keyword">auto</span> arraySize = sz;           <span class="comment">// OK：arraySize 是 sz 的 const 副本</span></span><br><span class="line">std::array&lt;<span class="type">int</span>, arraySize&gt; data;     <span class="comment">// 错误：值不是编译期已知</span></span><br></pre></td></tr></table></figure>
+
+<p>一句话：<strong>所有 <code>constexpr</code> 对象都是 <code>const</code>，但不是所有 <code>const</code> 对象都是 <code>constexpr</code></strong>。</p>
+<h2 id="2-constexpr-函数"><a href="#2-constexpr-函数" class="headerlink" title="2. constexpr 函数"></a>2. constexpr 函数</h2><p><code>constexpr</code> 函数有两种用法：</p>
+<ul>
+<li>用编译期常量调用，并且在需要编译期常量的上下文里使用，结果在编译期算出来；</li>
+<li>用运行时值调用，它就是普通函数，结果在运行时算出来。</li>
+</ul>
+<p>所以不需要写两个版本，一个 <code>constexpr</code> 函数就能兼顾。</p>
+<h3 id="例子：编译期求幂"><a href="#例子：编译期求幂" class="headerlink" title="例子：编译期求幂"></a>例子：编译期求幂</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">int</span> <span class="title">pow</span><span class="params">(<span class="type">int</span> base, <span class="type">int</span> exp)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (exp == <span class="number">0</span> ? <span class="number">1</span> : base * <span class="built_in">pow</span>(base, exp - <span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> numConds = <span class="number">5</span>;</span><br><span class="line">std::array&lt;<span class="type">int</span>, pow(3, numConds)&gt; results;   <span class="comment">// 3^5 个元素</span></span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>pow</code> 的结果被用作 <code>std::array</code> 的大小，所以必须在编译期算出来。因为 <code>3</code> 和 <code>numConds</code> 都是编译期常量，可以。</p>
+<p>同一个 <code>pow</code> 也能在运行时用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> base = <span class="built_in">readFromDB</span>(<span class="string">&quot;base&quot;</span>);</span><br><span class="line"><span class="keyword">auto</span> exp = <span class="built_in">readFromDB</span>(<span class="string">&quot;exponent&quot;</span>);</span><br><span class="line"><span class="keyword">auto</span> baseToExp = <span class="built_in">pow</span>(base, exp);   <span class="comment">// 运行时计算</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="C-11-与-C-14-的实现限制"><a href="#C-11-与-C-14-的实现限制" class="headerlink" title="C++11 与 C++14 的实现限制"></a>C++11 与 C++14 的实现限制</h3><p>C++11 的 <code>constexpr</code> 函数体只能有一条可执行语句：<code>return</code>。所以 <code>pow</code> 要用递归和 <code>?:</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">int</span> <span class="title">pow</span><span class="params">(<span class="type">int</span> base, <span class="type">int</span> exp)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (exp == <span class="number">0</span> ? <span class="number">1</span> : base * <span class="built_in">pow</span>(base, exp - <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++14 放宽了限制，可以写局部变量和循环：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">int</span> <span class="title">pow</span><span class="params">(<span class="type">int</span> base, <span class="type">int</span> exp)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> result = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; exp; ++i) result *= base;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-字面类型和-constexpr-类"><a href="#3-字面类型和-constexpr-类" class="headerlink" title="3. 字面类型和 constexpr 类"></a>3. 字面类型和 constexpr 类</h2><p><code>constexpr</code> 函数只能接收和返回“字面类型”（literal type），大致就是能在编译期确定值的类型。C++11 中除了 <code>void</code> 之外的内建类型都算；用户自定义类型也可以是字面类型，只要构造函数和成员函数能声明为 <code>constexpr</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">constexpr</span> <span class="title">Point</span><span class="params">(<span class="type">double</span> xVal = <span class="number">0</span>, <span class="type">double</span> yVal = <span class="number">0</span>)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">    : x(xVal), y(yVal) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">constexpr</span> <span class="type">double</span> <span class="title">xValue</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line">  <span class="function"><span class="keyword">constexpr</span> <span class="type">double</span> <span class="title">yValue</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> y; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">setX</span><span class="params">(<span class="type">double</span> newX)</span> <span class="keyword">noexcept</span> </span>&#123; x = newX; &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">setY</span><span class="params">(<span class="type">double</span> newY)</span> <span class="keyword">noexcept</span> </span>&#123; y = newY; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">double</span> x, y;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>构造函数可以是 <code>constexpr</code>，因为如果实参是编译期常量，成员的值也能在编译期确定：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> Point <span class="title">p1</span><span class="params">(<span class="number">9.4</span>, <span class="number">27.7</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">constexpr</span> Point <span class="title">p2</span><span class="params">(<span class="number">28.8</span>, <span class="number">5.3</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>getter 也可以是 <code>constexpr</code>，于是可以写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> Point <span class="title">midpoint</span><span class="params">(<span class="type">const</span> Point&amp; p1, <span class="type">const</span> Point&amp; p2)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; (p1.<span class="built_in">xValue</span>() + p2.<span class="built_in">xValue</span>()) / <span class="number">2</span>,</span><br><span class="line">           (p1.<span class="built_in">yValue</span>() + p2.<span class="built_in">yValue</span>()) / <span class="number">2</span> &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> mid = <span class="built_in">midpoint</span>(p1, p2);</span><br></pre></td></tr></table></figure>
+
+<p><code>mid</code> 的初始化涉及构造函数、getter 和普通函数，但整个计算可以在编译期完成，对象可以放在只读内存里。</p>
+<h3 id="C-11-的两个限制"><a href="#C-11-的两个限制" class="headerlink" title="C++11 的两个限制"></a>C++11 的两个限制</h3><p>在 C++11 中，<code>Point::setX</code> 和 <code>setY</code> 不能是 <code>constexpr</code>：</p>
+<ul>
+<li>它们修改对象，而 C++11 的 <code>constexpr</code> 成员函数隐式是 <code>const</code>；</li>
+<li>它们返回 <code>void</code>，而 C++11 中 <code>void</code> 不是字面类型。</li>
+</ul>
+<p>C++14 放宽了这两条，setter 也能是 <code>constexpr</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">void</span> <span class="title">setX</span><span class="params">(<span class="type">double</span> newX)</span> <span class="keyword">noexcept</span> </span>&#123; x = newX; &#125;   <span class="comment">// C++14</span></span><br><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">void</span> <span class="title">setY</span><span class="params">(<span class="type">double</span> newY)</span> <span class="keyword">noexcept</span> </span>&#123; y = newY; &#125;   <span class="comment">// C++14</span></span><br></pre></td></tr></table></figure>
+
+<p>于是可以写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> Point <span class="title">reflection</span><span class="params">(<span class="type">const</span> Point&amp; p)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  Point result;</span><br><span class="line">  result.<span class="built_in">setX</span>(-p.<span class="built_in">xValue</span>());</span><br><span class="line">  result.<span class="built_in">setY</span>(-p.<span class="built_in">yValue</span>());</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> reflectedMid = <span class="built_in">reflection</span>(mid);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-constexpr-是接口的一部分"><a href="#4-constexpr-是接口的一部分" class="headerlink" title="4. constexpr 是接口的一部分"></a>4. constexpr 是接口的一部分</h2><p><code>constexpr</code> 声明的是：“我可以在需要常量表达式的上下文里使用。”一旦声明，调用方就可能依赖它。</p>
+<p>如果以后去掉 <code>constexpr</code>，可能让大量客户代码编译失败。比如你为了调试给函数加了 I&#x2F;O，而 I&#x2F;O 通常不允许出现在 <code>constexpr</code> 函数里，这个函数就不再是 <code>constexpr</code> 了。</p>
+<p>所以“尽可能使用”还有一层含义：<strong>你愿意长期遵守 <code>constexpr</code> 带来的限制</strong>。</p>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li><code>constexpr</code> 对象是 <code>const</code>，并且用编译期已知的值初始化。</li>
+<li><code>constexpr</code> 函数在实参是编译期常量时能产生编译期结果；实参是运行时值时，它就是普通函数。</li>
+<li><code>constexpr</code> 对象和函数能用在比非 <code>constexpr</code> 更广的上下文里。</li>
+<li><code>constexpr</code> 是对象或函数接口的一部分，声明前要确认能长期遵守限制。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-3-14/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款14 不抛异常就声明 noexcept</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款14 不抛异常就声明 noexcept - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款14：如果函数不会抛异常，就声明 noexceptnoexcept 不只是“说明”，它是函数接口的一部分；调用方可以查询它，编译器也能据此生成更好的代码，移动操作和 swap 尤其受益。可以使得代码运行的更快,编译器不用给他加额外的错误处理 1. noexcept 是接口的一部分函数会不会抛异常，调用方很关心： 1void f() noexcept;   &#x2F;&#x2F; 承诺不抛  调用方可以用 noe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款14 不抛异常就声明 noexcept">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-14/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款14：如果函数不会抛异常，就声明 noexceptnoexcept 不只是“说明”，它是函数接口的一部分；调用方可以查询它，编译器也能据此生成更好的代码，移动操作和 swap 尤其受益。可以使得代码运行的更快,编译器不用给他加额外的错误处理 1. noexcept 是接口的一部分函数会不会抛异常，调用方很关心： 1void f() noexcept;   &#x2F;&#x2F; 承诺不抛  调用方可以用 noe">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-13T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-13T02:42:00.019Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-13T18:00:00+08:00">
+      November 13, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款14 不抛异常就声明 noexcept</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款14：如果函数不会抛异常，就声明-noexcept"><a href="#条款14：如果函数不会抛异常，就声明-noexcept" class="headerlink" title="条款14：如果函数不会抛异常，就声明 noexcept"></a>条款14：如果函数不会抛异常，就声明 noexcept</h1><p><code>noexcept</code> 不只是“说明”，它是函数接口的一部分；调用方可以查询它，编译器也能据此生成更好的代码，移动操作和 <code>swap</code> 尤其受益。可以使得代码运行的更快,编译器不用给他加额外的错误处理</p>
+<h2 id="1-noexcept-是接口的一部分"><a href="#1-noexcept-是接口的一部分" class="headerlink" title="1. noexcept 是接口的一部分"></a>1. noexcept 是接口的一部分</h2><p>函数会不会抛异常，调用方很关心：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;   <span class="comment">// 承诺不抛</span></span><br></pre></td></tr></table></figure>
+
+<p>调用方可以用 <code>noexcept(f())</code> 查询。这个结果会影响异常安全策略，甚至影响性能。所以“函数是否 <code>noexcept</code>”和“成员函数是否 <code>const</code>”一样，是接口信息。</p>
+<h2 id="2-为什么更可优化"><a href="#2-为什么更可优化" class="headerlink" title="2. 为什么更可优化"></a>2. 为什么更可优化</h2><p>C++98 的写法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">(<span class="type">int</span> x)</span> <span class="title">throw</span><span class="params">()</span></span>;    <span class="comment">// 不抛异常</span></span><br></pre></td></tr></table></figure>
+
+<p>C++11 的写法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">(<span class="type">int</span> x)</span> <span class="keyword">noexcept</span></span>;   <span class="comment">// 不抛异常</span></span><br></pre></td></tr></table></figure>
+
+<p>两者都表示“异常离开函数就终止程序”，但语义有细微差别：</p>
+<ul>
+<li><code>throw()</code>：异常离开时，调用栈会展开到调用者。</li>
+<li><code>noexcept</code>：异常离开时，栈<strong>可能</strong>不展开。</li>
+</ul>
+<p>这个差别对代码生成影响很大。对 <code>noexcept</code> 函数，编译器不需要保证栈可展开，也不需要在异常离开时按逆序销毁局部对象，因此可以做更多优化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">RetType <span class="title">f</span><span class="params">(params)</span> <span class="keyword">noexcept</span></span>;   <span class="comment">// 最可优化</span></span><br><span class="line"><span class="function">RetType <span class="title">f</span><span class="params">(params)</span> <span class="title">throw</span><span class="params">()</span></span>;    <span class="comment">// 次之</span></span><br><span class="line"><span class="function">RetType <span class="title">f</span><span class="params">(params)</span></span>;            <span class="comment">// 次之</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-移动操作为什么特别需要-noexcept"><a href="#3-移动操作为什么特别需要-noexcept" class="headerlink" title="3. 移动操作为什么特别需要 noexcept"></a>3. 移动操作为什么特别需要 noexcept</h2><p>考虑 <code>std::vector&lt;Widget&gt;</code> 的 <code>push_back</code>。当 vector 容量不够时，它要分配新内存，并把旧元素搬到新内存。</p>
+<p>C++98 用拷贝，能提供强异常安全保证：如果拷贝过程中抛异常，旧元素还在，vector 不变。</p>
+<p>C++11 想用移动代替拷贝，但移动可能抛异常。如果已经移动了 n 个元素，第 n+1 个移动时抛异常，旧 vector 已经被改了一部分，无法恢复。这会破坏 <code>push_back</code> 的强异常安全保证。</p>
+<p>所以标准库采取“能移动就移动，不能移动就拷贝”的策略：</p>
+<ul>
+<li>如果元素的移动构造函数是 <code>noexcept</code>，就用移动；</li>
+<li>否则用拷贝，保证强异常安全。</li>
+</ul>
+<p><code>std::vector::push_back</code> 内部通过 <code>std::move_if_noexcept</code> 和 <code>std::is_nothrow_move_constructible</code> 做这个判断。也就是说，<strong>你的移动构造函数没有声明 <code>noexcept</code>，vector 就可能退回拷贝，性能优势全没了</strong>。</p>
+<p>同理，<code>std::vector::reserve</code>、<code>std::deque::insert</code> 等提供强异常安全保证的操作，也会检查移动操作是否 <code>noexcept</code>。</p>
+<h2 id="4-swap-也需要-noexcept"><a href="#4-swap-也需要-noexcept" class="headerlink" title="4. swap 也需要 noexcept"></a>4. swap 也需要 noexcept</h2><p><code>swap</code> 被大量 STL 算法和拷贝赋值运算符使用，<code>noexcept</code> 的收益很大。标准库的 <code>swap</code> 有些是条件 <code>noexcept</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(T (&amp;a)[N], T (&amp;b)[N])</span></span></span><br><span class="line"><span class="function">  <span class="title">noexcept</span><span class="params">(<span class="keyword">noexcept</span>(swap(*a, *b)))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T1</span>, <span class="keyword">class</span> <span class="title class_">T2</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">pair</span> &#123;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(pair&amp; p)</span></span></span><br><span class="line"><span class="function">    <span class="title">noexcept</span><span class="params">(<span class="keyword">noexcept</span>(swap(first, p.first)) &amp;&amp;</span></span></span><br><span class="line"><span class="params"><span class="function">             <span class="keyword">noexcept</span>(swap(second, p.second)))</span></span>;<span class="comment">//这个是实时判断是否需要抛异常的写法,当表达式为true那就不抛异常,反之一此类推</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>数组的 <code>swap</code> 是否 <code>noexcept</code>，取决于元素 <code>swap</code> 是否 <code>noexcept</code>；<code>pair</code> 的 <code>swap</code> 取决于两个成员的 <code>swap</code>。所以给自定义类型写一个 <code>noexcept</code> 的 <code>swap</code>，能惠及上层容器和算法。</p>
+<h2 id="5-不要为了-noexcept-扭曲实现"><a href="#5-不要为了-noexcept-扭曲实现" class="headerlink" title="5. 不要为了 noexcept 扭曲实现"></a>5. 不要为了 noexcept 扭曲实现</h2><p><code>noexcept</code> 是长期承诺。声明了之后又后悔，选择都不好：</p>
+<ul>
+<li>去掉 <code>noexcept</code>：改了接口，可能破坏调用方。</li>
+<li>保留 <code>noexcept</code> 但让异常逃出：程序直接终止。</li>
+<li>硬着头皮不改实现：放弃原本想做的改进。</li>
+</ul>
+<p>大多数函数是“异常中立”的：自己不抛，但调用的函数可能抛，异常只是路过。这种函数<strong>不应该</strong>声明 <code>noexcept</code>，因为它们确实可能让异常穿过。</p>
+<p>只有当你确认函数“天然不抛异常”时，才声明 <code>noexcept</code>。如果为了 <code>noexcept</code> 去到处 catch、把异常换成错误码，往往会让实现和调用方都更复杂，性能收益可能还不如损失。</p>
+<h2 id="6-析构函数和-deallocation-函数默认-noexcept"><a href="#6-析构函数和-deallocation-函数默认-noexcept" class="headerlink" title="6. 析构函数和 deallocation 函数默认 noexcept"></a>6. 析构函数和 deallocation 函数默认 noexcept</h2><p>C++11 中，析构函数和 <code>operator delete</code>&#x2F;<code>operator delete[]</code> 默认是 <code>noexcept</code>，不用显式写。</p>
+<p>唯一的例外：类的某个成员（包括基类成员、嵌套成员）的析构函数显式声明了 <code>noexcept(false)</code>。这种类型很少见，标准库中没有；如果标准库对象（比如容器里的元素）的析构函数抛异常，行为未定义。</p>
+<h2 id="7-宽契约与窄契约"><a href="#7-宽契约与窄契约" class="headerlink" title="7. 宽契约与窄契约"></a>7. 宽契约与窄契约</h2><p>库设计里常把函数分成：</p>
+<ul>
+<li><strong>宽契约</strong>（wide contract）：没有前置条件，任何情况下都能调用，不会产生未定义行为。</li>
+<li><strong>窄契约</strong>（narrow contract）：有前置条件，违反前置条件就是未定义行为。</li>
+</ul>
+<p>宽契约且确定不抛异常的函数，适合声明 <code>noexcept</code>。</p>
+<p>窄契约就要小心。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> std::string&amp; s)</span> <span class="keyword">noexcept</span></span>;   <span class="comment">// 前置条件：s.length() &lt;= 32</span></span><br></pre></td></tr></table></figure>
+
+<p>如果实现选择检查前置条件，并在违反时抛异常，那它就不能是 <code>noexcept</code>。很多库设计者因此只给宽契约函数加 <code>noexcept</code>。</p>
+<h2 id="8-编译器通常不检查调用链"><a href="#8-编译器通常不检查调用链" class="headerlink" title="8. 编译器通常不检查调用链"></a>8. 编译器通常不检查调用链</h2><p>下面代码合法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">setup</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">doWork</span><span class="params">()</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">setup</span>();</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">cleanup</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>doWork</code> 声明了 <code>noexcept</code>，却调用了没有 <code>noexcept</code> 的 <code>setup</code>&#x2F;<code>cleanup</code>。编译器一般不会警告，因为 <code>setup</code>&#x2F;<code>cleanup</code> 可能文档上保证不抛，只是没写 <code>noexcept</code>（比如 C 库函数、旧 C++98 库）。</p>
+<p>所以 <code>noexcept</code> 最终还是要你自己判断，不能指望编译器帮你验证。</p>
+<h2 id="9-记住"><a href="#9-记住" class="headerlink" title="9. 记住"></a>9. 记住</h2><ul>
+<li><code>noexcept</code> 是函数接口的一部分，调用方可能依赖它。</li>
+<li><code>noexcept</code> 函数比非 <code>noexcept</code> 函数更容易优化。</li>
+<li>移动操作、<code>swap</code>、deallocation 函数、析构函数尤其适合 <code>noexcept</code>。</li>
+<li>大多数函数是异常中立的，不要随便声明 <code>noexcept</code>。</li>
+<li>析构函数和 deallocation 函数默认 <code>noexcept</code>；只有成员析构函数显式 <code>noexcept(false)</code> 时才例外。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-3-15/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-3-13/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款13 优先用 const_iterator</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
