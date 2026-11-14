@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款16：让 const 成员函数做到线程安全const 成员函数不代表“只读”，它可能通过 mutable 成员修改缓存；多个线程同时调用同一个对象的 const 成员函数时，也可能产生数据竞争。其实这节有点没啥必要了,这明明是所有函数都存在的问题,还专门提一个const函数,感觉其实有点莫名其妙 1. 一个看似只读的 const 函数多项式求根很耗时，通常会把结果缓存起来： 123456789">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-16/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款16：让 const 成员函数做到线程安全const 成员函数不代表“只读”，它可能通过 mutable 成员修改缓存；多个线程同时调用同一个对象的 const 成员函数时，也可能产生数据竞争。其实这节有点没啥必要了,这明明是所有函数都存在的问题,还专门提一个const函数,感觉其实有点莫名其妙 1. 一个看似只读的 const 函数多项式求根很耗时，通常会把结果缓存起来： 123456789">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-14T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-14T03:14:04.365Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-14T12:00:00+08:00">
+      November 14, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款16：让-const-成员函数做到线程安全"><a href="#条款16：让-const-成员函数做到线程安全" class="headerlink" title="条款16：让 const 成员函数做到线程安全"></a>条款16：让 const 成员函数做到线程安全</h1><p><code>const</code> 成员函数不代表“只读”，它可能通过 <code>mutable</code> 成员修改缓存；多个线程同时调用同一个对象的 <code>const</code> 成员函数时，也可能产生数据竞争。其实这节有点没啥必要了,这明明是所有函数都存在的问题,还专门提一个const函数,感觉其实有点莫名其妙</p>
+<h2 id="1-一个看似只读的-const-函数"><a href="#1-一个看似只读的-const-函数" class="headerlink" title="1. 一个看似只读的 const 函数"></a>1. 一个看似只读的 const 函数</h2><p>多项式求根很耗时，通常会把结果缓存起来：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Polynomial</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">using</span> RootsType = std::vector&lt;<span class="type">double</span>&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="function">RootsType <span class="title">roots</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!rootsAreValid) &#123;</span><br><span class="line">      ...                    <span class="comment">// 计算根，存入 rootVals</span></span><br><span class="line">      rootsAreValid = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> rootVals;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> <span class="type">bool</span> rootsAreValid&#123;<span class="literal">false</span>&#125;;</span><br><span class="line">  <span class="keyword">mutable</span> RootsType rootVals&#123;&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>roots()</code> 不改变多项式的值，所以声明为 <code>const</code> 是合理的；但为了缓存，它修改了 <code>rootsAreValid</code> 和 <code>rootVals</code>，所以这两个成员是 <code>mutable</code>。</p>
+<p>单线程没问题。多线程就危险了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Polynomial p;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程1</span></span><br><span class="line"><span class="keyword">auto</span> rootsOfP = p.<span class="built_in">roots</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程2</span></span><br><span class="line"><span class="keyword">auto</span> valsGivingZero = p.<span class="built_in">roots</span>();</span><br></pre></td></tr></table></figure>
+
+<p>两个线程都调用 <code>const</code> 成员函数，看起来都是读操作，不需要同步。但 <code>roots()</code> 内部可能同时读写 <code>rootsAreValid</code> 和 <code>rootVals</code>，这就是数据竞争，行为未定义。</p>
+<p>问题不在 <code>const</code> 声明：从概念上说，求根确实不改变多项式。问题在于函数<strong>不是线程安全的</strong>。</p>
+<h2 id="2-用-mutex-保护"><a href="#2-用-mutex-保护" class="headerlink" title="2. 用 mutex 保护"></a>2. 用 mutex 保护</h2><p>最直接的办法是加锁：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Polynomial</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">using</span> RootsType = std::vector&lt;<span class="type">double</span>&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="function">RootsType <span class="title">roots</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">g</span><span class="params">(m)</span></span>;   <span class="comment">// 加锁</span></span><br><span class="line">    <span class="keyword">if</span> (!rootsAreValid) &#123;</span><br><span class="line">      ...</span><br><span class="line">      rootsAreValid = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> rootVals;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> std::mutex m;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="type">bool</span> rootsAreValid&#123;<span class="literal">false</span>&#125;;</span><br><span class="line">  <span class="keyword">mutable</span> RootsType rootVals&#123;&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>m</code> 必须声明为 <code>mutable</code>，因为 <code>lock_guard</code> 的构造&#x2F;析构会调用 <code>mutex</code> 的非 const 成员函数，而在 <code>const</code> 成员函数里，<code>m</code> 默认是 const。</p>
+<p>副作用：<code>std::mutex</code> 既不能拷贝也不能移动，所以 <code>Polynomial</code> 也变成既不能拷贝也不能移动。（书里把这类类型称作 move-only，但标准库的 <code>std::mutex</code> 实际上连移动构造也没有；以编译器的 type traits 为准。）</p>
+<h2 id="3-单个计数器用-atomic"><a href="#3-单个计数器用-atomic" class="headerlink" title="3. 单个计数器用 atomic"></a>3. 单个计数器用 atomic</h2><p>如果只是统计成员函数被调用了多少次，用 <code>std::atomic</code> 通常比 mutex 轻量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">double</span> <span class="title">distanceFromOrigin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    ++callCount;   <span class="comment">// 原子递增</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">sqrt</span>((x * x) + (y * y));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> std::atomic&lt;<span class="type">unsigned</span>&gt; callCount&#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> x, y;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::atomic</code> 同样既不能拷贝也不能移动，所以 <code>Point</code> 也变成既不能拷贝也不能移动。</p>
+<h2 id="4-两个-atomic-不一定够"><a href="#4-两个-atomic-不一定够" class="headerlink" title="4. 两个 atomic 不一定够"></a>4. 两个 atomic 不一定够</h2><p>假设你要缓存一个昂贵的计算结果，想用两个 <code>atomic</code> 变量避免加锁：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">magicValue</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (cacheValid) <span class="keyword">return</span> cachedValue;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">auto</span> val1 = <span class="built_in">expensiveComputation1</span>();</span><br><span class="line">      <span class="keyword">auto</span> val2 = <span class="built_in">expensiveComputation2</span>();</span><br><span class="line">      cachedValue = val1 + val2;   <span class="comment">// 第一步</span></span><br><span class="line">      cacheValid = <span class="literal">true</span>;           <span class="comment">// 第二步</span></span><br><span class="line">      <span class="keyword">return</span> cachedValue;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> std::atomic&lt;<span class="type">bool</span>&gt; cacheValid&#123;<span class="literal">false</span>&#125;;</span><br><span class="line">  <span class="keyword">mutable</span> std::atomic&lt;<span class="type">int</span>&gt; cachedValue;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这能工作，但可能重复计算：</p>
+<ul>
+<li>线程 A 看到 <code>cacheValid == false</code>，开始计算；</li>
+<li>线程 B 也看到 <code>cacheValid == false</code>，也做同样的计算。</li>
+</ul>
+<p>把赋值顺序反过来：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cacheValid = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">return</span> cachedValue = val1 + val2;</span><br></pre></td></tr></table></figure>
+
+<p>问题更严重：</p>
+<ul>
+<li>线程 A 先把 <code>cacheValid</code> 设为 <code>true</code>；</li>
+<li>线程 B 看到 <code>true</code>，直接返回 <code>cachedValue</code>，但线程 A 还没写入新值；</li>
+<li>线程 B 拿到的是错误的值。</li>
+</ul>
+<p>结论：<strong>单个变量或内存位置的同步，<code>std::atomic</code> 足够；两个或更多变量需要作为一个整体操作时，应该用 mutex。</strong></p>
+<p>用 mutex 的版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">magicValue</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span> (cacheValid) <span class="keyword">return</span> cachedValue;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">auto</span> val1 = <span class="built_in">expensiveComputation1</span>();</span><br><span class="line">      <span class="keyword">auto</span> val2 = <span class="built_in">expensiveComputation2</span>();</span><br><span class="line">      cachedValue = val1 + val2;</span><br><span class="line">      cacheValid = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">return</span> cachedValue;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> std::mutex m;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="type">int</span> cachedValue;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="type">bool</span> cacheValid&#123;<span class="literal">false</span>&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li><code>const</code> 成员函数也可能通过 <code>mutable</code> 成员修改状态，因此可能不是线程安全的。</li>
+<li>多个线程同时调用同一个对象的 <code>const</code> 成员函数，如果有内部写入，就是数据竞争。</li>
+<li>用 <code>std::mutex</code> 保护共享状态；<code>mutex</code> 需要声明为 <code>mutable</code>。</li>
+<li>单个变量&#x2F;内存位置可以用 <code>std::atomic</code>；多个变量需要作为整体操作时，用 mutex。</li>
+<li><code>mutex</code> 和 <code>atomic</code> 都不可拷贝、不可移动，会让所在类也既不能拷贝也不能移动。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-3-17/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款17 理解特殊成员函数生成</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-3-15/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(三)：条款17 理解特殊成员函数生成 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款17：理解特殊成员函数的生成规则编译器会在需要时自动生成默认构造、析构、拷贝、移动这些特殊成员函数；但只要你声明了其中一个，就可能悄悄改变其他函数的生成。最稳妥的做法是：需要默认行为时用 &#x3D; default 写清楚。 1. 六个特殊成员函数C++98 有四个：  默认构造函数 析构函数 拷贝构造函数 拷贝赋值运算符  C++11 又加了两个：对于右值用的  移动构造函数 移动赋值运算符  12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(三)：条款17 理解特殊成员函数生成">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-3-17/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款17：理解特殊成员函数的生成规则编译器会在需要时自动生成默认构造、析构、拷贝、移动这些特殊成员函数；但只要你声明了其中一个，就可能悄悄改变其他函数的生成。最稳妥的做法是：需要默认行为时用 &#x3D; default 写清楚。 1. 六个特殊成员函数C++98 有四个：  默认构造函数 析构函数 拷贝构造函数 拷贝赋值运算符  C++11 又加了两个：对于右值用的  移动构造函数 移动赋值运算符  12">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-14T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-14T03:19:56.220Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-14T18:00:00+08:00">
+      November 14, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(三)：条款17 理解特殊成员函数生成</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款17：理解特殊成员函数的生成规则"><a href="#条款17：理解特殊成员函数的生成规则" class="headerlink" title="条款17：理解特殊成员函数的生成规则"></a>条款17：理解特殊成员函数的生成规则</h1><p>编译器会在需要时自动生成默认构造、析构、拷贝、移动这些特殊成员函数；但只要你声明了其中一个，就可能悄悄改变其他函数的生成。最稳妥的做法是：需要默认行为时用 <code>= default</code> 写清楚。</p>
+<h2 id="1-六个特殊成员函数"><a href="#1-六个特殊成员函数" class="headerlink" title="1. 六个特殊成员函数"></a>1. 六个特殊成员函数</h2><p>C++98 有四个：</p>
+<ul>
+<li>默认构造函数</li>
+<li>析构函数</li>
+<li>拷贝构造函数</li>
+<li>拷贝赋值运算符</li>
+</ul>
+<p>C++11 又加了两个：<br>对于右值用的</p>
+<ul>
+<li>移动构造函数</li>
+<li>移动赋值运算符</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Widget</span>(Widget&amp;&amp; rhs);              <span class="comment">// 移动构造</span></span><br><span class="line">  Widget&amp; <span class="keyword">operator</span>=(Widget&amp;&amp; rhs);   <span class="comment">// 移动赋值</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这些函数只在“被需要”时生成，即代码里用到了它们，而类里又没有显式声明。生成的函数是 <code>public</code>、<code>inline</code> 的；除非基类析构函数是虚的，派生类的析构函数才会是虚的。</p>
+<h2 id="2-移动操作是“成员级移动”"><a href="#2-移动操作是“成员级移动”" class="headerlink" title="2. 移动操作是“成员级移动”"></a>2. 移动操作是“成员级移动”</h2><p>移动构造函数对每个非静态数据成员做移动构造，移动赋值对每个成员做移动赋值；基类部分也一样。</p>
+<p>但“移动”不一定真的发生。对于没有移动操作的类型（比如大多数 C++98 遗留类），所谓“移动”实际调用的是拷贝。每个成员的“移动”本质上是 <code>std::move</code> 之后的重载决议：能移动就移动，不能移动就拷贝。</p>
+<h2 id="3-拷贝是独立的，移动不是"><a href="#3-拷贝是独立的，移动不是" class="headerlink" title="3. 拷贝是独立的，移动不是"></a>3. 拷贝是独立的，移动不是</h2><p>两个拷贝操作互相独立：</p>
+<ul>
+<li>声明拷贝构造，不会阻止编译器生成拷贝赋值；</li>
+<li>声明拷贝赋值，也不会阻止生成拷贝构造。</li>
+</ul>
+<p>两个移动操作不独立：</p>
+<ul>
+<li>声明移动构造，会阻止生成移动赋值；</li>
+<li>声明移动赋值，会阻止生成移动构造。</li>
+</ul>
+<p>理由：如果你自己写了移动构造，说明默认的成员级移动不合适；那么成员级移动赋值大概率也不合适。</p>
+<h3 id="拷贝和移动互相影响"><a href="#拷贝和移动互相影响" class="headerlink" title="拷贝和移动互相影响"></a>拷贝和移动互相影响</h3><ul>
+<li><strong>声明拷贝操作会阻止移动操作的生成</strong>。因为你觉得成员级拷贝不合适，编译器就认为成员级移动也不合适。</li>
+<li><strong>声明移动操作会让拷贝操作被删除</strong>（用 <code>= delete</code>）。因为成员级移动不合适，成员级拷贝也不合适。</li>
+</ul>
+<p>这不会破坏 C++98 代码，因为 C++98 根本没有移动操作；只有为 C++11 新加了移动操作的类才会触发这些规则。</p>
+<h2 id="4-Rule-of-Three-和析构函数"><a href="#4-Rule-of-Three-和析构函数" class="headerlink" title="4. Rule of Three 和析构函数"></a>4. Rule of Three 和析构函数</h2><p>Rule of Three（三法则）：如果你声明了拷贝构造、拷贝赋值、析构函数中的任何一个，就应该把三个都声明。</p>
+<p>原因：需要自定义拷贝，通常意味着类在管理资源；两个拷贝操作和析构函数都要参与资源管理。</p>
+<p>一个推论：<strong>用户声明析构函数，说明简单的成员级拷贝很可能不合适</strong>，所以编译器不应该自动生成拷贝操作。但 C++98 没有限制这一点，C++11 也没有直接禁止，因为会破坏太多旧代码。C++11 只是把“有用户声明析构函数或拷贝操作时，拷贝操作的自动生成”标记为 deprecated（弃用）。</p>
+<h2 id="5-移动操作生成的条件"><a href="#5-移动操作生成的条件" class="headerlink" title="5. 移动操作生成的条件"></a>5. 移动操作生成的条件</h2><p>移动操作只在以下三条都满足时才会生成：</p>
+<ul>
+<li>类没有声明拷贝操作；</li>
+<li>类没有声明移动操作；</li>
+<li>类没有声明析构函数。</li>
+</ul>
+<p>注意第三条：<strong>只要写了析构函数，移动操作就不会自动生成</strong>。这是很多性能问题的来源。</p>
+<h2 id="6-用-default-恢复"><a href="#6-用-default-恢复" class="headerlink" title="6. 用 &#x3D; default 恢复"></a>6. 用 &#x3D; default 恢复</h2><p>如果编译器生成的行为正是你想要的，可以用 <code>= default</code> 显式要求：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  ~<span class="built_in">Widget</span>();                             <span class="comment">// 用户声明析构函数</span></span><br><span class="line">  <span class="built_in">Widget</span>(<span class="type">const</span> Widget&amp;) = <span class="keyword">default</span>;       <span class="comment">// 默认拷贝构造</span></span><br><span class="line">  Widget&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp;) = <span class="keyword">default</span>;  <span class="comment">// 默认拷贝赋值</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>多态基类经常需要这种写法。基类通常要有虚析构函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() = <span class="keyword">default</span>;             <span class="comment">// 虚析构</span></span><br><span class="line">  <span class="built_in">Base</span>(Base&amp;&amp;) = <span class="keyword">default</span>;                <span class="comment">// 支持移动</span></span><br><span class="line">  Base&amp; <span class="keyword">operator</span>=(Base&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line">  <span class="built_in">Base</span>(<span class="type">const</span> Base&amp;) = <span class="keyword">default</span>;           <span class="comment">// 支持拷贝</span></span><br><span class="line">  Base&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Base&amp;) = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>因为用户声明了析构函数，移动操作不会自动生成；用 <code>= default</code> 补上。又因为声明了移动操作，拷贝操作会被删除；再用 <code>= default</code> 补上。这样六个函数的行为都明确。这个我觉得是最好的办法,既显然,又方便</p>
+<h2 id="7-一个性能陷阱：StringTable"><a href="#7-一个性能陷阱：StringTable" class="headerlink" title="7. 一个性能陷阱：StringTable"></a>7. 一个性能陷阱：StringTable</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StringTable</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">StringTable</span>() &#123;&#125;</span><br><span class="line">  ...   <span class="comment">// 插入、删除、查找等，没有拷贝/移动/析构</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::map&lt;<span class="type">int</span>, std::string&gt; values;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>一开始编译器会自动生成拷贝、移动、析构，一切正常。</p>
+<p>后来想加日志：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StringTable</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">StringTable</span>()</span><br><span class="line">  &#123; <span class="built_in">makeLogEntry</span>(<span class="string">&quot;Creating StringTable object&quot;</span>); &#125;</span><br><span class="line"></span><br><span class="line">  ~<span class="built_in">StringTable</span>()</span><br><span class="line">  &#123; <span class="built_in">makeLogEntry</span>(<span class="string">&quot;Destroying StringTable object&quot;</span>); &#125;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::map&lt;<span class="type">int</span>, std::string&gt; values;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>看起来只是加了个析构函数，但副作用很大：<strong>移动操作不再生成</strong>。拷贝操作仍然生成。</p>
+<p>于是代码里所有“移动” <code>StringTable</code> 的地方，实际都变成拷贝；拷贝一个 <code>std::map&lt;int, std::string&gt;</code> 可能比移动慢几个数量级。程序能编译、能运行、功能测试也能过，只是性能悄悄变差。</p>
+<p>如果显式用 <code>= default</code> 声明拷贝和移动，问题就不会发生：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">StringTable</span>(StringTable&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line">StringTable&amp; <span class="keyword">operator</span>=(StringTable&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line"><span class="built_in">StringTable</span>(<span class="type">const</span> StringTable&amp;) = <span class="keyword">default</span>;</span><br><span class="line">StringTable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> StringTable&amp;) = <span class="keyword">default</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-生成规则速查"><a href="#8-生成规则速查" class="headerlink" title="8. 生成规则速查"></a>8. 生成规则速查</h2><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>生成条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认构造函数</td>
+<td>类没有用户声明的构造函数</td>
+</tr>
+<tr>
+<td>析构函数</td>
+<td>总是生成；默认 <code>noexcept</code>；基类析构是虚的时才是虚的</td>
+</tr>
+<tr>
+<td>拷贝构造函数</td>
+<td>没有用户声明的拷贝构造；声明了移动操作则被删除；有用户声明的拷贝赋值或析构时生成被弃用</td>
+</tr>
+<tr>
+<td>拷贝赋值运算符</td>
+<td>没有用户声明的拷贝赋值；声明了移动操作则被删除；有用户声明的拷贝构造或析构时生成被弃用</td>
+</tr>
+<tr>
+<td>移动构造函数</td>
+<td>没有用户声明的拷贝操作、移动操作、析构函数</td>
+</tr>
+<tr>
+<td>移动赋值运算符</td>
+<td>同上</td>
+</tr>
+</tbody></table>
+<h2 id="9-成员函数模板不阻止生成"><a href="#9-成员函数模板不阻止生成" class="headerlink" title="9. 成员函数模板不阻止生成"></a>9. 成员函数模板不阻止生成</h2><p>类里的成员函数模板不会阻止编译器生成特殊成员函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">  <span class="title">Widget</span><span class="params">(<span class="type">const</span> T&amp; rhs)</span></span>;            <span class="comment">// 从任意类型构造</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">  Widget&amp; <span class="keyword">operator</span>=(<span class="type">const</span> T&amp; rhs); <span class="comment">// 从任意类型赋值</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>即使这些模板在 <code>T = Widget</code> 时能实例化出拷贝构造&#x2F;拷贝赋值的签名，编译器仍然会生成真正的拷贝和移动操作。这一点在条款26 里会造成重要影响。</p>
+<h2 id="10-记住"><a href="#10-记住" class="headerlink" title="10. 记住"></a>10. 记住</h2><ul>
+<li>特殊成员函数包括：默认构造、析构、拷贝构造、拷贝赋值、移动构造、移动赋值。</li>
+<li>移动操作只在类没有声明拷贝操作、移动操作、析构函数时生成。</li>
+<li>拷贝构造和拷贝赋值互相独立；移动构造和移动赋值不独立。</li>
+<li>声明拷贝操作会抑制移动操作；声明移动操作会删除拷贝操作。</li>
+<li>用户声明析构函数会抑制移动操作，但不会阻止拷贝操作生成（生成拷贝操作被弃用）。</li>
+<li>需要默认行为时用 <code>= default</code> 写清楚，避免悄悄退化成拷贝。</li>
+<li>成员函数模板不会阻止特殊成员函数的生成。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-3-16/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
