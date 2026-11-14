@@ -13,15 +13,15 @@
   <link rel='manifest' href='/manifest.json'>
   
 
-  <meta name="description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 3.1 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannond">
+  <meta name="description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 1. 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannonda">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python教程(二)---列表">
 <meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-2/index.html">
 <meta property="og:site_name" content="陈某人的个人空间">
-<meta property="og:description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 3.1 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannond">
+<meta property="og:description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 1. 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannonda">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-14T10:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-14T08:52:24.480Z">
+<meta property="article:modified_time" content="2026-11-14T15:35:12.372Z">
 <meta property="article:author" content="crazera">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="python语法">
@@ -202,7 +202,7 @@
 
   <div class="content">
     <h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去</p>
-<h2 id="3-1-列表是什么"><a href="#3-1-列表是什么" class="headerlink" title="3.1 列表是什么"></a>3.1 列表是什么</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(bicycles)</span><br></pre></td></tr></table></figure>
+<h2 id="1-列表是什么"><a href="#1-列表是什么" class="headerlink" title="1. 列表是什么"></a>1. 列表是什么</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(bicycles)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]</span><br></pre></td></tr></table></figure>
 
@@ -247,7 +247,7 @@
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">My first bicycle was a Trek.</span><br></pre></td></tr></table></figure>
 
 <p>注意 <code>.title()</code> 的位置：作用在 <code>bicycles[0]</code> 这个值上，而不是 <code>bicycles</code> 上。</p>
-<h2 id="3-2-修改、添加和删除元素"><a href="#3-2-修改、添加和删除元素" class="headerlink" title="3.2 修改、添加和删除元素"></a>3.2 修改、添加和删除元素</h2><h3 id="修改：按下标赋值"><a href="#修改：按下标赋值" class="headerlink" title="修改：按下标赋值"></a>修改：按下标赋值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br><span class="line"></span><br><span class="line">motorcycles[<span class="number">0</span>] = <span class="string">&#x27;ducati&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;ducati&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-修改、添加和删除元素"><a href="#2-修改、添加和删除元素" class="headerlink" title="2. 修改、添加和删除元素"></a>2. 修改、添加和删除元素</h2><h3 id="修改：按下标赋值"><a href="#修改：按下标赋值" class="headerlink" title="修改：按下标赋值"></a>修改：按下标赋值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br><span class="line"></span><br><span class="line">motorcycles[<span class="number">0</span>] = <span class="string">&#x27;ducati&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;ducati&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
 
 <p>语法和访问元素一样，只是把取值换成了赋值。可以改任何位置的元素，不只是第一个。</p>
 <h3 id="添加：append-与-insert"><a href="#添加：append-与-insert" class="headerlink" title="添加：append() 与 insert()"></a>添加：<code>append()</code> 与 <code>insert()</code></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">motorcycles.append(<span class="string">&#x27;ducati&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;, &#x27;ducati&#x27;]</span></span><br></pre></td></tr></table></figure>
@@ -274,7 +274,7 @@
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A Ducati is too expensive for me.</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-3-组织列表"><a href="#3-3-组织列表" class="headerlink" title="3.3 组织列表"></a>3.3 组织列表</h2><p>用户的输入顺序、文件里的记录顺序，往往不受你控制；但展示时经常需要按字母、按数字、按时间排。</p>
+<h2 id="3-组织列表"><a href="#3-组织列表" class="headerlink" title="3. 组织列表"></a>3. 组织列表</h2><p>用户的输入顺序、文件里的记录顺序，往往不受你控制；但展示时经常需要按字母、按数字、按时间排。</p>
 <h3 id="sort-：永久排序"><a href="#sort-：永久排序" class="headerlink" title="sort()：永久排序"></a><code>sort()</code>：永久排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line">cars.sort()</span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># [&#x27;audi&#x27;, &#x27;bmw&#x27;, &#x27;subaru&#x27;, &#x27;toyota&#x27;]</span></span><br></pre></td></tr></table></figure>
 
 <p>排序是<strong>原地</strong>完成的，原来的顺序再也回不来。想倒序就传参数：</p>
@@ -295,7 +295,7 @@
 <p>它只是把顺序倒过来，不比较大小。而且<strong>再调用一次就恢复原样</strong>，所以它虽然也是永久修改，却是可逆的。</p>
 <h3 id="len-：长度"><a href="#len-：长度" class="headerlink" title="len()：长度"></a><code>len()</code>：长度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(cars))            <span class="comment"># 4</span></span><br></pre></td></tr></table></figure>
 <p><code>len()</code> 从 1 开始数，所以确定长度时不会遇到差一错误。书里举的用例都很实际：还剩几个外星人、有多少条数据、网站有多少注册用户。<br>注意 <code>sort()</code>、<code>reverse()</code> 都返回 <code>None</code>。写成 <code>cars = cars.sort()</code> 会把列表变成 <code>None</code>，这是新手常见事故。要分清是成员函数还是外部函数</p>
-<h2 id="3-4-使用列表时避免索引错误"><a href="#3-4-使用列表时避免索引错误" class="headerlink" title="3.4 使用列表时避免索引错误"></a>3.4 使用列表时避免索引错误</h2><p>当心越界,幸好是python,要是C&#x2F;C++就内存泄漏了</p>
+<h2 id="4-使用列表时避免索引错误"><a href="#4-使用列表时避免索引错误" class="headerlink" title="4. 使用列表时避免索引错误"></a>4. 使用列表时避免索引错误</h2><p>当心越界,幸好是python,要是C&#x2F;C++就内存泄漏了</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles[<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;motorcycles.py&quot;, line 3, in &lt;module&gt;</span><br><span class="line">    print(motorcycles[3])</span><br><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
 
