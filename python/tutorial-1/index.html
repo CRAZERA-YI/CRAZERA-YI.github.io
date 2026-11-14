@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(一)---变量和简单数据类型 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="变量和简单数据类型1. 变量赋值与重新赋值12message &#x3D; &quot;Hello Python world!&quot;print(message)  输出： 1Hello Python world!  &#x3D; 不是“相等”，而是“把右边的值绑定给左边的名字”。变量可以随时改，Python 始终记录最新值——书里的这句话是整个动态类型体系的地基。 命名规则   规则 可行 不可行    只能含">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(一)---变量和简单数据类型">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="变量和简单数据类型1. 变量赋值与重新赋值12message &#x3D; &quot;Hello Python world!&quot;print(message)  输出： 1Hello Python world!  &#x3D; 不是“相等”，而是“把右边的值绑定给左边的名字”。变量可以随时改，Python 始终记录最新值——书里的这句话是整个动态类型体系的地基。 命名规则   规则 可行 不可行    只能含">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-14T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-14T05:07:51.041Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-14T12:00:00+08:00">
+      November 14, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(一)---变量和简单数据类型</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="变量和简单数据类型"><a href="#变量和简单数据类型" class="headerlink" title="变量和简单数据类型"></a>变量和简单数据类型</h1><h2 id="1-变量"><a href="#1-变量" class="headerlink" title="1. 变量"></a>1. 变量</h2><h3 id="赋值与重新赋值"><a href="#赋值与重新赋值" class="headerlink" title="赋值与重新赋值"></a>赋值与重新赋值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&quot;Hello Python world!&quot;</span></span><br><span class="line"><span class="built_in">print</span>(message)</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello Python world!</span><br></pre></td></tr></table></figure>
+
+<p><code>=</code> 不是“相等”，而是“把右边的值绑定给左边的名字”。变量可以随时改，Python 始终记录最新值——书里的这句话是整个动态类型体系的地基。</p>
+<h3 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h3><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>可行</th>
+<th>不可行</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只能含字母、数字、下划线</td>
+<td><code>message_1</code></td>
+<td><code>message-1</code></td>
+</tr>
+<tr>
+<td>不能以数字开头</td>
+<td><code>message_1</code></td>
+<td><code>1_message</code></td>
+</tr>
+<tr>
+<td>不能含空格</td>
+<td><code>greeting_message</code></td>
+<td><code>greeting message</code></td>
+</tr>
+<tr>
+<td>不能用关键字和内置函数名</td>
+<td><code>message</code></td>
+<td><code>print</code>、<code>class</code></td>
+</tr>
+<tr>
+<td>简短且有描述性</td>
+<td><code>name_length</code></td>
+<td><code>length_of_persons_name</code></td>
+</tr>
+<tr>
+<td>避开易混字符</td>
+<td><code>count</code></td>
+<td><code>l</code>、<code>O</code>（像 1 和 0）</td>
+</tr>
+</tbody></table>
+<p>最好用小写变量名,大写一般拿来命名类名</p>
+<h3 id="NameError：名字对不上"><a href="#NameError：名字对不上" class="headerlink" title="NameError：名字对不上"></a>NameError：名字对不上</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&quot;Hello Python Crash Course reader!&quot;</span></span><br><span class="line"><span class="built_in">print</span>(mesage)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;hello_world.py&quot;, line 2, in &lt;module&gt;</span><br><span class="line">    print(mesage)</span><br><span class="line">NameError: name &#x27;mesage&#x27; is not defined</span><br></pre></td></tr></table></figure>
+
+<p>traceback 三要素：<strong>文件与行号</strong>、<strong>出错的那行代码</strong>、<strong>错误类型与描述</strong>。书里对 <code>NameError</code> 的解释很到位：通常只有两种原因——用了变量却没赋值，或者变量名拼错了。有意思的是，如果把两处都拼成 <code>mesage</code>，程序反而能正常运行：解释器不做拼写检查，只要求前后一致。</p>
+<h2 id="2-3-字符串"><a href="#2-3-字符串" class="headerlink" title="2.3 字符串"></a>2.3 字符串</h2><h3 id="引号、大小写与拼接"><a href="#引号、大小写与拼接" class="headerlink" title="引号、大小写与拼接"></a>引号、大小写与拼接</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;this is a string&quot;</span></span><br><span class="line"><span class="built_in">print</span>(name.title())        <span class="comment"># This Is A String</span></span><br><span class="line"><span class="built_in">print</span>(name.upper())        <span class="comment"># THIS IS A STRING</span></span><br><span class="line"><span class="built_in">print</span>(name.lower())        <span class="comment"># this is a string</span></span><br></pre></td></tr></table></figure>
+
+<p>单引号和双引号等价，好处是可以在字符串里放另一种引号,如果在C&#x2F;C++里面就需要用转义字符了,有点麻烦：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;I told my friend, &quot;Python is my favorite language!&quot;&#x27;</span></span><br><span class="line"><span class="string">&quot;The language &#x27;Python&#x27; is named after Monty Python, not the snake.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>方法调用用点号：<code>name.title()</code> 表示“对 <code>name</code> 这个值执行 <code>title</code> 操作”。括号必不可少，即使不需要额外参数。书里特别强调 <code>lower()</code> 的实用场景：存储用户输入前统一转小写，显示时再转成合适的格式。</p>
+<p>拼接用 <code>+</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">first_name = <span class="string">&quot;ada&quot;</span></span><br><span class="line">last_name = <span class="string">&quot;lovelace&quot;</span></span><br><span class="line">full_name = first_name + <span class="string">&quot; &quot;</span> + last_name</span><br><span class="line">message = <span class="string">&quot;Hello, &quot;</span> + full_name.title() + <span class="string">&quot;!&quot;</span></span><br><span class="line"><span class="built_in">print</span>(message)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, Ada Lovelace!</span><br></pre></td></tr></table></figure>
+
+<p>把整条消息先存进变量再打印，是书里反复示范的习惯：<code>print</code> 语句因此变得简单，消息也方便复用。</p>
+<h3 id="空白：-t、-n-与剔除"><a href="#空白：-t、-n-与剔除" class="headerlink" title="空白：\t、\n 与剔除"></a>空白：<code>\t</code>、<code>\n</code> 与剔除</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Languages:\n\tPython\n\tC\n\tJavaScript&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Languages:</span><br><span class="line">    Python</span><br><span class="line">    C</span><br><span class="line">    JavaScript</span><br></pre></td></tr></table></figure>
+
+<p><code>\t</code> 制表符、<code>\n</code> 换行符，一个字符串就能生成多行输出。第 3 章打印“原始列表 &#x2F; 排序后列表”的对照时，<code>\n</code> 会再次派上用场。</p>
+<p>剔除空白是三个方法：<code>rstrip()</code> 去尾部、<code>lstrip()</code> 去开头、<code>strip()</code> 去两端。关键点在于——<strong>它们返回新字符串，不修改原字符串</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; favorite_language = &#x27;python &#x27;</span><br><span class="line">&gt;&gt;&gt; favorite_language</span><br><span class="line">&#x27;python &#x27;</span><br><span class="line">&gt;&gt;&gt; favorite_language.rstrip()</span><br><span class="line">&#x27;python&#x27;</span><br><span class="line">&gt;&gt;&gt; favorite_language</span><br><span class="line">&#x27;python &#x27;</span><br></pre></td></tr></table></figure>
+
+<p>在终端会话里，字符串两侧的引号会把末尾那个空格“显形”——这正是书里特意用 REPL 演示、而不是用 <code>print()</code> 的原因：<code>print</code> 看不出尾部空白。想让删除生效，必须把结果存回变量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">favorite_language = favorite_language.rstrip()</span><br><span class="line"><span class="built_in">print</span>(favorite_language)    <span class="comment"># python</span></span><br></pre></td></tr></table></figure>
+
+<p>书里用这个例子说明：在程序中“修改变量的值，再把新值存回原变量”是极其常见的动作。</p>
+<h3 id="语法错误：引号嵌套"><a href="#语法错误：引号嵌套" class="headerlink" title="语法错误：引号嵌套"></a>语法错误：引号嵌套</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&#x27;One of Python&#x27;</span>s strengths <span class="keyword">is</span> its diverse community.<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  File &quot;apostrophe.py&quot;, line 1</span><br><span class="line">    message = &#x27;One of Python&#x27;s strengths is its diverse community.&#x27;</span><br><span class="line">                            ^</span><br><span class="line">SyntaxError: invalid syntax</span><br></pre></td></tr></table></figure>
+
+<p>解释器把第一个单引号和撇号之间的内容当成字符串，后面的文本就“不是 Python 代码”了。改成双引号包裹即可。书里给了一个实用技巧：代码和被当成普通文本的部分颜色不一致，往往就是引号不匹配。<br>所以应该这样写,就没问题了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&quot;One of Python&#x27;s strengths is its diverse community.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Python-2-的-print"><a href="#Python-2-的-print" class="headerlink" title="Python 2 的 print"></a>Python 2 的 print</h3><p>现在应该没人用python2了,了解一下就行了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span> <span class="string">&quot;Hello Python 2.7 world!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Python 3 里 <code>print</code> 是函数，括号是语法的一部分；Python 2 里它是语句。看到不带括号的 <code>print</code>，基本可以判断是 Python 2 代码。</p>
+<h2 id="2-4-数字"><a href="#2-4-数字" class="headerlink" title="2.4 数字"></a>2.4 数字</h2><h3 id="整数与运算"><a href="#整数与运算" class="headerlink" title="整数与运算"></a>整数与运算</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span> + <span class="number">3</span>      <span class="comment"># 5</span></span><br><span class="line"><span class="number">3</span> - <span class="number">2</span>      <span class="comment"># 1</span></span><br><span class="line"><span class="number">2</span> * <span class="number">3</span>      <span class="comment"># 6</span></span><br><span class="line"><span class="number">3</span> / <span class="number">2</span>      <span class="comment"># 1.5（Python 3 的真除法）</span></span><br><span class="line"><span class="number">3</span> ** <span class="number">2</span>     <span class="comment"># 9</span></span><br><span class="line"><span class="number">10</span> ** <span class="number">6</span>    <span class="comment"># 1000000</span></span><br><span class="line"><span class="number">2</span> + <span class="number">3</span> * <span class="number">4</span>  <span class="comment"># 14</span></span><br><span class="line">(<span class="number">2</span> + <span class="number">3</span>) * <span class="number">4</span>  <span class="comment"># 20</span></span><br></pre></td></tr></table></figure>
+
+<p><code>**</code> 表示乘方，运算优先级和数学一致，括号可以改变次序。书里强调空格不影响计算，只影响阅读——这种“运算符两侧留空格”的写法后来成了 PEP 8 的默认风格。</p>
+<h3 id="浮点数与精度"><a href="#浮点数与精度" class="headerlink" title="浮点数与精度"></a>浮点数与精度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.1</span> + <span class="number">0.1</span>   <span class="comment"># 0.2</span></span><br><span class="line"><span class="number">0.2</span> + <span class="number">0.1</span>   <span class="comment"># 0.30000000000000004</span></span><br><span class="line"><span class="number">3</span> * <span class="number">0.1</span>     <span class="comment"># 0.30000000000000004</span></span><br></pre></td></tr></table></figure>
+
+<p>原因不在 Python，而在二进制无法精确表示 0.1 这类十进制小数。作者的处理很务实：现阶段忽略多余小数位，把这个话题留到第二部分的项目里；就现在而言，知道误差存在即可。真要比较浮点数，用 <code>round()</code> 或 <code>math.isclose()</code>，不要用 <code>==</code>。</p>
+<h3 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h3><p>布尔类型也算是一种整数类型吧,布尔值只有两种状态<code>False</code>和<code>True</code>,非0的都为<code>True</code>,只有0为<code>False</code>,这个会在后面的条件判断语法部分提到</p>
+<h3 id="类型错误与-str"><a href="#类型错误与-str" class="headerlink" title="类型错误与 str()"></a>类型错误与 <code>str()</code></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">23</span></span><br><span class="line">message = <span class="string">&quot;Happy &quot;</span> + age + <span class="string">&quot;rd Birthday!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>书里的报错是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Can&#x27;t convert &#x27;int&#x27; object to str implicitly</span><br></pre></td></tr></table></figure>
+
+<p>（Python 3.6 及以后文案变为 <code>TypeError: can only concatenate str (not &quot;int&quot;) to str</code>，含义相同。）<code>+</code> 两边必须类型一致：字符串拼字符串，数字加数字。显式转换即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&quot;Happy &quot;</span> + <span class="built_in">str</span>(age) + <span class="string">&quot;rd Birthday!&quot;</span></span><br><span class="line"><span class="built_in">print</span>(message)      <span class="comment"># Happy 23rd Birthday!</span></span><br></pre></td></tr></table></figure>
+
+<p>反方向的转换（<code>int()</code>、<code>float()</code>）本章没展开。常见坑是 <code>input()</code> 拿到的永远是字符串，需要数字就得转——第 7 章会正式遇到。</p>
+<h3 id="Python-2-的整数除法"><a href="#Python-2-的整数除法" class="headerlink" title="Python 2 的整数除法"></a>Python 2 的整数除法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span> / <span class="number">2</span>      <span class="comment"># Python 2 得到 1，不是 1.5,如果想要在python3实现,需要这样做int(3/2)</span></span><br><span class="line"><span class="number">3.0</span> / <span class="number">2</span>    <span class="comment"># 1.5</span></span><br></pre></td></tr></table></figure>
+
+<p>Python 2 的整数除法直接砍掉小数部分（不是四舍五入）。这是从 Python 2 迁移到 3 时最容易踩的差异之一。另外书里没提但值得知道：<code>//</code> 在 Python 3 中才是“整除”，<code>/</code> 永远是真除法。</p>
+<h2 id="2-5-注释"><a href="#2-5-注释" class="headerlink" title="2.5 注释"></a>2.5 注释</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 向大家问好</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello Python people!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>#</code> 之后的内容全部被解释器忽略。书里对“写什么”的判断标准很实用：<strong>如果你在找到这个方案之前考虑过多个方案，就写注释说明为什么选它</strong>。换句话说，注释解释决策，而不是复述代码。作者还提到一个现实理由：代码是多人协作的，注释是专业习惯，而删除多余注释比事后补注释容易得多。</p>
+<p>在某些代码里面,你可能还会看见这样的多行注释,其实是不严谨的,官方也建议不这样写</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">这是一段注释</span></span><br><span class="line"><span class="string">这是一段注释</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="补充—-REPL模式"><a href="#补充—-REPL模式" class="headerlink" title="补充— REPL模式"></a>补充— REPL模式</h2><p>python有一个其他语言都没有的工具—交互模式(ERPL),这个玩意能干嘛的呢,可以让你在不创建<code>.py</code>文件的情况下就写python代码,并且获取运行结果,如下</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> C:\&gt; python</span><br><span class="line">Python <span class="number">3.12</span>.<span class="number">9</span> (tags/v3.<span class="number">12.9</span>:fdb8142, Feb  <span class="number">4</span> <span class="number">2025</span>, <span class="number">15</span>:<span class="number">27</span>:<span class="number">58</span>) [<span class="type">MSC</span> <span class="type">v.1942</span> <span class="number">64</span> <span class="type">bit</span> (<span class="type">AMD64</span>)] on win32</span><br><span class="line"><span class="built_in">Type</span> <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; print(<span class="string">&quot;this is a string&quot;</span> + str(<span class="number">3</span>/<span class="number">2</span>))</span><br><span class="line">this is a string1.<span class="number">5</span></span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>这个东西,在项目里面的用的少,调试可能比较有用</p>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-3-16/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-3-15/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款15 尽可能用 constexpr</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
