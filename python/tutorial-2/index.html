@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(二)---列表 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 3.1 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannond">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(二)---列表">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-2/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="列表引言列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去 3.1 列表是什么12bicycles &#x3D; [&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]print(bicycles)  1[&#x27;trek&#x27;, &#x27;cannond">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-14T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-14T08:52:24.480Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-14T18:00:00+08:00">
+      November 14, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(二)---列表</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>列表类似其他语言里面的数组,但是列表不限制数据类型,什么数据都能放进去</p>
+<h2 id="3-1-列表是什么"><a href="#3-1-列表是什么" class="headerlink" title="3.1 列表是什么"></a>3.1 列表是什么</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(bicycles)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;trek&#x27;, &#x27;cannondale&#x27;, &#x27;redline&#x27;, &#x27;specialized&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p>方括号表示列表，逗号分隔元素。直接 <code>print</code> 出来的是列表的“内部表示”，带方括号和引号——这通常不是给用户看的输出，所以要学会访问单个元素。</p>
+<p>列表元素之间可以毫无关系：字母、数字、人名、甚至不同类型混装都行。书里建议用复数名（<code>letters</code>、<code>digits</code>、<code>names</code>）给列表命名，读代码时一眼能看出它是集合。</p>
+<h3 id="访问元素"><a href="#访问元素" class="headerlink" title="访问元素"></a>访问元素</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(bicycles[<span class="number">0</span>])          <span class="comment"># trek</span></span><br><span class="line"><span class="built_in">print</span>(bicycles[<span class="number">1</span>])          <span class="comment"># cannondale</span></span><br><span class="line"><span class="built_in">print</span>(bicycles[<span class="number">3</span>])          <span class="comment"># specialized</span></span><br><span class="line"><span class="built_in">print</span>(bicycles[<span class="number">0</span>].title())  <span class="comment"># Trek</span></span><br><span class="line"><span class="built_in">print</span>(bicycles[-<span class="number">1</span>])         <span class="comment"># specialized</span></span><br></pre></td></tr></table></figure>
+
+<p>两个要点：</p>
+<ol>
+<li><strong>索引从 0 开始</strong>。第一个元素是 <code>[0]</code>，第四个是 <code>[3]</code>。要访问第 n 个，索引写 n-1。</li>
+<li><strong>负索引从尾部数</strong>。<code>[-1]</code> 是最后一个，<code>[-2]</code> 是倒数第二个。好处是不用知道列表有多长——列表长度变了，<code>[-1]</code> 依然指向最后一个。</li>
+</ol>
+<p>索引对照（以 4 个元素的列表为例）：</p>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>trek</th>
+<th>cannondale</th>
+<th>redline</th>
+<th>specialized</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正索引</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>负索引</td>
+<td>-4</td>
+<td>-3</td>
+<td>-2</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<h3 id="使用列表中的值"><a href="#使用列表中的值" class="headerlink" title="使用列表中的值"></a>使用列表中的值</h3><p>取出来的元素和普通变量没区别，可以拼接、可以调方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">message = <span class="string">&quot;My first bicycle was a &quot;</span> + bicycles[<span class="number">0</span>].title() + <span class="string">&quot;.&quot;</span></span><br><span class="line"><span class="built_in">print</span>(message)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">My first bicycle was a Trek.</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>.title()</code> 的位置：作用在 <code>bicycles[0]</code> 这个值上，而不是 <code>bicycles</code> 上。</p>
+<h2 id="3-2-修改、添加和删除元素"><a href="#3-2-修改、添加和删除元素" class="headerlink" title="3.2 修改、添加和删除元素"></a>3.2 修改、添加和删除元素</h2><h3 id="修改：按下标赋值"><a href="#修改：按下标赋值" class="headerlink" title="修改：按下标赋值"></a>修改：按下标赋值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br><span class="line"></span><br><span class="line">motorcycles[<span class="number">0</span>] = <span class="string">&#x27;ducati&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;ducati&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>语法和访问元素一样，只是把取值换成了赋值。可以改任何位置的元素，不只是第一个。</p>
+<h3 id="添加：append-与-insert"><a href="#添加：append-与-insert" class="headerlink" title="添加：append() 与 insert()"></a>添加：<code>append()</code> 与 <code>insert()</code></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">motorcycles.append(<span class="string">&#x27;ducati&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;, &#x27;ducati&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>append()</code> 追加到末尾，不影响其他元素。它最重要的用法是“先建空列表，再逐个填”：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = []</span><br><span class="line">motorcycles.append(<span class="string">&#x27;honda&#x27;</span>)</span><br><span class="line">motorcycles.append(<span class="string">&#x27;yamaha&#x27;</span>)</span><br><span class="line">motorcycles.append(<span class="string">&#x27;suzuki&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
+<p><code>insert()</code> 在指定位置插入，原有元素整体右移：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">motorcycles.insert(<span class="number">0</span>, <span class="string">&#x27;ducati&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;ducati&#x27;, &#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
+<h3 id="删除：del、pop-、remove"><a href="#删除：del、pop-、remove" class="headerlink" title="删除：del、pop()、remove()"></a>删除：<code>del</code>、<code>pop()</code>、<code>remove()</code></h3><p>三个工具解决三个不同问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 知道位置，且不再使用这个值</span></span><br><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="keyword">del</span> motorcycles[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 弹出最后一个值</span></span><br><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">popped_motorcycle = motorcycles.pop()</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;]</span></span><br><span class="line"><span class="built_in">print</span>(popped_motorcycle)    <span class="comment"># suzuki</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 根据数据删,要是列表里面存在多个相同数据,只删最先找到的,也就是最靠前的那一个</span></span><br><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>, <span class="string">&#x27;ducati&#x27;</span>]</span><br><span class="line">motorcycles.remove(<span class="string">&#x27;ducati&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)          <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>pop()</code> 的名字来自“栈”：删除末尾元素相当于弹出栈顶。它也可以弹出任意位置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">first_owned = motorcycles.pop(<span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;The first motorcycle I owned was a &#x27;</span> + first_owned.title() + <span class="string">&#x27;.&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The first motorcycle I owned was a Honda.</span><br></pre></td></tr></table></figure>
+
+<p>书里给了一条很清楚的判断标准：</p>
+<blockquote>
+<p>删除后不再使用它 → <code>del</code>；删除后还要用它的值 → <code>pop()</code>。</p>
+</blockquote>
+<p><code>remove()</code> 的坑在最后一段的“注意”里：<strong>它只删除第一个匹配的值</strong>。列表里有多个相同值，剩下的还在；要全删得用第 7 章的循环。</p>
+<p><code>remove()</code> 也允许先存变量再删，删完变量里仍有那个值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>, <span class="string">&#x27;ducati&#x27;</span>]</span><br><span class="line">too_expensive = <span class="string">&#x27;ducati&#x27;</span></span><br><span class="line">motorcycles.remove(too_expensive)</span><br><span class="line"><span class="built_in">print</span>(motorcycles)      <span class="comment"># [&#x27;honda&#x27;, &#x27;yamaha&#x27;, &#x27;suzuki&#x27;]</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\nA &quot;</span> + too_expensive.title() + <span class="string">&quot; is too expensive for me.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A Ducati is too expensive for me.</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-组织列表"><a href="#3-3-组织列表" class="headerlink" title="3.3 组织列表"></a>3.3 组织列表</h2><p>用户的输入顺序、文件里的记录顺序，往往不受你控制；但展示时经常需要按字母、按数字、按时间排。</p>
+<h3 id="sort-：永久排序"><a href="#sort-：永久排序" class="headerlink" title="sort()：永久排序"></a><code>sort()</code>：永久排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line">cars.sort()</span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># [&#x27;audi&#x27;, &#x27;bmw&#x27;, &#x27;subaru&#x27;, &#x27;toyota&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>排序是<strong>原地</strong>完成的，原来的顺序再也回不来。想倒序就传参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cars.sort(reverse=<span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># [&#x27;toyota&#x27;, &#x27;subaru&#x27;, &#x27;bmw&#x27;, &#x27;audi&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>reverse=True</code> 表示按相反的顺序排序，结果是从 Z 到 A（或从大到小）；它和后面要讲的 <code>reverse()</code> 不是一回事：前者比较大小，后者只是把位置倒过来。</p>
+<p>如何通过自定义比较器来实现排序规则的自定义<br>通过传入<code>key</code>的可调用对象,<code>sort</code>根据<code>key</code>函数的返回来确定重要性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按绝对值排序</span></span><br><span class="line">nums = [-<span class="number">3</span>, <span class="number">1</span>, -<span class="number">2</span>, <span class="number">4</span>]</span><br><span class="line">nums.sort(key=<span class="built_in">abs</span>)</span><br><span class="line"><span class="built_in">print</span>(nums)  <span class="comment"># [1, -2, -3, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 按字符串长度排序</span></span><br><span class="line">words = [<span class="string">&quot;apple&quot;</span>, <span class="string">&quot;hi&quot;</span>, <span class="string">&quot;banana&quot;</span>, <span class="string">&quot;ok&quot;</span>]</span><br><span class="line">words.sort(key=<span class="built_in">len</span>)</span><br><span class="line"><span class="built_in">print</span>(words)  <span class="comment"># [&#x27;hi&#x27;, &#x27;ok&#x27;, &#x27;apple&#x27;, &#x27;banana&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="sorted-：临时排序"><a href="#sorted-：临时排序" class="headerlink" title="sorted()：临时排序"></a><code>sorted()</code>：临时排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># 原始顺序</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(cars))         <span class="comment"># [&#x27;audi&#x27;, &#x27;bmw&#x27;, &#x27;subaru&#x27;, &#x27;toyota&#x27;]</span></span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># 原始顺序，没变</span></span><br></pre></td></tr></table></figure>
+
+<p><code>sorted()</code> 是<strong>函数</strong>，返回新列表，原列表不动。也支持 <code>reverse=True</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(cars, reverse=<span class="literal">True</span>))   <span class="comment"># [&#x27;toyota&#x27;, &#x27;subaru&#x27;, &#x27;bmw&#x27;, &#x27;audi&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>书里提醒：列表里大小写混杂时，“字母顺序”会变复杂，因为大写字母和小写字母的排序规则不同。</p>
+<h3 id="reverse-：反转，不是排序"><a href="#reverse-：反转，不是排序" class="headerlink" title="reverse()：反转，不是排序"></a><code>reverse()</code>：反转，不是排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line">cars.reverse()</span><br><span class="line"><span class="built_in">print</span>(cars)                 <span class="comment"># [&#x27;subaru&#x27;, &#x27;toyota&#x27;, &#x27;audi&#x27;, &#x27;bmw&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>它只是把顺序倒过来，不比较大小。而且<strong>再调用一次就恢复原样</strong>，所以它虽然也是永久修改，却是可逆的。</p>
+<h3 id="len-：长度"><a href="#len-：长度" class="headerlink" title="len()：长度"></a><code>len()</code>：长度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(cars))            <span class="comment"># 4</span></span><br></pre></td></tr></table></figure>
+<p><code>len()</code> 从 1 开始数，所以确定长度时不会遇到差一错误。书里举的用例都很实际：还剩几个外星人、有多少条数据、网站有多少注册用户。<br>注意 <code>sort()</code>、<code>reverse()</code> 都返回 <code>None</code>。写成 <code>cars = cars.sort()</code> 会把列表变成 <code>None</code>，这是新手常见事故。要分清是成员函数还是外部函数</p>
+<h2 id="3-4-使用列表时避免索引错误"><a href="#3-4-使用列表时避免索引错误" class="headerlink" title="3.4 使用列表时避免索引错误"></a>3.4 使用列表时避免索引错误</h2><p>当心越界,幸好是python,要是C&#x2F;C++就内存泄漏了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(motorcycles[<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;motorcycles.py&quot;, line 3, in &lt;module&gt;</span><br><span class="line">    print(motorcycles[3])</span><br><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
+
+<p>三个元素的列表，合法正索引只有 0、1、2。<code>[3]</code> 越界，因为“索引 &#x3D; 第几个 - 1”。</p>
+<p><code>[-1]</code> 是安全访问最后一个元素的标准写法，前提是列表非空：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = []</span><br><span class="line"><span class="built_in">print</span>(motorcycles[-<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li>列表用方括号和逗号定义，有序、可索引、长度可变、元素类型可以不同。</li>
+<li>索引从 0 开始，负索引从尾部数，<code>[-1]</code> 是最常用的“最后一个”。</li>
+<li>增：<code>append()</code> 追加、<code>insert()</code> 插入；删：<code>del</code> 按位置不留值、<code>pop()</code> 按位置留值、<code>remove()</code> 按值删第一个。</li>
+<li>改：<code>lst[i] = 新值</code>，语法和访问元素一致。</li>
+<li>排序要分清“永久”与“临时”：<code>sort()</code> 改原列表、返回 <code>None</code>；<code>sorted()</code> 返回新列表。</li>
+<li><code>reverse()</code> 是倒序，不是排序；再调一次即可复原。</li>
+<li><code>len()</code> 从 1 数，长度不会差一。</li>
+<li><code>IndexError</code> 的本质是差一错误；排查时先打印列表或其长度。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-3-17/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款17 理解特殊成员函数生成</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-3-16/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(三)：条款16 const 成员函数要线程安全</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
