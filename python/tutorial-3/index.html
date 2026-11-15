@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(三)---操作列表 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="操作列表1. 遍历整个列表123magicians &#x3D; [&#x27;alice&#x27;, &#x27;david&#x27;, &#x27;carolina&#x27;]for magician in magicians:    print(magician)  123alicedavidcarolina  执行过程分三步:先从列表取出第一个值存进循环变量 magician,再执行缩进的代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(三)---操作列表">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-3/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="操作列表1. 遍历整个列表123magicians &#x3D; [&#x27;alice&#x27;, &#x27;david&#x27;, &#x27;carolina&#x27;]for magician in magicians:    print(magician)  123alicedavidcarolina  执行过程分三步:先从列表取出第一个值存进循环变量 magician,再执行缩进的代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-15T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-15T07:26:12.542Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-15T18:00:00+08:00">
+      November 15, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(三)---操作列表</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="操作列表"><a href="#操作列表" class="headerlink" title="操作列表"></a>操作列表</h1><h2 id="1-遍历整个列表"><a href="#1-遍历整个列表" class="headerlink" title="1. 遍历整个列表"></a>1. 遍历整个列表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">magicians = [<span class="string">&#x27;alice&#x27;</span>, <span class="string">&#x27;david&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> magician <span class="keyword">in</span> magicians:</span><br><span class="line">    <span class="built_in">print</span>(magician)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alice</span><br><span class="line">david</span><br><span class="line">carolina</span><br></pre></td></tr></table></figure>
+
+<p>执行过程分三步:先从列表取出第一个值存进循环变量 <code>magician</code>,再执行缩进的代码块,然后回到 <code>for</code> 行取下一个值,直到列表取空。可以这样读这行代码:”对于 <code>magicians</code> 中的每位魔术师,都打印其名字。”</p>
+<p>要是你有C++基础,你用C++里面的这个来类比就行了,但是不是完全一样的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for(auto x : arr)</span><br></pre></td></tr></table></figure>
+
+<h3 id="循环变量用单数"><a href="#循环变量用单数" class="headerlink" title="循环变量用单数"></a>循环变量用单数</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for cat in cats:</span><br><span class="line">for dog in dogs:</span><br><span class="line">for item in list_of_items:</span><br></pre></td></tr></table></figure>
+
+<p>单数变量 + 复数列表,一眼能分清”当前元素”和”整个集合”。这个习惯后面写函数参数时还会用到。</p>
+<h2 id="2-避免缩进错误"><a href="#2-避免缩进错误" class="headerlink" title="2. 避免缩进错误"></a>2. 避免缩进错误</h2><p>C&#x2F;C++ 用花括号 <code>{}</code> 划分代码块,Python 没有花括号,靠缩进,只有对应的缩进的代码块才是一个作用域,要是作用域搞错会导致代码出错,需要牢记。所以缩进错了不是排版难看,而是直接改变程序逻辑。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;jack&#x27;</span>,<span class="string">&#x27;alice&#x27;</span>,<span class="string">&#x27;tom&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line"><span class="built_in">print</span>(name)</span><br></pre></td></tr></table></figure>
+<p>这下就会报错,因为print函数没有在for循环的作用域里面,所以print找不到name变量</p>
+<h2 id="3-创建数值列表"><a href="#3-创建数值列表" class="headerlink" title="3. 创建数值列表"></a>3. 创建数值列表</h2><h3 id="range"><a href="#range" class="headerlink" title="range()"></a>range()</h3><p>左闭右开,不知道为什么这样设计,我觉得不咋直观,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">5</span>):</span><br><span class="line">    <span class="built_in">print</span>(value)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p><code>range(1, 5)</code> 从 1 开始数,到 5 之前停下,所以是 1~4,又是一个含头不含尾。输出不对就把数字加一或减一试试。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">6</span>)))      <span class="comment"># [1, 2, 3, 4, 5]</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">5</span>)))         <span class="comment"># [0, 1, 2, 3, 4],只给一个值时从 0 开始</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">2</span>, <span class="number">11</span>, <span class="number">2</span>)))  <span class="comment"># [2, 4, 6, 8, 10],第三个参数是步长</span></span><br></pre></td></tr></table></figure>
+<p><code>range()</code> 本身只是一串数字,套上 <code>list()</code> 才变成列表。</p>
+<p><code>range()</code> 函数还可以这样用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;jack&#x27;</span>,<span class="string">&#x27;alice&#x27;</span>,<span class="string">&#x27;tom&#x27;</span>]</span><br><span class="line">n = <span class="built_in">len</span>(name)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="built_in">print</span>(names[i])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样看,是不是很像C&#x2F;C++或者java里面的<code>for(int i=0;i&lt;n;i++)</code>这种三段式for循环了</p>
+<h3 id="用循环和-append-构建列表"><a href="#用循环和-append-构建列表" class="headerlink" title="用循环和 append 构建列表"></a>用循环和 append 构建列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">squares = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">    square = value ** <span class="number">2</span>  <span class="comment"># python里面的幂运算</span></span><br><span class="line">    squares.append(square)</span><br><span class="line"><span class="built_in">print</span>(squares)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span><br></pre></td></tr></table></figure>
+<p><code>append()</code> 函数是列表的成员函数,可以把元素追加到列表的最后,这里在补充一下其他的成员函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">a.append(<span class="number">4</span>)      <span class="comment"># 末尾追加</span></span><br><span class="line">a.pop()     <span class="comment">#取出某个位置的元素,并且删除列表中的元素,不传入参数就是获取最后一个元素,传参就是i位置的元素</span></span><br><span class="line">a.remove(<span class="number">2</span>) <span class="comment">#只删除不返回</span></span><br><span class="line">a.index(<span class="number">3</span>) <span class="comment"># 找某个元素的值的对应索引</span></span><br><span class="line">a.count(<span class="number">1</span>)  <span class="comment">#统计某个值的出现次数</span></span><br><span class="line">a.sort()    <span class="comment"># 排序</span></span><br><span class="line">a.reverse() <span class="comment">#翻转</span></span><br><span class="line">a.clear() <span class="comment">#清空</span></span><br><span class="line">a.copy()    <span class="comment">#返回一个新的列表对象,里面的值和a一样</span></span><br><span class="line">a.extend([<span class="number">5</span>, <span class="number">6</span>])    <span class="comment">#在原有的列表后面追加</span></span><br><span class="line">a.insert(<span class="number">0</span>, <span class="number">0</span>) <span class="comment"># index,value,指定位置插入一个元素</span></span><br></pre></td></tr></table></figure>
+<h3 id="统计函数"><a href="#统计函数" class="headerlink" title="统计函数"></a>统计函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">digits = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">min</span>(digits))   <span class="comment"># 0</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">max</span>(digits))   <span class="comment"># 9</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>(digits))   <span class="comment"># 45</span></span><br></pre></td></tr></table></figure>
+<h3 id="列表解析"><a href="#列表解析" class="headerlink" title="列表解析"></a>列表解析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">squares = [value ** <span class="number">2</span> <span class="keyword">for</span> value <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>)]</span><br><span class="line"><span class="built_in">print</span>(squares)</span><br></pre></td></tr></table></figure>
+<p>一行完成”循环 + 计算 + 追加”。语法是 <code>[表达式 for 变量 in 可迭代对象]</code>,注意这里的 <code>for</code> 后面<strong>不写冒号</strong>,因为它不是语句而是表达式。<br>我觉得不太好,这样写可读性不是很好,而且也容易写错</p>
+<h2 id="4-使用列表的一部分"><a href="#4-使用列表的一部分" class="headerlink" title="4. 使用列表的一部分"></a>4. 使用列表的一部分</h2><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">players = [<span class="string">&#x27;charles&#x27;</span>, <span class="string">&#x27;martina&#x27;</span>, <span class="string">&#x27;michael&#x27;</span>, <span class="string">&#x27;florence&#x27;</span>, <span class="string">&#x27;eli&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(players[<span class="number">0</span>:<span class="number">3</span>])   <span class="comment"># [&#x27;charles&#x27;, &#x27;martina&#x27;, &#x27;michael&#x27;],不会改变列表原来的结构,依旧是左闭右开</span></span><br><span class="line"><span class="built_in">print</span>(players[<span class="number">1</span>:<span class="number">4</span>])   <span class="comment"># [&#x27;martina&#x27;, &#x27;michael&#x27;, &#x27;florence&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>和 <code>range()</code> 一样<strong>含头不含尾</strong>:<code>[0:3]</code> 取索引 0、1、2。省略两端也有约定:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(players[:<span class="number">4</span>])    <span class="comment"># 从开头取到索引 3</span></span><br><span class="line"><span class="built_in">print</span>(players[<span class="number">2</span>:])    <span class="comment"># 从索引 2 取到末尾</span></span><br><span class="line"><span class="built_in">print</span>(players[-<span class="number">3</span>:])   <span class="comment"># 最后三个,按照上面的意思,也就是倒数第三个到最后一个,那可不就是最后三个嘛</span></span><br></pre></td></tr></table></figure>
+<h3 id="复制列表"><a href="#复制列表" class="headerlink" title="复制列表"></a>复制列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">my_foods = [<span class="string">&#x27;pizza&#x27;</span>, <span class="string">&#x27;falafel&#x27;</span>, <span class="string">&#x27;carrot cake&#x27;</span>]</span><br><span class="line">friend_foods = my_foods[:]      <span class="comment"># 真复制</span></span><br><span class="line"><span class="comment">#也可以这样写 friend_foods = my_foods.copy()</span></span><br><span class="line"></span><br><span class="line">my_foods.append(<span class="string">&#x27;cannoli&#x27;</span>)</span><br><span class="line">friend_foods.append(<span class="string">&#x27;ice cream&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(my_foods)        <span class="comment"># [&#x27;pizza&#x27;, &#x27;falafel&#x27;, &#x27;carrot cake&#x27;, &#x27;cannoli&#x27;]</span></span><br><span class="line"><span class="built_in">print</span>(friend_foods)    <span class="comment"># [&#x27;pizza&#x27;, &#x27;falafel&#x27;, &#x27;carrot cake&#x27;, &#x27;ice cream&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>两个列表各自独立。而下面这种写法<strong>不是复制</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my_foods = [<span class="string">&#x27;pizza&#x27;</span>, <span class="string">&#x27;falafel&#x27;</span>, <span class="string">&#x27;carrot cake&#x27;</span>]</span><br><span class="line">friend_foods = my_foods         <span class="comment"># 只是又贴了一个标签</span></span><br><span class="line">my_foods.append(<span class="string">&#x27;cannoli&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(friend_foods)             <span class="comment"># 也有 cannoli</span></span><br></pre></td></tr></table></figure>
+
+<p><code>friend_foods = my_foods</code> 让两个变量指向同一个列表,改一边两边都变,思路类似 C&#x2F;C++ 里两个指针指向同一块内存。除了 <code>[:]</code>,也可以用 <code>list(my_foods)</code> 或 <code>my_foods.copy()</code>。</p>
+<h2 id="5-元组"><a href="#5-元组" class="headerlink" title="5. 元组"></a>5. 元组</h2><p>列表适合存运行期间会变的数据;如果一组值整个生命周期都不该变,就用元组。<strong>不可变的列表叫元组</strong>,某种程度上类似 C++ 的 <code>const</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dimensions = (<span class="number">200</span>, <span class="number">50</span>) <span class="comment"># 写法上来说,就是把列表的[],换成()</span></span><br><span class="line"><span class="built_in">print</span>(dimensions[<span class="number">0</span>])   <span class="comment"># 200</span></span><br><span class="line"><span class="built_in">print</span>(dimensions[<span class="number">1</span>])   <span class="comment"># 50</span></span><br></pre></td></tr></table></figure>
+
+<p>圆括号代替方括号,访问方式和列表一样。试图修改元素会失败:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dimensions[<span class="number">0</span>] = <span class="number">250</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: &#x27;tuple&#x27; object does not support item assignment</span><br></pre></td></tr></table></figure>
+
+<p>这不是缺陷,而是设计目标:矩形的尺寸本来就不该被随手改掉。</p>
+<p>遍历和整体重新赋值都正常:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dimensions = (<span class="number">200</span>, <span class="number">50</span>)</span><br><span class="line"><span class="keyword">for</span> dimension <span class="keyword">in</span> dimensions:</span><br><span class="line">    <span class="built_in">print</span>(dimension)</span><br><span class="line"></span><br><span class="line">dimensions = (<span class="number">400</span>, <span class="number">100</span>)   <span class="comment"># 合法:换的是变量指向的元组</span></span><br></pre></td></tr></table></figure>
+<p><strong>不能改元组里的元素,但可以给存元组的变量重新赋值</strong>,前者是对象不可变,后者是变量重新绑定。</p>
+<h3 id="元组和列表的嵌套"><a href="#元组和列表的嵌套" class="headerlink" title="元组和列表的嵌套"></a>元组和列表的嵌套</h3><p>元组内部是可以嵌套列表的,列表内部也可以嵌套元组,但是修改方面有些东西还是需要提一下的<br>首先是元组内嵌套列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">t = ([<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">t[<span class="number">0</span>].append(<span class="number">99</span>)       <span class="comment"># OK，原地改列表</span></span><br><span class="line"><span class="built_in">print</span>(t)              <span class="comment"># ([1, 2, 99], [3, 4])</span></span><br><span class="line"></span><br><span class="line">t[<span class="number">0</span>] = [<span class="number">9</span>, <span class="number">9</span>]         <span class="comment"># 这不行,你不能把标签给到一个新对象</span></span><br></pre></td></tr></table></figure>
+<p>元组内嵌套列表,一句话来说就是,元组只管各个位置的原来的对象是否是原来的,但是那个对象自己怎么变,不管元组的事了<br>列表嵌套元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a = [(<span class="number">1</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">4</span>)]</span><br><span class="line"></span><br><span class="line">a[<span class="number">0</span>] = (<span class="number">9</span>, <span class="number">9</span>)          <span class="comment"># 可以，列表槽位可换</span></span><br><span class="line">a.append((<span class="number">5</span>, <span class="number">6</span>))       <span class="comment"># 可以，列表可增删</span></span><br><span class="line"><span class="built_in">print</span>(a)               <span class="comment"># [(9, 9), (3, 4), (5, 6)]</span></span><br><span class="line"></span><br><span class="line">a[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">100</span>          <span class="comment"># 元组各个槽位的对象不可变</span></span><br></pre></td></tr></table></figure>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li><code>for</code> 循环让每条语句对每个元素执行一次,循环体靠缩进界定,不缩进的语句只在循环后执行一次。</li>
+<li>循环变量用单数、列表用复数,是可读性最高的一类命名。</li>
+<li>缩进错误分两种:语法错误会立刻报出来,逻辑错误只会让结果”看起来对”。</li>
+<li><code>range()</code> 含头不含尾,<code>list()</code> 把结果转成列表,第三个参数是步长。</li>
+<li>列表解析把”建空表 + 循环 + append”压成一行,<code>for</code> 后不加冒号。</li>
+<li>切片 <code>[start:stop]</code> 同样含头不含尾,省略边界就是”从头”或”到尾”。</li>
+<li>复制列表必须用 <code>[:]</code>,直接赋值只是给同一个列表又起了个名字。</li>
+<li>元组用于存不该变的数据;元素不可改,但变量可以重新绑定。</li>
+<li>PEP 8 的核心不是规则本身,而是”代码主要写给人和未来的自己看”。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-4-19/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款19 优先用 shared_ptr</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-4-18/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款18 优先用 unique_ptr</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

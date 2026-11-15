@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(四)：条款19 优先用 shared_ptr - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款19：用 std::shared_ptr 管理共享所有权资源std::shared_ptr 通过引用计数实现共享所有权，最后一个 shared_ptr 销毁对象。它很方便，但比 unique_ptr 大、慢，而且控制块用错(this指针问题)会导致重复销毁。 1. 共享所有权和引用计数一个对象可以被多个 shared_ptr 共同拥有，没有哪一个“单独拥有”它。每个 shared_ptr 都指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(四)：条款19 优先用 shared_ptr">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-4-19/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款19：用 std::shared_ptr 管理共享所有权资源std::shared_ptr 通过引用计数实现共享所有权，最后一个 shared_ptr 销毁对象。它很方便，但比 unique_ptr 大、慢，而且控制块用错(this指针问题)会导致重复销毁。 1. 共享所有权和引用计数一个对象可以被多个 shared_ptr 共同拥有，没有哪一个“单独拥有”它。每个 shared_ptr 都指">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-15T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-15T08:15:40.674Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-15T22:00:00+08:00">
+      November 15, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(四)：条款19 优先用 shared_ptr</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款19：用-std-shared-ptr-管理共享所有权资源"><a href="#条款19：用-std-shared-ptr-管理共享所有权资源" class="headerlink" title="条款19：用 std::shared_ptr 管理共享所有权资源"></a>条款19：用 std::shared_ptr 管理共享所有权资源</h1><p><code>std::shared_ptr</code> 通过引用计数实现共享所有权，最后一个 <code>shared_ptr</code> 销毁对象。它很方便，但比 <code>unique_ptr</code> 大、慢，而且控制块用错(this指针问题)会导致重复销毁。</p>
+<h2 id="1-共享所有权和引用计数"><a href="#1-共享所有权和引用计数" class="headerlink" title="1. 共享所有权和引用计数"></a>1. 共享所有权和引用计数</h2><p>一个对象可以被多个 <code>shared_ptr</code> 共同拥有，没有哪一个“单独拥有”它。每个 <code>shared_ptr</code> 都指向同一个控制块，控制块里记录有多少个 <code>shared_ptr</code> 指向该对象。</p>
+<ul>
+<li>拷贝 <code>shared_ptr</code>：引用计数加一。</li>
+<li>销毁 <code>shared_ptr</code>：引用计数减一。<br>咋叫销毁呢,比如传入一个函数,传入一个容器,然后函数返回,或者从容器里面把拷贝构造的对象给pop都算</li>
+<li>拷贝赋值：先减左边的旧对象，再加右边的新对象。<br>比如</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; a = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">1</span>);</span><br><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; b = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>);</span><br><span class="line">a = b;              <span class="comment">// 拷贝赋值：a 也指向 b 的对象，引用计数 +1</span></span><br><span class="line">                    <span class="comment">// 原来 a 指向的对象引用计数 -1（归零则释放）</span></span><br><span class="line">a = std::<span class="built_in">move</span>(b);   <span class="comment">// 移动赋值：a 接管 b 的对象，b 变为空</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>计数减到零：最后一个 <code>shared_ptr</code> 销毁对象。</li>
+</ul>
+<p>销毁时机是确定的，像析构函数，不像垃圾回收那样不确定；但调用方不需要手动管理生命周期。</p>
+<h2 id="2-成本"><a href="#2-成本" class="headerlink" title="2. 成本"></a>2. 成本</h2><p><code>shared_ptr</code> 通常有两个指针大小：一个指向对象，一个指向控制块。</p>
+<p>控制块是动态分配的，里面通常有：</p>
+<ul>
+<li>强引用计数（多少个 <code>shared_ptr</code>）；</li>
+<li>弱引用计数（多少个 <code>weak_ptr</code>，不决定生命周期）；</li>
+<li>自定义删除器的副本；</li>
+<li>自定义分配器的副本；</li>
+<li>销毁对象所需的虚函数机制。</li>
+</ul>
+<p>引用计数的增减必须是原子的，因为不同线程可能同时拷贝&#x2F;销毁指向同一对象的 <code>shared_ptr</code>。原子操作通常比普通操作慢。<br>移动 <code>shared_ptr</code> 不改变引用计数：源被置空，目标接管，计数不变。所以移动比拷贝快。</p>
+<h2 id="3-控制块的创建规则"><a href="#3-控制块的创建规则" class="headerlink" title="3. 控制块的创建规则"></a>3. 控制块的创建规则</h2><p>控制块由“第一个创建 <code>shared_ptr</code> 的人”建立。规则：</p>
+<ul>
+<li><code>std::make_shared</code> 总是创建控制块（它新建对象，不可能已有控制块）。</li>
+<li>从 <code>std::unique_ptr</code>（或 <code>std::auto_ptr</code>）构造 <code>shared_ptr</code> 时创建控制块。</li>
+<li>从<strong>裸指针</strong>构造 <code>shared_ptr</code> 时创建控制块。</li>
+<li>从另一个 <code>shared_ptr</code> 或 <code>weak_ptr</code> 构造时<strong>不创建</strong>新控制块，而是共享已有的。</li>
+</ul>
+<p>最后一条很重要：拷贝 <code>shared_ptr</code> 不会产生新控制块。</p>
+<h2 id="4-同一个裸指针不能构造两个-shared-ptr"><a href="#4-同一个裸指针不能构造两个-shared-ptr" class="headerlink" title="4. 同一个裸指针不能构造两个 shared_ptr"></a>4. 同一个裸指针不能构造两个 shared_ptr</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> pw = <span class="keyword">new</span> Widget;</span><br><span class="line"></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw1</span><span class="params">(pw)</span></span>;   <span class="comment">// 创建控制块1</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw2</span><span class="params">(pw)</span></span>;   <span class="comment">// 创建控制块2！</span></span><br></pre></td></tr></table></figure>
+
+<p><code>*pw</code> 现在有两个控制块、两个引用计数；两个计数最终都会归零，于是 <code>*pw</code> 会被销毁两次，第二次就是未定义行为。</p>
+<p>两个建议：</p>
+<ol>
+<li>尽量不要把裸指针传给 <code>shared_ptr</code> 构造函数；优先用 <code>make_shared</code>。</li>
+<li>如果必须传裸指针，直接把 <code>new</code> 的结果写进构造函数，不要先存到裸指针变量里：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw1</span><span class="params">(<span class="keyword">new</span> Widget)</span></span>;</span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw2</span><span class="params">(spw1)</span></span>;   <span class="comment">// 拷贝构造,共享控制块</span></span><br></pre></td></tr></table></figure>
+
+<p>这样别人更可能用 <code>spw1</code> 去拷贝，而不是拿同一个裸指针再建一个。</p>
+<h2 id="5-this-指针的坑"><a href="#5-this-指针的坑" class="headerlink" title="5. this 指针的坑"></a>5. this 指针的坑</h2><p>假设有一个全局容器记录处理过的 <code>Widget</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; processedWidgets;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">()</span></span>;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Widget::process</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  processedWidgets.<span class="built_in">emplace_back</span>(<span class="keyword">this</span>);   <span class="comment">// 会出问题的,内部的this和外部的智能指针不是同一个控制块,会导致重复释放</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>this</code> 是裸指针。用它在容器里构造 <code>shared_ptr</code> 会创建一个新的控制块；如果外部已经有 <code>shared_ptr</code> 指向这个 <code>Widget</code>，现在就有两个控制块，最终重复销毁，未定义行为。</p>
+<p>正确做法是让 <code>Widget</code> 继承 <code>std::enable_shared_from_this&lt;Widget&gt;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> std::enable_shared_from_this&lt;Widget&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Widget::process</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  processedWidgets.<span class="built_in">emplace_back</span>(<span class="built_in">shared_from_this</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>shared_from_this()</code> 会查找当前对象已有的控制块，并创建一个共享该控制块的新 <code>shared_ptr</code>。</p>
+<p>前提：调用 <code>shared_from_this()</code> 时，对象必须已经由一个 <code>shared_ptr</code> 管理；否则没有控制块，行为未定义（通常会抛 <code>std::bad_weak_ptr</code>）。</p>
+<p>为了防止客户端在对象还没有 <code>shared_ptr</code> 时调用这些成员函数，常见做法是把构造函数设为 private，只提供返回 <code>shared_ptr</code> 的工厂函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> std::enable_shared_from_this&lt;Widget&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function">  <span class="type">static</span> std::shared_ptr&lt;Widget&gt; <span class="title">create</span><span class="params">(Ts&amp;&amp;... params)</span></span>;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-shared-ptr-不支持数组"><a href="#6-shared-ptr-不支持数组" class="headerlink" title="6. shared_ptr 不支持数组"></a>6. shared_ptr 不支持数组</h2><p><code>shared_ptr</code> 的 API 只针对单个对象，没有 <code>shared_ptr&lt;T[]&gt;</code>。</p>
+<p>有人会用 <code>shared_ptr&lt;T&gt;</code> 加一个执行 <code>delete[]</code> 的自定义删除器来指向数组。这能编译，但很糟：</p>
+<ul>
+<li>没有 <code>operator[]</code>，索引要靠指针运算，很难看。</li>
+<li><code>shared_ptr</code> 支持派生类到基类的指针转换，这对单个对象合理，对数组会破坏类型系统（<code>unique_ptr&lt;T[]&gt;</code> 明确禁止这种转换）。</li>
+<li>C++11 已经有 <code>std::array</code>、<code>std::vector</code>、<code>std::string</code>，用智能指针指向“哑数组”通常说明设计有问题。</li>
+</ul>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li><code>std::shared_ptr</code> 用引用计数管理共享生命周期，方便但有控制块和原子计数成本。</li>
+<li>比 <code>unique_ptr</code> 通常大两倍，还要动态分配控制块。</li>
+<li>自定义删除器的类型不影响 <code>shared_ptr</code> 的类型，删除器存在控制块里。</li>
+<li>不要用同一个裸指针构造多个 <code>shared_ptr</code>，否则会重复销毁。</li>
+<li>需要从 <code>this</code> 创建 <code>shared_ptr</code> 时，用 <code>enable_shared_from_this</code> 和 <code>shared_from_this()</code>。</li>
+<li><code>shared_ptr</code> 不适合管理数组；用 <code>std::array</code>、<code>std::vector</code> 或 <code>std::string</code>。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/python/tutorial-3/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">python教程(三)---操作列表</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
