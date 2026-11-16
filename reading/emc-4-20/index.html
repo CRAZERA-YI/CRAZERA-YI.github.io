@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(四)：条款20 优先用 weak_ptr - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款20：用 std::weak_ptr 表示可能悬空的 shared_ptr 式指针std::weak_ptr 像 shared_ptr 一样指向对象，但不参与所有权、不影响引用计数；它能检测对象是否已经被销毁，适合缓存、观察者列表和打破循环引用。 1. weak_ptr 是什么weak_ptr 不是独立的智能指针，它是 shared_ptr 的补充：  不能解引用； 不能判断是否为空； 不增加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(四)：条款20 优先用 weak_ptr">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-4-20/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款20：用 std::weak_ptr 表示可能悬空的 shared_ptr 式指针std::weak_ptr 像 shared_ptr 一样指向对象，但不参与所有权、不影响引用计数；它能检测对象是否已经被销毁，适合缓存、观察者列表和打破循环引用。 1. weak_ptr 是什么weak_ptr 不是独立的智能指针，它是 shared_ptr 的补充：  不能解引用； 不能判断是否为空； 不增加">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-16T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-16T06:44:40.098Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-16T12:00:00+08:00">
+      November 16, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(四)：条款20 优先用 weak_ptr</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款20：用-std-weak-ptr-表示可能悬空的-shared-ptr-式指针"><a href="#条款20：用-std-weak-ptr-表示可能悬空的-shared-ptr-式指针" class="headerlink" title="条款20：用 std::weak_ptr 表示可能悬空的 shared_ptr 式指针"></a>条款20：用 std::weak_ptr 表示可能悬空的 shared_ptr 式指针</h1><p><code>std::weak_ptr</code> 像 <code>shared_ptr</code> 一样指向对象，但不参与所有权、不影响引用计数；它能检测对象是否已经被销毁，适合缓存、观察者列表和打破循环引用。</p>
+<h2 id="1-weak-ptr-是什么"><a href="#1-weak-ptr-是什么" class="headerlink" title="1. weak_ptr 是什么"></a>1. weak_ptr 是什么</h2><p><code>weak_ptr</code> 不是独立的智能指针，它是 <code>shared_ptr</code> 的补充：</p>
+<ul>
+<li>不能解引用；</li>
+<li>不能判断是否为空；</li>
+<li>不增加对象的引用计数；</li>
+<li>可以判断自己是否已经过期（expired）。</li>
+</ul>
+<p>它通常从 <code>shared_ptr</code> 创建：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> spw = std::<span class="built_in">make_shared</span>&lt;Widget&gt;();   <span class="comment">// 引用计数 = 1</span></span><br><span class="line"><span class="function">std::weak_ptr&lt;Widget&gt; <span class="title">wpw</span><span class="params">(spw)</span></span>;          <span class="comment">// wpw 指向同一个 Widget，计数仍为 1</span></span><br><span class="line"></span><br><span class="line">spw = <span class="literal">nullptr</span>;                           <span class="comment">// 计数变 0，Widget 被销毁</span></span><br><span class="line">                                         <span class="comment">// wpw 现在悬空</span></span><br></pre></td></tr></table></figure>
+
+<p>悬空的 <code>weak_ptr</code> 叫“已过期”（expired）。可以这样检查：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (wpw.<span class="built_in">expired</span>()) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-lock-和-shared-ptr-构造"><a href="#2-lock-和-shared-ptr-构造" class="headerlink" title="2. lock 和 shared_ptr 构造"></a>2. lock 和 shared_ptr 构造</h2><p><code>weak_ptr::lock()</code> 返回一个 <code>shared_ptr</code>：</p>
+<ul>
+<li>如果 <code>weak_ptr</code> 已过期，返回空 <code>shared_ptr</code>；</li>
+<li>否则返回一个指向同一对象的 <code>shared_ptr</code>，引用计数加一。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;Widget&gt; spw1 = wpw.<span class="built_in">lock</span>();   <span class="comment">// 过期则为 null</span></span><br><span class="line"><span class="keyword">auto</span> spw2 = wpw.<span class="built_in">lock</span>();</span><br></pre></td></tr></table></figure>
+<p>另一种方式是用 <code>shared_ptr</code> 的构造函数接收 <code>weak_ptr</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw3</span><span class="params">(wpw)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果 <code>wpw</code> 已过期，这个构造函数会抛 <code>std::bad_weak_ptr</code>。</p>
+<h2 id="3-场景一：缓存"><a href="#3-场景一：缓存" class="headerlink" title="3. 场景一：缓存"></a>3. 场景一：缓存</h2><p>假设 <code>loadWidget(id)</code> 很贵（读文件或数据库），同一个 id 可能被反复请求。可以加缓存，但缓存不能阻止对象被销毁。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;<span class="type">const</span> Widget&gt; <span class="title">fastLoadWidget</span><span class="params">(WidgetID id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">static</span> std::unordered_map&lt;</span><br><span class="line">    WidgetID,</span><br><span class="line">    std::weak_ptr&lt;<span class="type">const</span> Widget&gt;</span><br><span class="line">  &gt; cache;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">auto</span> objPtr = cache[id].<span class="built_in">lock</span>();   <span class="comment">// 缓存里有就拿到 shared_ptr</span></span><br><span class="line">  <span class="keyword">if</span> (!objPtr) &#123;                    <span class="comment">// 没有或已过期</span></span><br><span class="line">    objPtr = <span class="built_in">loadWidget</span>(id);        <span class="comment">// 重新加载</span></span><br><span class="line">    cache[id] = objPtr;             <span class="comment">// 缓存 weak_ptr</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> objPtr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么缓存里放 <code>weak_ptr</code> 而不是 <code>shared_ptr</code>？因为缓存不应该延长对象的生命周期。客户端用完后，对象该销毁就销毁；缓存里的 <code>weak_ptr</code> 自然过期，下次访问时重新加载。</p>
+<h2 id="4-场景二：观察者列表"><a href="#4-场景二：观察者列表" class="headerlink" title="4. 场景二：观察者列表"></a>4. 场景二：观察者列表</h2><p>观察者模式里，subject 状态变化时要通知 observers，但 subject 不应该控制 observer 的生命周期。</p>
+<p>如果 subject 保存 <code>shared_ptr</code>，会延长 observer 的生命周期，甚至造成循环引用；如果保存裸指针，observer 销毁后 subject 可能访问悬空指针。</p>
+<p>合理做法：subject 保存 <code>weak_ptr</code>，通知前用 <code>lock()</code> 检查：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Subject</span> &#123;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::vector&lt;std::weak_ptr&lt;Observer&gt;&gt; observers;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这样 subject 不会拥有 observer，也能在通知时发现 observer 已经销毁。</p>
+<h2 id="5-场景三：打破-shared-ptr-循环"><a href="#5-场景三：打破-shared-ptr-循环" class="headerlink" title="5. 场景三：打破 shared_ptr 循环"></a>5. 场景三：打破 shared_ptr 循环</h2><p>考虑 A、B、C 三个对象：A 和 C 共享拥有 B，所以 A、C 各有一个指向 B 的 <code>shared_ptr</code>。现在 B 也需要指回 A。</p>
+<p>三种选择：</p>
+<ul>
+<li><strong>裸指针</strong>：A 销毁后，如果 C 还拥有 B，B 里的裸指针就悬空；B 无法检测，解引用就是未定义行为。</li>
+<li><strong>shared_ptr</strong>：A 和 B 互相持有 <code>shared_ptr</code>，引用计数永远不为零；即使外部已经无法访问它们，内存也回收不了，形成泄漏。</li>
+<li><strong>weak_ptr</strong>：B 指回 A 用 <code>weak_ptr</code>。A 销毁后，B 能检测到；同时 B 的 <code>weak_ptr</code> 不影响 A 的引用计数，不会阻止 A 销毁。</li>
+</ul>
+<p>所以打破 <code>shared_ptr</code> 循环引用，<code>weak_ptr</code> 是标准工具。</p>
+<p>不过，不是所有指针结构都需要 <code>weak_ptr</code>。严格层次结构（比如树）里，父节点拥有子节点，子节点到父节点的反向指针可以用裸指针：子节点生命周期不会超过父节点，父指针不会悬空。</p>
+<h2 id="6-成本"><a href="#6-成本" class="headerlink" title="6. 成本"></a>6. 成本</h2><p><code>weak_ptr</code> 和 <code>shared_ptr</code> 大小相同，使用同一个控制块，构造、销毁、赋值也涉及原子引用计数操作。</p>
+<p>它操作的是控制块里的<strong>第二个引用计数</strong>，叫弱引用计数（weak count）。强引用计数归零时对象被销毁，但只要还有 <code>weak_ptr</code> 指向控制块，控制块本身就必须继续存在，直到最后一个 <code>weak_ptr</code> 也销毁。</p>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li><code>std::weak_ptr</code> 用于“像 <code>shared_ptr</code> 但可能悬空”的场景。</li>
+<li>它不参与共享所有权，不影响对象的强引用计数。</li>
+<li>用 <code>expired()</code> 检测是否过期，用 <code>lock()</code> 原子地获取 <code>shared_ptr</code>。</li>
+<li>典型场景：缓存、观察者列表、打破 <code>shared_ptr</code> 循环引用。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-4-21/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款21 优先用 make 函数</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-4-19/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款19 优先用 shared_ptr</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

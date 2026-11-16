@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(四)---if语句 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="if 语句1. 一个简单示例1234567cars &#x3D; [&#x27;audi&#x27;, &#x27;bmw&#x27;, &#x27;subaru&#x27;, &#x27;toyota&#x27;]for car in cars:    if car &#x3D;&#x3D; &#x27;bmw&#x27;:        print(car.upper())    else:        print(ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(四)---if语句">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-4/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="if 语句1. 一个简单示例1234567cars &#x3D; [&#x27;audi&#x27;, &#x27;bmw&#x27;, &#x27;subaru&#x27;, &#x27;toyota&#x27;]for car in cars:    if car &#x3D;&#x3D; &#x27;bmw&#x27;:        print(car.upper())    else:        print(ca">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-16T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-16T06:55:43.141Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-16T18:00:00+08:00">
+      November 16, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(四)---if语句</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h1><h2 id="1-一个简单示例"><a href="#1-一个简单示例" class="headerlink" title="1. 一个简单示例"></a>1. 一个简单示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> car <span class="keyword">in</span> cars:</span><br><span class="line">    <span class="keyword">if</span> car == <span class="string">&#x27;bmw&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(car.upper())</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(car.title())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Audi</span><br><span class="line">BMW</span><br><span class="line">Subaru</span><br><span class="line">Toyota</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-条件测试"><a href="#2-条件测试" class="headerlink" title="2. 条件测试"></a>2. 条件测试</h2><p>条件测试就是值为 <code>True</code> 或 <code>False</code> 的表达式,它是每条 <code>if</code> 语句的核心。</p>
+<h3 id="大小写"><a href="#大小写" class="headerlink" title="大小写"></a>大小写</h3><p>大小写必然是要区分的,因为本质上英文字符就是ASCII码的具象化,本质是比较两个字符的ASCII是否相同,当然要是是其他语言也是同理</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; car = &#x27;Audi&#x27;</span><br><span class="line">&gt;&gt;&gt; car == &#x27;audi&#x27;</span><br><span class="line">False</span><br><span class="line">&gt;&gt;&gt; car.lower() == &#x27;audi&#x27;</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; car</span><br><span class="line">&#x27;Audi&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>字符串比较区分大小写。要忽略大小写就先 <code>lower()</code> 再比,<code>lower()</code> 返回新字符串,<code>car</code> 本身没变。网站检查用户名是否重复,用的就是这个办法:把新用户名转小写,再和所有既有用户名的小写版本比较,这样 <code>John</code> 和 <code>john</code> 就不会同时存在。</p>
+<h3 id="检查不相等"><a href="#检查不相等" class="headerlink" title="检查不相等"></a>检查不相等</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">requested_topping = <span class="string">&#x27;mushrooms&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> requested_topping != <span class="string">&#x27;anchovies&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hold the anchovies!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hold the anchovies!</span><br></pre></td></tr></table></figure>
+
+<p><code>!=</code> 表示”不等于”,在排除某个值的时候比 <code>==</code> 更直接。</p>
+<h3 id="比较数字"><a href="#比较数字" class="headerlink" title="比较数字"></a>比较数字</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; age = 19</span><br><span class="line">&gt;&gt;&gt; age == 18</span><br><span class="line">False</span><br><span class="line">&gt;&gt;&gt; age &lt; 21</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; age &lt;= 21</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; age &gt; 21</span><br><span class="line">False</span><br><span class="line">&gt;&gt;&gt; age &gt;= 21</span><br><span class="line">False</span><br></pre></td></tr></table></figure>
+
+<p>六种运算符:<code>==</code>、<code>!=</code>、<code>&lt;</code>、<code>&lt;=</code>、<code>&gt;</code>、<code>&gt;=</code>。</p>
+<h3 id="检查多个条件"><a href="#检查多个条件" class="headerlink" title="检查多个条件"></a>检查多个条件</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; age_0 = 22</span><br><span class="line">&gt;&gt;&gt; age_1 = 18</span><br><span class="line">&gt;&gt;&gt; age_0 &gt;= 21 and age_1 &gt;= 21</span><br><span class="line">False</span><br><span class="line">&gt;&gt;&gt; age_1 = 22</span><br><span class="line">&gt;&gt;&gt; age_0 &gt;= 21 and age_1 &gt;= 21</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>and</code>:两个都通过才为 <code>True</code>,有一个不通过就是 <code>False</code>。类比C&#x2F;C++的<code>&amp;&amp;</code></li>
+<li><code>or</code>:至少一个通过就为 <code>True</code>,两个都不通过才为 <code>False</code>。类比C&#x2F;C++的<code>||</code></li>
+</ul>
+<p>为可读性可以加括号,虽然不是必须的:<code>(age_0 &gt;= 21) and (age_1 &gt;= 21)</code>。</p>
+<h3 id="检查值是否在列表中"><a href="#检查值是否在列表中" class="headerlink" title="检查值是否在列表中"></a>检查值是否在列表中</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; requested_toppings = [&#x27;mushrooms&#x27;, &#x27;onions&#x27;, &#x27;pineapple&#x27;]</span><br><span class="line">&gt;&gt;&gt; &#x27;mushrooms&#x27; in requested_toppings</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; &#x27;pepperoni&#x27; in requested_toppings</span><br><span class="line">False</span><br></pre></td></tr></table></figure>
+
+<p><code>in</code> 判断”在不在”,<code>not in</code> 判断”不在”。书里的例子是论坛禁言名单:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">banned_users = [<span class="string">&#x27;andrew&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>, <span class="string">&#x27;david&#x27;</span>]</span><br><span class="line">user = <span class="string">&#x27;marie&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> user <span class="keyword">not</span> <span class="keyword">in</span> banned_users:</span><br><span class="line">    <span class="built_in">print</span>(user.title() + <span class="string">&quot;, you can post a response if you wish.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Marie, you can post a response if you wish.</span><br></pre></td></tr></table></figure>
+
+<h3 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h3><p>布尔表达式就是条件测试的另一种叫法,结果只有 <code>True</code> 和 <code>False</code>,注意首字母大写,不是字符串。前面第 2 章的补充里提过:非 0 的整数都算 <code>True</code>,0 算 <code>False</code>;空列表、空字符串、空字典也都算 <code>False</code>。后面第 4 节的”列表为空”检查就是靠这个。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">game_active = <span class="literal">True</span></span><br><span class="line">can_edit = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>这种变量很适合记录程序状态。</p>
+<h2 id="3-if-语句"><a href="#3-if-语句" class="headerlink" title="3. if 语句"></a>3. if 语句</h2><h3 id="简单的-if"><a href="#简单的-if" class="headerlink" title="简单的 if"></a>简单的 if</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">19</span></span><br><span class="line"><span class="keyword">if</span> age &gt;= <span class="number">18</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;You are old enough to vote!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You are old enough to vote!</span><br></pre></td></tr></table></figure>
+
+<p>测试通过就执行缩进块,否则跳过。缩进规则和 <code>for</code> 完全一样。</p>
+<h3 id="if-else"><a href="#if-else" class="headerlink" title="if-else"></a>if-else</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">17</span></span><br><span class="line"><span class="keyword">if</span> age &gt;= <span class="number">18</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;You are old enough to vote!&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Have you registered to vote yet?&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Sorry, you are too young to vote.&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Please register to vote as soon as you turn 18!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Sorry, you are too young to vote.</span><br><span class="line">Please register to vote as soon as you turn 18!</span><br></pre></td></tr></table></figure>
+
+<p>只有两种可能时用 <code>if-else</code>,两个块必然执行其中一个。</p>
+<h3 id="if-elif-else"><a href="#if-elif-else" class="headerlink" title="if-elif-else"></a>if-elif-else</h3><p>游乐场的票价规则:4 岁以下免费,4~17 岁 5 美元,18 岁及以上 10 美元。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> age &lt; <span class="number">4</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Your admission cost is $0.&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &lt; <span class="number">18</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Your admission cost is $5.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Your admission cost is $10.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your admission cost is $5.</span><br></pre></td></tr></table></figure>
+<p>Python 从上往下依次检查,<strong>命中一个就执行它、跳过其余所有测试</strong>。12 岁时第一个不通过,第二个通过,<code>else</code> 就被跳过。<br>更好的写法是让 <code>if</code> 结构只负责定价格,打印交给后面一条语句:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> age &lt; <span class="number">4</span>:</span><br><span class="line">    price = <span class="number">0</span></span><br><span class="line"><span class="keyword">elif</span> age &lt; <span class="number">18</span>:</span><br><span class="line">    price = <span class="number">5</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    price = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Your admission cost is $&quot;</span> + <span class="built_in">str</span>(price) + <span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>好处有两个:只维护一条 <code>print</code>;逻辑(定价)和输出(措辞)分开。这个思路后面写函数时会反复出现。<code>else</code>是可以不写的,也就是一个<code>if</code>语句里面不一定有<code>else</code></p>
+<h2 id="5-设置-if-语句的格式"><a href="#5-设置-if-语句的格式" class="headerlink" title="5. 设置 if 语句的格式"></a>5. 设置 if 语句的格式</h2><p>PEP 8 对条件测试只有一条明确建议:<strong>比较运算符两侧各加一个空格</strong>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if age &lt; 4:        # 好</span><br><span class="line">if age&lt;4:          # 不会报错,语法也没问题,就是不咋容易看清,而且连在一起,也不是很美观</span><br></pre></td></tr></table></figure>
+<h2 id="补充—-三元表达式和链式比较"><a href="#补充—-三元表达式和链式比较" class="headerlink" title="补充— 三元表达式和链式比较"></a>补充— 三元表达式和链式比较</h2><p><code>if-else</code> 只为了给一个变量赋值时,可以写成一行:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">20</span></span><br><span class="line">status = <span class="string">&quot;adult&quot;</span> <span class="keyword">if</span> age &gt;= <span class="number">18</span> <span class="keyword">else</span> <span class="string">&quot;minor&quot;</span></span><br><span class="line"><span class="built_in">print</span>(status)      <span class="comment"># adult</span></span><br></pre></td></tr></table></figure>
+
+<p>语法是 <code>值1 if 条件 else 值2</code>,条件成立取值 1,否则取值 2。C&#x2F;C++ 里的 <code>cond ? a : b</code> 是同一个东西,只是 Python 把它写得更像英语。</p>
+<p>另外 Python 支持链式比较,这个在 C&#x2F;C++ 里得写成两个条件:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; age = 15</span><br><span class="line">&gt;&gt;&gt; 0 &lt; age &lt; 18</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+<p>等价于 <code>0 &lt; age and age &lt; 18</code>,但更短也更清楚。写范围判断时很好用。在<code>python</code> 里面反而这样写,感觉有点不好看懂了</p>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li>条件测试的结果只有 <code>True</code> &#x2F; <code>False</code>,一个等号是赋值,两个等号才是比较。</li>
+<li>字符串比较区分大小写,需要时用 <code>lower()</code> 统一后再比。</li>
+<li><code>and</code> 要求全部成立,<code>or</code> 只要一个成立;<code>in</code> &#x2F; <code>not in</code> 用于成员检查。</li>
+<li><code>else</code> 是兜底,条件能写清就用 <code>elif</code>;范围条件从窄到宽写。</li>
+<li>列表名可直接作为条件:非空为真、空为假。python里面没有empty函数</li>
+<li>循环 + <code>if</code> 是处理”大多数元素 + 特殊情况”的标准组合,<code>in</code> 常用来对照另一个列表。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-4-21/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款21 优先用 make 函数</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
