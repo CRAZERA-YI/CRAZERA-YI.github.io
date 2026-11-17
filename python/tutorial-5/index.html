@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(五)---字典 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="字典引言列表用下标找数据,字典用名字找数据。假如一个外星人有颜色、点数和坐标,用列表存就得记住”第 0 个是颜色、第 1 个是点数”,很容易记错;用字典可以直接写 alien[&#39;color&#39;],意思清楚得多。C++ 里类似的东西是 std::map 和 std::unordered_map,其实准确的说是std::unordered_map,因为python的字典底层实现是哈希表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(五)---字典">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-5/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="字典引言列表用下标找数据,字典用名字找数据。假如一个外星人有颜色、点数和坐标,用列表存就得记住”第 0 个是颜色、第 1 个是点数”,很容易记错;用字典可以直接写 alien[&#39;color&#39;],意思清楚得多。C++ 里类似的东西是 std::map 和 std::unordered_map,其实准确的说是std::unordered_map,因为python的字典底层实现是哈希表">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-17T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-17T04:18:33.679Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-17T12:00:00+08:00">
+      November 17, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(五)---字典</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>列表用下标找数据,字典用名字找数据。假如一个外星人有颜色、点数和坐标,用列表存就得记住”第 0 个是颜色、第 1 个是点数”,很容易记错;用字典可以直接写 <code>alien[&#39;color&#39;]</code>,意思清楚得多。C++ 里类似的东西是 <code>std::map</code> 和 <code>std::unordered_map</code>,其实准确的说是<code>std::unordered_map</code>,因为python的字典底层实现是哈希表</p>
+<h2 id="1-一个简单的字典"><a href="#1-一个简单的字典" class="headerlink" title="1. 一个简单的字典"></a>1. 一个简单的字典</h2><p>简单的说,字典就是键值对,通过一个<code>key</code>来查询一个<code>value</code>,当然键和值的类型不限</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(alien_0[<span class="string">&#x27;color&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(alien_0[<span class="string">&#x27;points&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">green</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<p>花括号表示字典,<code>&#39;color&#39;</code> 是键,<code>&#39;green&#39;</code> 是值,中间用冒号;键值对之间用逗号。访问时写字典名 + 方括号里的键。</p>
+<h2 id="2-使用字典"><a href="#2-使用字典" class="headerlink" title="2. 使用字典"></a>2. 使用字典</h2><h3 id="访问值"><a href="#访问值" class="headerlink" title="访问值"></a>访问值</h3><p>注意键不存在时会报 <code>KeyError</code>,后面补充部分会讲怎么避免。</p>
+<h3 id="添加键值对"><a href="#添加键值对" class="headerlink" title="添加键值对"></a>添加键值对</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(alien_0)</span><br><span class="line"></span><br><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = <span class="number">0</span></span><br><span class="line">alien_0[<span class="string">&#x27;y_position&#x27;</span>] = <span class="number">25</span></span><br><span class="line"><span class="built_in">print</span>(alien_0)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;, &#x27;points&#x27;: 5&#125;</span><br><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;, &#x27;points&#x27;: 5, &#x27;x_position&#x27;: 0, &#x27;y_position&#x27;: 25&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加的语法和修改一模一样:<strong>键不存在就是新增,键已存在就是覆盖</strong>。</p>
+<h3 id="先创建空字典"><a href="#先创建空字典" class="headerlink" title="先创建空字典"></a>先创建空字典</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;&#125;</span><br><span class="line"></span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] = <span class="string">&#x27;green&#x27;</span></span><br><span class="line">alien_0[<span class="string">&#x27;points&#x27;</span>] = <span class="number">5</span></span><br><span class="line"><span class="built_in">print</span>(alien_0)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;, &#x27;points&#x27;: 5&#125;</span><br></pre></td></tr></table></figure>
+<p>存用户输入、或代码要自动生成大量键值对时,通常先建空字典,这和”先建空列表再 <code>append</code>“是同一个套路。但是,你要是用过C++的哈希表,你可能会习惯于这样写<code>m[index]++</code>,由于python没有模板,所以解释器并不知道你的值是什么类型,所以这样在python里面是不合法的</p>
+<h3 id="删除键值对"><a href="#删除键值对" class="headerlink" title="删除键值对"></a>删除键值对</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(alien_0)</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(alien_0)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;, &#x27;points&#x27;: 5&#125;</span><br><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>del</code>删掉后键和值一起消失</p>
+<h3 id="由类似对象组成的字典"><a href="#由类似对象组成的字典" class="headerlink" title="由类似对象组成的字典"></a>由类似对象组成的字典</h3><p>前面的字典描述”一个对象的多个属性”。反过来,也可以描述”多个对象的同一个属性”:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages = &#123;</span><br><span class="line">    <span class="string">&#x27;jen&#x27;</span>: <span class="string">&#x27;python&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;sarah&#x27;</span>: <span class="string">&#x27;c&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;edward&#x27;</span>: <span class="string">&#x27;ruby&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;phil&#x27;</span>: <span class="string">&#x27;python&#x27;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>多行字典的格式:左花括号后换行,缩进四个空格,每对末尾加逗号,右花括号与键对齐。最后一个键值对也保留逗号,方便以后继续加行。</p>
+<p>取值和打印:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Sarah&#x27;s favorite language is &quot;</span> +</span><br><span class="line">    favorite_languages[<span class="string">&#x27;sarah&#x27;</span>].title() +</span><br><span class="line">    <span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sarah&#x27;s favorite language is C.</span><br></pre></td></tr></table></figure>
+<h2 id="3-遍历字典"><a href="#3-遍历字典" class="headerlink" title="3. 遍历字典"></a>3. 遍历字典</h2><h3 id="所有键值对-items"><a href="#所有键值对-items" class="headerlink" title="所有键值对:items()"></a>所有键值对:items()</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">user_0 = &#123;</span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>: <span class="string">&#x27;efermi&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;first&#x27;</span>: <span class="string">&#x27;enrico&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;last&#x27;</span>: <span class="string">&#x27;fermi&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_0.items(): </span><br><span class="line">    <span class="comment"># 这是items()函数返回的对象dict_items([(&#x27;username&#x27;, &#x27;efermi&#x27;), (&#x27;first&#x27;, &#x27;enrico&#x27;), (&#x27;last&#x27;, &#x27;fermi&#x27;)])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nKey: &quot;</span> + key)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Value: &quot;</span> + value)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> pair <span class="keyword">in</span> user_0.items():  <span class="comment"># 这样也行</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nKey: &quot;</span> + pair[<span class="number">0</span>])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Value: &quot;</span> + pair[<span class="number">1</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Key: username</span><br><span class="line">Value: efermi</span><br><span class="line"></span><br><span class="line">Key: first</span><br><span class="line">Value: enrico</span><br><span class="line"></span><br><span class="line">Key: last</span><br><span class="line">Value: fermi</span><br></pre></td></tr></table></figure>
+<h3 id="所有键-keys"><a href="#所有键-keys" class="headerlink" title="所有键:keys()"></a>所有键:keys()</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> favorite_languages.keys():</span><br><span class="line">    <span class="built_in">print</span>(name.title())</span><br></pre></td></tr></table></figure>
+
+<p><strong>遍历字典时默认就是遍历键</strong>,所以写成 <code>for name in favorite_languages:</code> 结果完全一样,显式写 <code>keys()</code> 只是让意图更清楚。</p>
+<p><code>keys()</code> 也可以直接做成员判断:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="string">&#x27;erin&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> favorite_languages.keys():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Erin, please take our poll!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Erin, please take our poll!</span><br></pre></td></tr></table></figure>
+
+<h3 id="按顺序遍历键-sorted"><a href="#按顺序遍历键-sorted" class="headerlink" title="按顺序遍历键:sorted()"></a>按顺序遍历键:sorted()</h3><p>字典本身不负责顺序,但可以先把键排序再遍历:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> <span class="built_in">sorted</span>(favorite_languages.keys()):</span><br><span class="line">    <span class="built_in">print</span>(name.title() + <span class="string">&quot;, thank you for taking the poll.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Edward, thank you for taking the poll.</span><br><span class="line">Jen, thank you for taking the poll.</span><br><span class="line">Phil, thank you for taking the poll.</span><br><span class="line">Sarah, thank you for taking the poll.</span><br></pre></td></tr></table></figure>
+
+<p><code>sorted()</code> 返回排好序的键列表,原字典不受影响。</p>
+<h3 id="所有值-values-和-set"><a href="#所有值-values-和-set" class="headerlink" title="所有值:values() 和 set()"></a>所有值:values() 和 set()</h3><p>有<code>keys()</code>那就肯定有<code>values()</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;The following languages have been mentioned:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> favorite_languages.values():</span><br><span class="line">    <span class="built_in">print</span>(language.title())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">The following languages have been mentioned:</span><br><span class="line">Python</span><br><span class="line">C</span><br><span class="line">Python</span><br><span class="line">Ruby</span><br></pre></td></tr></table></figure>
+
+<p><code>values()</code> 只给值,不管重复。想去重就需要套一层 <code>set()</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> <span class="built_in">set</span>(favorite_languages.values()):</span><br><span class="line">    <span class="built_in">print</span>(language.title())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Python</span><br><span class="line">C</span><br><span class="line">Ruby</span><br></pre></td></tr></table></figure>
+<h2 id="4-嵌套"><a href="#4-嵌套" class="headerlink" title="4. 嵌套"></a>4. 嵌套</h2><p>列表和元组里面啥都能放,当然也包括字典咯,当然字典里面也能放元组和列表,套来套去</p>
+<h3 id="字典列表"><a href="#字典列表" class="headerlink" title="字典列表"></a>字典列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">alien_1 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;yellow&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">10</span>&#125;</span><br><span class="line">alien_2 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;points&#x27;</span>: <span class="number">15</span>&#125;</span><br><span class="line"></span><br><span class="line">aliens = [alien_0, alien_1, alien_2]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> alien <span class="keyword">in</span> aliens:</span><br><span class="line">    <span class="built_in">print</span>(alien)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;color&#x27;: &#x27;green&#x27;, &#x27;points&#x27;: 5&#125;</span><br><span class="line">&#123;&#x27;color&#x27;: &#x27;yellow&#x27;, &#x27;points&#x27;: 10&#125;</span><br><span class="line">&#123;&#x27;color&#x27;: &#x27;red&#x27;, &#x27;points&#x27;: 15&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="在字典中存储列表"><a href="#在字典中存储列表" class="headerlink" title="在字典中存储列表"></a>在字典中存储列表</h3><p>一个键对应多个值时,值就放列表:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pizza = &#123;</span><br><span class="line">    <span class="string">&#x27;crust&#x27;</span>: <span class="string">&#x27;thick&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;toppings&#x27;</span>: [<span class="string">&#x27;mushrooms&#x27;</span>, <span class="string">&#x27;extra cheese&#x27;</span>],</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;You ordered a &quot;</span> + pizza[<span class="string">&#x27;crust&#x27;</span>] + <span class="string">&quot;-crust pizza &quot;</span> +</span><br><span class="line">    <span class="string">&quot;with the following toppings:&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> pizza[<span class="string">&#x27;toppings&#x27;</span>]:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\t&quot;</span> + topping)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">You ordered a thick-crust pizza with the following toppings:</span><br><span class="line">    mushrooms</span><br><span class="line">    extra cheese</span><br></pre></td></tr></table></figure>
+<h3 id="在字典中存储字典"><a href="#在字典中存储字典" class="headerlink" title="在字典中存储字典"></a>在字典中存储字典</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">users = &#123;</span><br><span class="line">    <span class="string">&#x27;aeinstein&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;first&#x27;</span>: <span class="string">&#x27;albert&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;last&#x27;</span>: <span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;location&#x27;</span>: <span class="string">&#x27;princeton&#x27;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;mcurie&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;first&#x27;</span>: <span class="string">&#x27;marie&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;last&#x27;</span>: <span class="string">&#x27;curie&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;location&#x27;</span>: <span class="string">&#x27;paris&#x27;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> username, user_info <span class="keyword">in</span> users.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nUsername: &quot;</span> + username)</span><br><span class="line">    full_name = user_info[<span class="string">&#x27;first&#x27;</span>] + <span class="string">&quot; &quot;</span> + user_info[<span class="string">&#x27;last&#x27;</span>]</span><br><span class="line">    location = user_info[<span class="string">&#x27;location&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\tFull name: &quot;</span> + full_name.title())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\tLocation: &quot;</span> + location.title())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Username: aeinstein</span><br><span class="line">    Full name: Albert Einstein</span><br><span class="line">    Location: Princeton</span><br><span class="line"></span><br><span class="line">Username: mcurie</span><br><span class="line">    Full name: Marie Curie</span><br><span class="line">    Location: Paris</span><br></pre></td></tr></table></figure>
+
+<p>外层键是用户名,值是”用户信息字典”。书里点出一句关键:<strong>每个用户的字典结构相同</strong>,所以循环里的代码只需写一套;结构不同的话,循环里就得写一堆判断。</p>
+<h2 id="补充—-get"><a href="#补充—-get" class="headerlink" title="补充— get()"></a>补充— get()</h2><p>直接访问不存在的键会报 <code>KeyError</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(alien_0[<span class="string">&#x27;points&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;alien.py&quot;, line 2, in &lt;module&gt;</span><br><span class="line">    print(alien_0[&#x27;points&#x27;])</span><br><span class="line">KeyError: &#x27;points&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>get()</code> 就不会报错,键不存在时返回 <code>None</code>,也可以自己给默认值:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(alien_0.get(<span class="string">&#x27;points&#x27;</span>))          <span class="comment"># None</span></span><br><span class="line"><span class="built_in">print</span>(alien_0.get(<span class="string">&#x27;points&#x27;</span>, <span class="number">0</span>))       <span class="comment"># 0</span></span><br><span class="line"><span class="built_in">print</span>(alien_0.get(<span class="string">&#x27;color&#x27;</span>, <span class="string">&#x27;unknown&#x27;</span>))  <span class="comment"># green</span></span><br></pre></td></tr></table></figure>
+
+<p>所以在”不确定键在不在”的场合,<code>get()</code> 比 <code>if &#39;points&#39; in alien_0</code> 再取值更省事。不过如果这个键本来就必须有,直接 <code>d[&#39;k&#39;]</code> 更好——报错能早点暴露问题。</p>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li>字典是键—值对的集合,用名字(键)而不是位置(索引)找数据。</li>
+<li>定义用花括号,键值对用冒号,对与对之间用逗号;值可以是任何对象。</li>
+<li><code>d[k]</code> 访问、<code>d[k] = v</code> 添加或修改、<code>del d[k]</code> 删除,键不存在访问会报 <code>KeyError</code>。</li>
+<li>先建空字典再逐个填,是处理用户输入和批量生成数据的常见写法。</li>
+<li><code>items()</code> 遍历键值对、<code>keys()</code> 遍历键、<code>values()</code> 遍历值;默认遍历的是键。</li>
+<li>键可以排序后遍历(<code>sorted()</code>),值可以去重后遍历(<code>set()</code>)。</li>
+<li>嵌套让字典能表示”一群对象”和”对象的多重属性”,但层级越少越好。</li>
+<li>从 Python 3.7 起字典按插入顺序遍历,书里”顺序不可预测”的说法已经过时。</li>
+<li>不确定键是否存在时用 <code>get()</code>,能避免 <code>KeyError</code>。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/python/ai-agent-1/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">agent概述</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
