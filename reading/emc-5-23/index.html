@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款23 理解 move 和 forward - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款23：理解 std::move 和 std::forwardstd::move 无条件把参数转成右值，std::forward 只在参数原本绑定到右值时才转。 1. 它们不移动、不转发std::move 不移动任何东西，std::forward 也不转发任何东西。运行期不生成任何代码,只是一个名字而已,和他们的功能没关系。 它们只是函数模板，做的事情是类型转换：  std::move：无条件转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款23 理解 move 和 forward">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-23/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款23：理解 std::move 和 std::forwardstd::move 无条件把参数转成右值，std::forward 只在参数原本绑定到右值时才转。 1. 它们不移动、不转发std::move 不移动任何东西，std::forward 也不转发任何东西。运行期不生成任何代码,只是一个名字而已,和他们的功能没关系。 它们只是函数模板，做的事情是类型转换：  std::move：无条件转">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-18T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-18T08:51:47.644Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-18T22:00:00+08:00">
+      November 18, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款23 理解 move 和 forward</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款23：理解-std-move-和-std-forward"><a href="#条款23：理解-std-move-和-std-forward" class="headerlink" title="条款23：理解 std::move 和 std::forward"></a>条款23：理解 std::move 和 std::forward</h1><p><code>std::move</code> 无条件把参数转成右值，<code>std::forward</code> 只在参数原本绑定到右值时才转。</p>
+<h2 id="1-它们不移动、不转发"><a href="#1-它们不移动、不转发" class="headerlink" title="1. 它们不移动、不转发"></a>1. 它们不移动、不转发</h2><p><code>std::move</code> 不移动任何东西，<code>std::forward</code> 也不转发任何东西。运行期不生成任何代码,只是一个名字而已,和他们的功能没关系。</p>
+<p>它们只是函数模板，做的事情是类型转换：</p>
+<ul>
+<li><code>std::move</code>：无条件转成右值。</li>
+<li><code>std::forward</code>：有条件转成右值。</li>
+</ul>
+<h2 id="2-std-move-的实现"><a href="#2-std-move-的实现" class="headerlink" title="2. std::move 的实现"></a>2. std::move 的实现</h2><p>一个接近标准的 C++11 实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">typename</span> std::remove_reference&lt;T&gt;::<span class="function">type&amp;&amp;</span></span><br><span class="line"><span class="function"><span class="title">move</span><span class="params">(T&amp;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">using</span> ReturnType =</span><br><span class="line">    <span class="keyword">typename</span> std::remove_reference&lt;T&gt;::type&amp;&amp;;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;ReturnType&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::move</code> 接收一个万能引用，返回同一个对象的右值引用。</p>
+<p>为什么要 <code>remove_reference</code>？因为如果 <code>T</code> 本身是左值引用，<code>T&amp;&amp;</code> 会折叠成左值引用；去掉引用后再加 <code>&amp;&amp;</code>，才能保证返回的真的是右值引用。</p>
+<p>所以 <code>std::move</code> 只做一件事：<strong>把参数转成右值</strong>。它不保证这个对象一定能被移动，也不保证移动一定发生。</p>
+<h2 id="3-move-到-const-对象上会变成拷贝"><a href="#3-move-到-const-对象上会变成拷贝" class="headerlink" title="3. move 到 const 对象上会变成拷贝"></a>3. move 到 const 对象上会变成拷贝</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Annotation</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">Annotation</span><span class="params">(<span class="type">const</span> std::string text)</span></span></span><br><span class="line"><span class="function">  : value(std::move(text))   // 看起来是移动，实际上是拷贝</span></span><br><span class="line"><span class="function">  &#123;</span> ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string value;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>text</code> 是 <code>const std::string</code>。<code>std::move(text)</code> 的结果是 <code>const std::string&amp;&amp;</code>，也就是“const 右值”。</p>
+<p><code>std::string</code> 的移动构造函数签名是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span>(string&amp;&amp; rhs);        <span class="comment">// 接收非 const 右值</span></span><br></pre></td></tr></table></figure>
+
+<p><code>const std::string&amp;&amp;</code> 不能绑定到 <code>string&amp;&amp;</code>，但可以绑定到 <code>const string&amp;</code>，于是调用的是拷贝构造函数。</p>
+<p>两个结论：</p>
+<ul>
+<li>想移动一个对象，就不要把它声明成 <code>const</code>；对 const 对象的移动请求会静默变成拷贝。</li>
+<li><code>std::move</code> 只保证结果是右值，不保证这个右值能被移动。</li>
+</ul>
+<h2 id="4-std-forward-是条件转换"><a href="#4-std-forward-是条件转换" class="headerlink" title="4. std::forward 是条件转换"></a>4. std::forward 是条件转换</h2><p><code>std::forward</code> 的典型用法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">(<span class="type">const</span> Widget&amp; lvalArg)</span></span>;   <span class="comment">// 处理左值</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">(Widget&amp;&amp; rvalArg)</span></span>;        <span class="comment">// 处理右值</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndProcess</span><span class="params">(T&amp;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">  <span class="built_in">makeLogEntry</span>(<span class="string">&quot;Calling &#x27;process&#x27;&quot;</span>, now);</span><br><span class="line">  <span class="built_in">process</span>(std::forward&lt;T&gt;(param));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Widget w;</span><br><span class="line"><span class="built_in">logAndProcess</span>(w);                 <span class="comment">// 左值</span></span><br><span class="line"><span class="built_in">logAndProcess</span>(std::<span class="built_in">move</span>(w));      <span class="comment">// 右值</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <code>logAndProcess</code> 内部，<code>param</code> 本身是左值（所有函数参数都是左值），直接传给 <code>process</code> 会调用左值重载。<code>std::forward&lt;T&gt;(param)</code> 的作用是：</p>
+<ul>
+<li>如果调用方传进来的是左值，就保持左值；</li>
+<li>如果调用方传进来的是右值，就转成右值。</li>
+</ul>
+<p>所以 <code>std::forward</code> 是<strong>条件转换</strong>：只有实参原本绑定到右值时，才转成右值。</p>
+<p>它怎么知道？信息编码在模板参数 <code>T</code> 里。左值实参让 <code>T</code> 推成 <code>Widget&amp;</code>，右值实参让 <code>T</code> 推成 <code>Widget</code>。<code>std::forward</code> 根据 <code>T</code> 决定是否转换。具体机制见条款28。</p>
+<p>一个接近标准的实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">T&amp;&amp; <span class="title">forward</span><span class="params">(<span class="keyword">typename</span> std::remove_reference&lt;T&gt;::type&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;T&amp;&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-为什么不用-forward-代替-move"><a href="#5-为什么不用-forward-代替-move" class="headerlink" title="5. 为什么不用 forward 代替 move"></a>5. 为什么不用 forward 代替 move</h2><p>从纯技术角度，<code>std::forward</code> 什么都能做，<code>std::move</code> 不是必需的。但 <code>std::move</code> 更短、更清楚：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Widget</span>(Widget&amp;&amp; rhs)</span><br><span class="line">: <span class="built_in">s</span>(std::<span class="built_in">move</span>(rhs.s))</span><br><span class="line">&#123; ++moveCtorCalls; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>std::forward</code> 要写成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Widget</span>(Widget&amp;&amp; rhs)</span><br><span class="line">: <span class="built_in">s</span>(std::forward&lt;std::string&gt;(rhs.s))</span><br><span class="line">&#123; ++moveCtorCalls; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>不仅要写模板实参，还要保证传的是非引用类型；传错成 <code>std::string&amp;</code>，就会变成拷贝。</p>
+<p>更重要的是语义不同：</p>
+<ul>
+<li><code>std::move</code> 表示“无条件转成右值”，通常是在为移动做准备。</li>
+<li><code>std::forward</code> 表示“保持原来的值类别，转发给下一个函数”。</li>
+</ul>
+<p>所以两者都应该保留，用在各自的场景。</p>
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li><code>std::move</code> 执行无条件右值转换；它本身不移动任何东西。</li>
+<li><code>std::forward</code> 只在实参原本绑定到右值时，才转成右值。</li>
+<li>两者在运行期都不做任何事。</li>
+<li>想移动对象就不要声明成 <code>const</code>；对 const 对象的 <code>std::move</code> 会变成拷贝。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-4-22/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(四)：条款22 Pimpl 与特殊成员函数</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
