@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>python教程(七)---函数 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="函数函数其实就是一个工具模块,把各种功能封装成一个部分.类又是对于函数的再封装…一此类推 1. 定义函数12345def greet_user():    &quot;&quot;&quot;显示简单的问候语&quot;&quot;&quot;    print(&quot;Hello!&quot;)greet_user()  1Hello!  def是定义函数的关键字,只要有def,那就不会调用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python教程(七)---函数">
+<meta property="og:url" content="https://crazera-yi.github.io/python/tutorial-7/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="函数函数其实就是一个工具模块,把各种功能封装成一个部分.类又是对于函数的再封装…一此类推 1. 定义函数12345def greet_user():    &quot;&quot;&quot;显示简单的问候语&quot;&quot;&quot;    print(&quot;Hello!&quot;)greet_user()  1Hello!  def是定义函数的关键字,只要有def,那就不会调用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-20T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-20T05:09:03.597Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/python/">python</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-20T12:00:00+08:00">
+      November 20, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">python教程(七)---函数</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>函数其实就是一个工具模块,把各种功能封装成一个部分.类又是对于函数的再封装…一此类推</p>
+<h2 id="1-定义函数"><a href="#1-定义函数" class="headerlink" title="1. 定义函数"></a>1. 定义函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">greet_user</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;显示简单的问候语&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hello!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello!</span><br></pre></td></tr></table></figure>
+
+<p><code>def</code>是定义函数的关键字,只要有<code>def</code>,那就不会调用只有<code>函数名+括号+参数</code>才会调用</p>
+<h3 id="向函数传递信息"><a href="#向函数传递信息" class="headerlink" title="向函数传递信息"></a>向函数传递信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">greet_user</span>(<span class="params">username</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;显示简单的问候语&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hello, &quot;</span> + username.title() + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user(<span class="string">&#x27;jesse&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, Jesse!</span><br></pre></td></tr></table></figure>
+
+<p><code>username</code> 是形参(函数定义里的变量),<code>&#39;jesse&#39;</code> 是实参(调用时真正传进去的值)。</p>
+<h2 id="2-传递实参"><a href="#2-传递实参" class="headerlink" title="2. 传递实参"></a>2. 传递实参</h2><h3 id="位置实参"><a href="#位置实参" class="headerlink" title="位置实参"></a>位置实参</h3><p>要是参数传错位置,函数内部的部分可能会报错,所以得确认好函数的参数</p>
+<h3 id="关键字实参"><a href="#关键字实参" class="headerlink" title="关键字实参"></a>关键字实参</h3><p>把形参名写上,就不用记顺序就可以正确调用:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">describe_pet(animal_type=<span class="string">&#x27;hamster&#x27;</span>, pet_name=<span class="string">&#x27;harry&#x27;</span>)</span><br><span class="line">describe_pet(pet_name=<span class="string">&#x27;harry&#x27;</span>, animal_type=<span class="string">&#x27;hamster&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><p>写了默认值那样调用的函数的时候默认值那个参数就不用传入(选填)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">describe_pet</span>(<span class="params">pet_name, animal_type=<span class="string">&#x27;dog&#x27;</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;显示宠物的信息&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nI have a &quot;</span> + animal_type + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;My &quot;</span> + animal_type + <span class="string">&quot;&#x27;s name is &quot;</span> + pet_name.title() + <span class="string">&quot;.&quot;</span>)</span><br><span class="line"></span><br><span class="line">describe_pet(<span class="string">&#x27;willie&#x27;</span>)</span><br><span class="line">describe_pet(pet_name=<span class="string">&#x27;harry&#x27;</span>, animal_type=<span class="string">&#x27;hamster&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">I have a dog.</span><br><span class="line">My dog&#x27;s name is Willie.</span><br><span class="line"></span><br><span class="line">I have a hamster.</span><br><span class="line">My hamster&#x27;s name is Harry.</span><br></pre></td></tr></table></figure>
+
+<p>注意两点:</p>
+<ul>
+<li>有默认值的形参必须放在没有默认值的后面,否则 Python 不知道位置实参该给谁;</li>
+<li>默认值只在函数定义时求值一次(后面补充部分会讲这个坑)。</li>
+</ul>
+<h2 id="3-返回值"><a href="#3-返回值" class="headerlink" title="3. 返回值"></a>3. 返回值</h2><p>函数可以 <code>return</code> 一个值,把结果交给调用方:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_formatted_name</span>(<span class="params">first_name, last_name</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回整洁的姓名&quot;&quot;&quot;</span></span><br><span class="line">    full_name = first_name + <span class="string">&#x27; &#x27;</span> + last_name</span><br><span class="line">    <span class="keyword">return</span> full_name.title()</span><br><span class="line"></span><br><span class="line">musician = get_formatted_name(<span class="string">&#x27;jimi&#x27;</span>, <span class="string">&#x27;hendrix&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(musician)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jimi Hendrix</span><br></pre></td></tr></table></figure>
+<p><code>return</code>返回的类型没有限制,什么类型都可以,<code>python</code>的类型检验并不严格<br>没写 <code>return</code> 的函数返回 <code>None</code>。</p>
+<h2 id="4-传递列表"><a href="#4-传递列表" class="headerlink" title="4. 传递列表"></a>4. 传递列表</h2><p>把列表传给函数,函数就能直接处理里面的元素,但是要是传入的不是列表或者元组,肯定就会报错了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">greet_users</span>(<span class="params">names</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;向列表中的每位用户都发出简单的问候&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">        msg = <span class="string">&quot;Hello, &quot;</span> + name.title() + <span class="string">&quot;!&quot;</span></span><br><span class="line">        <span class="built_in">print</span>(msg)</span><br><span class="line"></span><br><span class="line">usernames = [<span class="string">&#x27;hannah&#x27;</span>, <span class="string">&#x27;ty&#x27;</span>, <span class="string">&#x27;margot&#x27;</span>]</span><br><span class="line">greet_users(usernames)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hello, Hannah!</span><br><span class="line">Hello, Ty!</span><br><span class="line">Hello, Margot!</span><br></pre></td></tr></table></figure>
+
+<h3 id="在函数中修改列表"><a href="#在函数中修改列表" class="headerlink" title="在函数中修改列表"></a>在函数中修改列表</h3><p>函数里对列表做增删,<strong>原列表会真的变</strong>,因为传的是引用不是副本,但是你要是操作列表的对应的元素进行修改,那就不一样了:<br><code>for</code>循环修改</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">changelist</span>(<span class="params"><span class="built_in">list</span></span>):</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">list</span>:</span><br><span class="line">        x = <span class="number">9999</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">list</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br><span class="line">changelist(<span class="built_in">list</span>)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">list</span>:</span><br><span class="line">    <span class="built_in">print</span>(x)</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+<p>直接修改</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">changelist</span>(<span class="params"><span class="built_in">list</span></span>):</span><br><span class="line">    <span class="built_in">list</span>[<span class="number">0</span>] = <span class="number">9999</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">list</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br><span class="line">changelist(<span class="built_in">list</span>)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">list</span>:</span><br><span class="line">    <span class="built_in">print</span>(x)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">9999</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+<h3 id="禁止函数修改列表"><a href="#禁止函数修改列表" class="headerlink" title="禁止函数修改列表"></a>禁止函数修改列表</h3><p>如果想保留原列表,就传副本:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print_models(unprinted_designs[:], completed_models)</span><br></pre></td></tr></table></figure>
+
+<p><code>[:]</code> 创建副本,函数怎么改都影响不到原列表。不过书里也说了:除非有明确理由,否则还是直接传原列表,省时间省内存,列表大的时候差别明显。</p>
+<h2 id="5-传递任意数量的实参"><a href="#5-传递任意数量的实参" class="headerlink" title="5. 传递任意数量的实参"></a>5. 传递任意数量的实参</h2><p>参数个数不确定时,用 <code>*形参名</code>,Python 会把多出来的实参打包成元组:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">make_pizza</span>(<span class="params">*toppings</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;打印顾客点的所有配料&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(toppings)</span><br><span class="line"></span><br><span class="line">make_pizza(<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="string">&#x27;mushrooms&#x27;</span>, <span class="string">&#x27;green peppers&#x27;</span>, <span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(&#x27;pepperoni&#x27;,)</span><br><span class="line">(&#x27;mushrooms&#x27;, &#x27;green peppers&#x27;, &#x27;extra cheese&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>注意只有一个值时,打印出来是 <code>(&#39;pepperoni&#39;,)</code>,那个逗号说明它是元组不是字符串。</p>
+<h3 id="位置实参-任意数量实参"><a href="#位置实参-任意数量实参" class="headerlink" title="位置实参 + 任意数量实参"></a>位置实参 + 任意数量实参</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">make_pizza</span>(<span class="params">size, *toppings</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;概述要制作的比萨&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nMaking a &quot;</span> + <span class="built_in">str</span>(size) + <span class="string">&quot;-inch pizza with the following toppings:&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;- &quot;</span> + topping)</span><br><span class="line"></span><br><span class="line">make_pizza(<span class="number">16</span>, <span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="number">12</span>, <span class="string">&#x27;mushrooms&#x27;</span>, <span class="string">&#x27;green peppers&#x27;</span>, <span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Making a 16-inch pizza with the following toppings:</span><br><span class="line">- pepperoni</span><br><span class="line"></span><br><span class="line">Making a 12-inch pizza with the following toppings:</span><br><span class="line">- mushrooms</span><br><span class="line">- green peppers</span><br><span class="line">- extra cheese</span><br></pre></td></tr></table></figure>
+
+<p><code>*toppings</code> 必须放最后,Python 先把前面的位置实参分掉,剩下的才打包。</p>
+<h3 id="任意数量的关键字实参"><a href="#任意数量的关键字实参" class="headerlink" title="任意数量的关键字实参"></a>任意数量的关键字实参</h3><p>两个星号 <code>**</code> 收集”键&#x3D;值”形式的实参,打包成字典:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build_profile</span>(<span class="params">first, last, **user_info</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;创建一个字典,其中包含我们知道的有关用户的一切&quot;&quot;&quot;</span></span><br><span class="line">    profile = &#123;&#125;</span><br><span class="line">    profile[<span class="string">&#x27;first_name&#x27;</span>] = first</span><br><span class="line">    profile[<span class="string">&#x27;last_name&#x27;</span>] = last</span><br><span class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> user_info.items():</span><br><span class="line">        profile[key] = value</span><br><span class="line">    <span class="keyword">return</span> profile</span><br><span class="line"></span><br><span class="line">user_profile = build_profile(<span class="string">&#x27;albert&#x27;</span>, <span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line">                             location=<span class="string">&#x27;princeton&#x27;</span>,</span><br><span class="line">                             field=<span class="string">&#x27;physics&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(user_profile)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;first_name&#x27;: &#x27;albert&#x27;, &#x27;last_name&#x27;: &#x27;einstein&#x27;, &#x27;location&#x27;: &#x27;princeton&#x27;, &#x27;field&#x27;: &#x27;physics&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>*args</code> 收位置参数变元组,<code>**kwargs</code> 收关键字参数变字典</p>
+<h2 id="6-将函数存储在模块中"><a href="#6-将函数存储在模块中" class="headerlink" title="6. 将函数存储在模块中"></a>6. 将函数存储在模块中</h2><p>函数写多了,主程序会越来越长。可以把函数放进一个 <code>.py</code> 文件(模块),再导入使用。</p>
+<h3 id="导入整个模块"><a href="#导入整个模块" class="headerlink" title="导入整个模块"></a>导入整个模块</h3><p><code>pizza.py</code> 里只放函数:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">make_pizza</span>(<span class="params">size, *toppings</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;概述要制作的比萨&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nMaking a &quot;</span> + <span class="built_in">str</span>(size) + <span class="string">&quot;-inch pizza with the following toppings:&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;- &quot;</span> + topping)</span><br></pre></td></tr></table></figure>
+
+<p>另一个文件 <code>making_pizzas.py</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pizza</span><br><span class="line"></span><br><span class="line">pizza.make_pizza(<span class="number">16</span>, <span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">pizza.make_pizza(<span class="number">12</span>, <span class="string">&#x27;mushrooms&#x27;</span>, <span class="string">&#x27;green peppers&#x27;</span>, <span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>import 模块名</code> 之后,用 <code>模块名.函数名()</code> 调用。</p>
+<h3 id="其他导入方式"><a href="#其他导入方式" class="headerlink" title="其他导入方式"></a>其他导入方式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pizza <span class="keyword">import</span> make_pizza            <span class="comment"># 只导入一个函数</span></span><br><span class="line"><span class="keyword">from</span> pizza <span class="keyword">import</span> make_pizza <span class="keyword">as</span> mp      <span class="comment"># 给函数起别名</span></span><br><span class="line"><span class="keyword">import</span> pizza <span class="keyword">as</span> p                       <span class="comment"># 给模块起别名</span></span><br><span class="line"><span class="keyword">from</span> pizza <span class="keyword">import</span> *                     <span class="comment"># 导入所有函数(不推荐)</span></span><br></pre></td></tr></table></figure>
+
+<p><code>from ... import ...</code> 之后调用不用写模块名前缀;<code>as</code> 用来解决名字太长或重名的问题。<code>import *</code> 不推荐:看不出导入了哪些名字,还容易覆盖自己程序里的同名函数。要么导入需要的函数,要么导入整个模块用句点访问。</p>
+<h2 id="补充—-默认参数的可变对象陷阱"><a href="#补充—-默认参数的可变对象陷阱" class="headerlink" title="补充— 默认参数的可变对象陷阱"></a>补充— 默认参数的可变对象陷阱</h2><p>这是 Python 新手最容易踩的坑之一:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add_item</span>(<span class="params">item, basket=[]</span>):</span><br><span class="line">    basket.append(item)</span><br><span class="line">    <span class="keyword">return</span> basket</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(add_item(<span class="string">&#x27;apple&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(add_item(<span class="string">&#x27;banana&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;apple&#x27;]</span><br><span class="line">[&#x27;apple&#x27;, &#x27;banana&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p>第二次调用时 <code>basket</code> 里居然还有第一次的 <code>&#39;apple&#39;</code>。原因是<strong>默认值只在函数定义时求值一次</strong>,这个空列表是函数对象的一部分,一直复用。类似 C&#x2F;C++ 里在函数里用 <code>static</code> 局部变量。</p>
+<p>正确写法是用 <code>None</code> 当默认值,进函数再创建:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add_item</span>(<span class="params">item, basket=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="keyword">if</span> basket <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        basket = []</span><br><span class="line">    basket.append(item)</span><br><span class="line">    <span class="keyword">return</span> basket</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(add_item(<span class="string">&#x27;apple&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(add_item(<span class="string">&#x27;banana&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;apple&#x27;]</span><br><span class="line">[&#x27;banana&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p>不可变对象(数字、字符串、元组)当默认值没这个问题,列表、字典、集合都会共享。</p>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li><code>def</code> 定义函数,函数名后必须有括号和冒号,函数体缩进;三引号是文档字符串。</li>
+<li>形参是定义里的变量,实参是调用时传的值;位置实参靠顺序,关键字实参靠名字。</li>
+<li>有默认值的形参要放在最后;默认值只在定义时求值一次,可变对象要小心。</li>
+<li><code>return</code> 把结果交给调用方,没写就返回 <code>None</code>;可以返回数字、字符串、列表、字典。</li>
+<li>列表传进函数是引用,函数里改原列表也会变;不想被改就传 <code>[:]</code> 副本。</li>
+<li><code>*args</code> 把多余的位置实参打包成元组,<code>**kwargs</code> 把关键字实参打包成字典。</li>
+<li>函数放进模块(独立 <code>.py</code> 文件)里用 <code>import</code> 导入,大型项目靠这个组织代码。</li>
+<li>函数名和文件名用小写下划线,文档字符串要写,<code>import</code> 放文件开头。</li>
+<li>一个函数只做一件事,任务多了就拆成两个。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/%E6%95%99%E7%A8%8B/" class="tag">#教程</a>
+      
+      <a href="/tags/python/" class="tag">#python</a>
+      
+      <a href="/tags/python%E8%AF%AD%E6%B3%95/" class="tag">#python语法</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-5-24/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款24 区分万能引用和右值引用</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-5-23/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款23 理解 move 和 forward</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

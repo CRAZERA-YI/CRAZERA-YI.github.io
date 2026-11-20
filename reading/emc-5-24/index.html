@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款24 区分万能引用和右值引用 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款24：区分万能引用和右值引用一句话：源码里的 T&amp;&amp; 不一定是右值引用。只有“形式精确为 T&amp;&amp;，并且发生类型推导”时，它才是万能引用；否则就是普通的右值引用。 1. T&amp;&amp; 的两种含义123456789void f(Widget&amp;&amp; param);          &#x2F;&#x2F; 右值引用Widget&amp;&amp; var1 &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款24 区分万能引用和右值引用">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-24/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款24：区分万能引用和右值引用一句话：源码里的 T&amp;&amp; 不一定是右值引用。只有“形式精确为 T&amp;&amp;，并且发生类型推导”时，它才是万能引用；否则就是普通的右值引用。 1. T&amp;&amp; 的两种含义123456789void f(Widget&amp;&amp; param);          &#x2F;&#x2F; 右值引用Widget&amp;&amp; var1 &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-20T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-20T04:08:16.367Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-20T12:00:00+08:00">
+      November 20, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款24 区分万能引用和右值引用</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款24：区分万能引用和右值引用"><a href="#条款24：区分万能引用和右值引用" class="headerlink" title="条款24：区分万能引用和右值引用"></a>条款24：区分万能引用和右值引用</h1><p>一句话：源码里的 <code>T&amp;&amp;</code> 不一定是右值引用。只有“形式精确为 <code>T&amp;&amp;</code>，并且发生类型推导”时，它才是万能引用；否则就是普通的右值引用。</p>
+<h2 id="1-T-的两种含义"><a href="#1-T-的两种含义" class="headerlink" title="1. T&amp;&amp; 的两种含义"></a>1. T&amp;&amp; 的两种含义</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;          <span class="comment">// 右值引用</span></span><br><span class="line">Widget&amp;&amp; var1 = <span class="built_in">Widget</span>();        <span class="comment">// 右值引用</span></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; var2 = var1;              <span class="comment">// 不是右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::vector&lt;T&gt;&amp;&amp; param)</span></span>;  <span class="comment">// 右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;               <span class="comment">// 不是右值引用，是万能引用</span></span><br></pre></td></tr></table></figure>
+
+<p><code>T&amp;&amp;</code> 的两种含义：</p>
+<ul>
+<li><strong>右值引用</strong>：只能绑定右值，主要用来标识“可以被移动”的对象。</li>
+<li><strong>万能引用</strong>（universal reference，也叫 forwarding reference）：看起来像右值引用，但既能绑左值，也能绑右值，还能绑 const&#x2F;non-const、volatile 等。</li>
+</ul>
+<h2 id="2-万能引用的两个来源"><a href="#2-万能引用的两个来源" class="headerlink" title="2. 万能引用的两个来源"></a>2. 万能引用的两个来源</h2><p>万能引用只出现在两种场景：</p>
+<h3 id="2-1-函数模板参数"><a href="#2-1-函数模板参数" class="headerlink" title="2.1 函数模板参数"></a>2.1 函数模板参数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;   <span class="comment">// param 是万能引用</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-auto-声明"><a href="#2-2-auto-声明" class="headerlink" title="2.2 auto 声明"></a>2.2 auto 声明</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span>&amp;&amp; var2 = var1;  <span class="comment">// var2 是万能引用,var1是右值那就是右值引用,是左值就退化为左值引用</span></span><br></pre></td></tr></table></figure>
+
+<p>共同点：<strong>存在类型推导</strong>。</p>
+<h2 id="3-没有类型推导，就是右值引用"><a href="#3-没有类型推导，就是右值引用" class="headerlink" title="3. 没有类型推导，就是右值引用"></a>3. 没有类型推导，就是右值引用</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;       <span class="comment">// 没有推导，右值引用</span></span><br><span class="line">Widget&amp;&amp; var1 = <span class="built_in">Widget</span>();     <span class="comment">// 没有推导，右值引用</span></span><br></pre></td></tr></table></figure>
+
+<p>模板里也不一定有推导。比如 <code>std::vector</code> 的 <code>push_back</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">Allocator</span> = allocator&lt;T&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> vector &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="type">void</span> <span class="built_in">push_back</span>(T&amp;&amp; x);   <span class="comment">// 看起来像万能引用</span></span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但 <code>push_back</code> 的类型由 <code>vector&lt;T&gt;</code> 的实例化完全确定，调用时不再推导 <code>T</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;Widget&gt; v;</span><br><span class="line"><span class="comment">// 实例化后相当于：</span></span><br><span class="line"><span class="comment">// void push_back(Widget&amp;&amp; x);  // 右值引用</span></span><br></pre></td></tr></table></figure>
+
+<p>对比 <code>emplace_back</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">emplace_back</span><span class="params">(Args&amp;&amp;... args)</span></span>;   <span class="comment">// Args 每次调用都要推导</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Args</code> 独立于 <code>vector</code> 的 <code>T</code>，所以 <code>Args&amp;&amp;</code> 是万能引用。</p>
+<h2 id="4-形式必须精确是-T"><a href="#4-形式必须精确是-T" class="headerlink" title="4. 形式必须精确是 T&amp;&amp;"></a>4. 形式必须精确是 T&amp;&amp;</h2><p>只有 <code>T&amp;&amp;</code> 这种形式才是万能引用。下面都不是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::vector&lt;T&gt;&amp;&amp; param)</span></span>;   <span class="comment">// 右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp;&amp; param)</span></span>;          <span class="comment">// 右值引用</span></span><br></pre></td></tr></table></figure>
+
+<p><code>std::vector&lt;T&gt;&amp;&amp;</code> 虽然也发生推导，但形式不是 <code>T&amp;&amp;</code>；<code>const T&amp;&amp;</code> 多了 <code>const</code>，也不行。</p>
+<p>名字也不一定非得叫 <code>T</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> MyType&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">someFunc</span><span class="params">(MyType&amp;&amp; param)</span></span>;    <span class="comment">// 万能引用</span></span><br></pre></td></tr></table></figure>
+
+<p>关键是形式“类型 &amp;&amp;”加上类型推导。</p>
+<h2 id="5-初始化决定它到底是什么"><a href="#5-初始化决定它到底是什么" class="headerlink" title="5. 初始化决定它到底是什么"></a>5. 初始化决定它到底是什么</h2><p>万能引用必须初始化，初始化器决定它最终表现为左值引用还是右值引用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;</span><br><span class="line"></span><br><span class="line">Widget w;</span><br><span class="line"><span class="built_in">f</span>(w);              <span class="comment">// 传左值：param 类型是 Widget&amp;</span></span><br><span class="line"><span class="built_in">f</span>(std::<span class="built_in">move</span>(w));   <span class="comment">// 传右值：param 类型是 Widget&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>所以同一个 <code>f</code>，对左值实参和右值实参表现不同。</p>
+<h2 id="6-auto-和-C-14-泛型-lambda"><a href="#6-auto-和-C-14-泛型-lambda" class="headerlink" title="6. auto&amp;&amp; 和 C++14 泛型 lambda"></a>6. auto&amp;&amp; 和 C++14 泛型 lambda</h2><p><code>auto&amp;&amp;</code> 也是万能引用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span>&amp;&amp; var2 = var1;   <span class="comment">// var1 是左值，var2 是 Widget&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>C++14 的 lambda 参数可以用 <code>auto&amp;&amp;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> timeFuncInvocation =</span><br><span class="line">  [](<span class="keyword">auto</span>&amp;&amp; func, <span class="keyword">auto</span>&amp;&amp;... params)   <span class="comment">// C++14</span></span><br><span class="line">  &#123;</span><br><span class="line">    start timer;</span><br><span class="line">    std::forward&lt;<span class="keyword">decltype</span>(func)&gt;(func)(</span><br><span class="line">      std::forward&lt;<span class="keyword">decltype</span>(params)&gt;(params)...</span><br><span class="line">    );</span><br><span class="line">    stop timer <span class="keyword">and</span> record elapsed time;</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>func</code> 和 <code>params</code> 都是万能引用，可以绑定任意可调用对象和任意数量、任意类型的参数。</p>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li>函数模板参数是 <code>T&amp;&amp;</code> 且 <code>T</code> 需要推导，或者变量声明为 <code>auto&amp;&amp;</code> 时，它是万能引用。</li>
+<li>如果形式不是精确的 <code>T&amp;&amp;</code>，或者没有类型推导，<code>T&amp;&amp;</code> 就是右值引用。</li>
+<li>万能引用用左值初始化就是左值引用，用右值初始化就是右值引用。</li>
+<li>万能引用几乎能绑定任何东西，这也是它在重载中很“贪婪”的原因（条款26）。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/python/tutorial-7/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">python教程(七)---函数</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
