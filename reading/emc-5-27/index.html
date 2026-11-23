@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款27 熟悉万能引用重载的替代方案 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款27：熟悉万能引用重载的替代方案条款26讲了为什么不能直接拿万能引用去重载。那如果既想要完美转发的效率，又需要区分不同参数类型（或者在构造函数里用完美转发），该怎么办？本条款给出五种替代方案。 1. 方案一：放弃重载最直接的办法就是把不同功能的重载拆成不同名字的函数。比如把 logAndAdd 拆成 logAndAddName 和 logAndAddNameIdx。 缺点也很明显：构造函数名字">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款27 熟悉万能引用重载的替代方案">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-27/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款27：熟悉万能引用重载的替代方案条款26讲了为什么不能直接拿万能引用去重载。那如果既想要完美转发的效率，又需要区分不同参数类型（或者在构造函数里用完美转发），该怎么办？本条款给出五种替代方案。 1. 方案一：放弃重载最直接的办法就是把不同功能的重载拆成不同名字的函数。比如把 logAndAdd 拆成 logAndAddName 和 logAndAddNameIdx。 缺点也很明显：构造函数名字">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-23T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-23T13:59:01.412Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-23T18:00:00+08:00">
+      November 23, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款27 熟悉万能引用重载的替代方案</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款27：熟悉万能引用重载的替代方案"><a href="#条款27：熟悉万能引用重载的替代方案" class="headerlink" title="条款27：熟悉万能引用重载的替代方案"></a>条款27：熟悉万能引用重载的替代方案</h1><p>条款26讲了为什么不能直接拿万能引用去重载。那如果既想要完美转发的效率，又需要区分不同参数类型（或者在构造函数里用完美转发），该怎么办？本条款给出五种替代方案。</p>
+<h2 id="1-方案一：放弃重载"><a href="#1-方案一：放弃重载" class="headerlink" title="1. 方案一：放弃重载"></a>1. 方案一：放弃重载</h2><p>最直接的办法就是把不同功能的重载拆成不同名字的函数。比如把 <code>logAndAdd</code> 拆成 <code>logAndAddName</code> 和 <code>logAndAddNameIdx</code>。</p>
+<p>缺点也很明显：构造函数名字固定，没法改名，所以这招对构造函数没用。</p>
+<h2 id="2-方案二：退回传-const-T"><a href="#2-方案二：退回传-const-T" class="headerlink" title="2. 方案二：退回传 const T&amp;"></a>2. 方案二：退回传 <code>const T&amp;</code></h2><p>回到 C++98 的写法，用 <code>void logAndAdd(const std::string&amp; name)</code> 代替万能引用。</p>
+<p>没有万能引用，就不会抢 <code>int</code> 重载。代价是放弃了移动语义和原地构造的高效，但在很多非性能瓶颈的地方，为了代码简单省心，这点性能损失完全可以接受。</p>
+<h2 id="3-方案三：按值传递"><a href="#3-方案三：按值传递" class="headerlink" title="3. 方案三：按值传递"></a>3. 方案三：按值传递</h2><p>如果肯定要拷贝参数（比如构造函数用参数初始化成员变量），可以按值传参再 <code>std::move</code>（详见条款41）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(std::string n)</span></span></span><br><span class="line"><span class="function">  : name(std::move(n)) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(<span class="type">int</span> idx)</span></span></span><br><span class="line"><span class="function">  : name(nameFromIdx(idx)) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这样所有整型（<code>short</code>、<code>std::size_t</code> 等）都会走 <code>int</code> 重载，所有类字符串类型都会走 <code>std::string</code> 重载，既清晰又不会和拷贝构造函数冲突。</p>
+<h2 id="4-方案四：标签分发（Tag-Dispatch）"><a href="#4-方案四：标签分发（Tag-Dispatch）" class="headerlink" title="4. 方案四：标签分发（Tag Dispatch）"></a>4. 方案四：标签分发（Tag Dispatch）</h2><p>如果坚持要用万能引用和完美转发，那就<strong>不要直接重载万能引用函数</strong>，而是只提供一个万能引用入口，再靠一个额外的“标签参数”把调用分发给内部实现函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">logAndAddImpl</span>(</span><br><span class="line">    std::forward&lt;T&gt;(name),</span><br><span class="line">    <span class="comment">// 此处的typename关键字的意义是标明std::remove_reference&lt;T&gt;::type这玩意是一个类型,编译器不要搞错了</span></span><br><span class="line">    std::is_integral&lt;<span class="keyword">typename</span> std::remove_reference&lt;T&gt;::type&gt;()</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里为什么要先 <code>std::remove_reference&lt;T&gt;</code>？因为如果传入左值 <code>int x</code>，<code>T</code> 会被推导为 <code>int&amp;</code>，而 <code>std::is_integral&lt;int&amp;&gt;</code> 是 <code>false</code>！去掉引用后才能正确判断它是不是整型。</p>
+<p>接着提供两个 <code>logAndAddImpl</code> 重载，分别接收 <code>std::false_type</code> 和 <code>std::true_type</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 非整型实参：添加到全局集合</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAddImpl</span><span class="params">(T&amp;&amp; name, std::false_type)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">  <span class="built_in">log</span>(now, <span class="string">&quot;logAndAdd&quot;</span>);</span><br><span class="line">  names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 整型实参：查表后再走一次 logAndAdd</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAddImpl</span><span class="params">(<span class="type">int</span> idx, std::true_type)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">logAndAdd</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>标签分发的核心思想是：<strong>对外只有一个不重载的万能引用函数，真正的重载靠编译期计算出来的标签类型来决定</strong>。</p>
+<h2 id="5-方案五：用-std-enable-if-约束模板"><a href="#5-方案五：用-std-enable-if-约束模板" class="headerlink" title="5. 方案五：用 std::enable_if 约束模板"></a>5. 方案五：用 <code>std::enable_if</code> 约束模板</h2><p>标签分发对普通函数很好用，但解决不了完美转发构造函数和编译器生成的拷贝&#x2F;移动构造函数冲突的问题——因为编译器生成的拷贝构造函数不会走你的标签分发逻辑。</p>
+<p>这时候必须动用 <code>std::enable_if</code>（SFINAE），在特定条件下直接把模板构造函数“禁用”掉。</p>
+<p>我们需要在以下两种情况下禁用 <code>Person(T&amp;&amp;)</code> 模板构造函数：</p>
+<ol>
+<li><strong>实参类型是 <code>Person</code> 或 <code>Person</code> 的派生类</strong>：应该走拷贝或移动构造函数。注意不能用 <code>std::is_same&lt;Person, ...&gt;</code>，而要用 <code>std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;</code>，这样才能把派生类 <code>SpecialPerson</code> 也排除掉；同时要用 <code>std::decay_t&lt;T&gt;</code> 脱掉引用和 <code>const</code>&#x2F;<code>volatile</code> 限定。</li>
+<li><strong>实参类型是整型</strong>：应该走 <code>Person(int)</code> 重载。</li>
+</ol>
+<p>C++14 写法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个写法真的是神了.std::enable_if_t里面的表达式如果是false,那么这个模板函数就不会生效</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">typename</span> T,</span><br><span class="line">    <span class="keyword">typename</span> = std::<span class="type">enable_if_t</span>&lt;</span><br><span class="line">      !std::is_base_of&lt;Person, std::<span class="type">decay_t</span>&lt;T&gt;&gt;::value</span><br><span class="line">      &amp;&amp;</span><br><span class="line">      !std::is_integral&lt;std::<span class="type">remove_reference_t</span>&lt;T&gt;&gt;::value</span><br><span class="line">    &gt;</span><br><span class="line">  &gt;</span><br><span class="line">  <span class="keyword">explicit</span> <span class="built_in">Person</span>(T&amp;&amp; n)</span><br><span class="line">  : <span class="built_in">name</span>(std::forward&lt;T&gt;(n))</span><br><span class="line">  &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">explicit</span> <span class="built_in">Person</span>(<span class="type">int</span> idx)</span><br><span class="line">  : <span class="built_in">name</span>(<span class="built_in">nameFromIdx</span>(idx))</span><br><span class="line">  &#123;&#125;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这样既保留了完美转发的高效，又不会劫持拷贝&#x2F;移动构造（包括派生类）和整型构造。</p>
+<h2 id="6-完美转发的权衡与-static-assert"><a href="#6-完美转发的权衡与-static-assert" class="headerlink" title="6. 完美转发的权衡与 static_assert"></a>6. 完美转发的权衡与 <code>static_assert</code></h2><p>前三种方案（放弃重载、传 <code>const T&amp;</code>、传值）在函数签名上写死了参数类型，简单直接；后两种方案（标签分发、<code>std::enable_if</code>）用了完美转发，效率最高，但也有两个缺点：</p>
+<ol>
+<li>有些合法实参无法被完美转发。</li>
+<li><strong>报错信息极其难读</strong>。如果调用方传错了类型（比如传了 <code>char16_t</code> 字符串 <code>Person p(u&quot;Konrad Zuse&quot;);</code>），错误会在转发链最底层的 <code>std::string</code> 构造处才爆出来，动辄一百多行模板报错。</li>
+</ol>
+<p>为了改善报错体验，可以在模板构造函数里加一条 <code>static_assert</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">  <span class="keyword">typename</span> T,</span><br><span class="line">  <span class="keyword">typename</span> = std::<span class="type">enable_if_t</span>&lt;</span><br><span class="line">    !std::is_base_of&lt;Person, std::<span class="type">decay_t</span>&lt;T&gt;&gt;::value</span><br><span class="line">    &amp;&amp;</span><br><span class="line">    !std::is_integral&lt;std::<span class="type">remove_reference_t</span>&lt;T&gt;&gt;::value</span><br><span class="line">  &gt;</span><br><span class="line">&gt;</span><br><span class="line"><span class="keyword">explicit</span> <span class="built_in">Person</span>(T&amp;&amp; n)</span><br><span class="line">: <span class="built_in">name</span>(std::forward&lt;T&gt;(n))</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// 检查能否从 T 构造出 std::string</span></span><br><span class="line">  <span class="keyword">static_assert</span>(</span><br><span class="line">    std::is_constructible&lt;std::string, T&gt;::value,</span><br><span class="line">    <span class="string">&quot;Parameter n can&#x27;t be used to construct a std::string&quot;</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样传错类型时，编译器会直接打出清晰的自定义错误提示。</p>
+<h2 id="7-记住"><a href="#7-记住" class="headerlink" title="7. 记住"></a>7. 记住</h2><ul>
+<li>不使用万能引用重载的替代方案包括：使用不同的函数名、传 <code>const</code> 左值引用、按值传参、使用标签分发。</li>
+<li>通过 <code>std::enable_if</code> 约束模板，可以把万能引用和重载结合起来，由程序员精确控制编译器在什么条件下允许调用万能引用重载。</li>
+<li>万能引用参数通常有更高的性能，但在易用性和报错可读性上往往处于劣势。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/python/tutorial-8/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">python教程(八)---类</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-5-26/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款26 避免在万能引用上重载</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款26 避免在万能引用上重载 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款26：避免在万能引用上重载万能引用参数在重载决议里非常“贪婪”，几乎对什么实参都能形成精确匹配，很容易把本来想调别的重载的调用劫持过去；完美转发构造函数更是重灾区。 1. 从一个看似合理的优化说起假设有一个记录日志并把名字加进全局集合的函数： 12345678std::multiset&lt;std::string&gt; names;void logAndAdd(const std::str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款26 避免在万能引用上重载">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-26/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款26：避免在万能引用上重载万能引用参数在重载决议里非常“贪婪”，几乎对什么实参都能形成精确匹配，很容易把本来想调别的重载的调用劫持过去；完美转发构造函数更是重灾区。 1. 从一个看似合理的优化说起假设有一个记录日志并把名字加进全局集合的函数： 12345678std::multiset&lt;std::string&gt; names;void logAndAdd(const std::str">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-23T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-23T13:44:30.941Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-23T12:00:00+08:00">
+      November 23, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款26 避免在万能引用上重载</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款26：避免在万能引用上重载"><a href="#条款26：避免在万能引用上重载" class="headerlink" title="条款26：避免在万能引用上重载"></a>条款26：避免在万能引用上重载</h1><p>万能引用参数在重载决议里非常“贪婪”，几乎对什么实参都能形成精确匹配，很容易把本来想调别的重载的调用劫持过去；完美转发构造函数更是重灾区。</p>
+<h2 id="1-从一个看似合理的优化说起"><a href="#1-从一个看似合理的优化说起" class="headerlink" title="1. 从一个看似合理的优化说起"></a>1. 从一个看似合理的优化说起</h2><p>假设有一个记录日志并把名字加进全局集合的函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::multiset&lt;std::string&gt; names;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(<span class="type">const</span> std::string&amp; name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">  <span class="built_in">log</span>(now, <span class="string">&quot;logAndAdd&quot;</span>);</span><br><span class="line">  names.<span class="built_in">emplace</span>(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看看三次调用的开销：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::string <span class="title">petName</span><span class="params">(<span class="string">&quot;Darla&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">logAndAdd</span>(petName);                   <span class="comment">// 传左值 std::string：在 multiset 中拷贝一次</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(std::<span class="built_in">string</span>(<span class="string">&quot;Persephone&quot;</span>)); <span class="comment">// 传右值 std::string：原本可移动，却因 const&amp; 被迫拷贝</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(<span class="string">&quot;Patty Dog&quot;</span>);               <span class="comment">// 传字符串字面量：先构造临时 std::string，再拷贝进 multiset</span></span><br></pre></td></tr></table></figure>
+
+<p>为了消除后两种情况的多余开销，很自然会改成万能引用 + <code>std::forward</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">  <span class="built_in">log</span>(now, <span class="string">&quot;logAndAdd&quot;</span>);</span><br><span class="line">  names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不涉及重载，这么写完全没问题。</p>
+<h2 id="2-一旦加上重载，问题就来了"><a href="#2-一旦加上重载，问题就来了" class="headerlink" title="2. 一旦加上重载，问题就来了"></a>2. 一旦加上重载，问题就来了</h2><p>现在新增一个需求：有些客户只知道名字的整型下标，于是加上一个按 <code>int</code> 重载的版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::string <span class="title">nameFromIdx</span><span class="params">(<span class="type">int</span> idx)</span></span>;   <span class="comment">// 返回 idx 对应的名字</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(<span class="type">int</span> idx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">  <span class="built_in">log</span>(now, <span class="string">&quot;logAndAdd&quot;</span>);</span><br><span class="line">  names.<span class="built_in">emplace</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前三种调用和传 <code>int</code> 都能正常工作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::string <span class="title">petName</span><span class="params">(<span class="string">&quot;Darla&quot;</span>)</span></span>;</span><br><span class="line"><span class="built_in">logAndAdd</span>(petName);                   <span class="comment">// 调 T&amp;&amp;</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(std::<span class="built_in">string</span>(<span class="string">&quot;Persephone&quot;</span>)); <span class="comment">// 调 T&amp;&amp;</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(<span class="string">&quot;Patty Dog&quot;</span>);               <span class="comment">// 调 T&amp;&amp;</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(<span class="number">22</span>);                        <span class="comment">// 调 int 重载</span></span><br></pre></td></tr></table></figure>
+
+<p>但如果客户手里拿的是 <code>short</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">short</span> nameIdx = <span class="number">22</span>;</span><br><span class="line"><span class="built_in">logAndAdd</span>(nameIdx);                   <span class="comment">// 编译失败！</span></span><br></pre></td></tr></table></figure>
+
+<p>为什么报错？因为有两个重载可选：</p>
+<ul>
+<li><code>template&lt;typename T&gt; void logAndAdd(T&amp;&amp;)</code>：<code>T</code> 推导为 <code>short&amp;</code>，形参精确变成 <code>short&amp;</code>，<strong>精确匹配</strong>。</li>
+<li><code>void logAndAdd(int)</code>：需要把 <code>short</code> <strong>整型提升</strong>（promotion）成 <code>int</code>。</li>
+</ul>
+<p>根据重载决议规则，精确匹配优先于提升转换。于是 <code>logAndAdd(nameIdx)</code> 调了万能引用版本，试图把 <code>short</code> 传给 <code>names.emplace(...)</code> 去构造 <code>std::string</code>，直接编译失败。</p>
+<p>当然这时候用<code>static_cast&lt;int&gt;</code>可以解决这个问题</p>
+<p>同理，传 <code>std::size_t</code>、<code>long</code>、<code>float</code> 都会被万能引用抢走。</p>
+<h2 id="3-完美转发构造函数是重灾区"><a href="#3-完美转发构造函数是重灾区" class="headerlink" title="3. 完美转发构造函数是重灾区"></a>3. 完美转发构造函数是重灾区</h2><p>把同样的套路搬到构造函数上，问题更隐蔽：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">  <span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(T&amp;&amp; n)</span></span></span><br><span class="line"><span class="function">  : name(std::forward&lt;T&gt;(n)) &#123;</span>&#125;   <span class="comment">// 完美转发构造函数</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(<span class="type">int</span> idx)</span></span></span><br><span class="line"><span class="function">  : name(nameFromIdx(idx)) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 编译器还会自动生成拷贝/移动构造函数：</span></span><br><span class="line">  <span class="comment">// Person(const Person&amp; rhs);</span></span><br><span class="line">  <span class="comment">// Person(Person&amp;&amp; rhs);</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>即使你没手写拷贝和移动构造函数，编译器也会自动生成它们，实际上已经构成了重载。看看拷贝一个非 <code>const</code> 的 <code>Person</code> 会发生什么：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Person <span class="title">p</span><span class="params">(<span class="string">&quot;Nancy&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">cloneOfP</span><span class="params">(p)</span></span>;   <span class="comment">// 编译失败！</span></span><br></pre></td></tr></table></figure>
+
+<p>直觉上应该调拷贝构造函数，但看看两个候选：</p>
+<ul>
+<li>模板构造函数 <code>Person(T&amp;&amp;)</code>：<code>T</code> 推导为 <code>Person&amp;</code>，实例化出 <code>Person(Person&amp;)</code>。</li>
+<li>拷贝构造函数 <code>Person(const Person&amp;)</code>：需要对 <code>p</code> 加上 <code>const</code> 限定。</li>
+</ul>
+<p>对非 <code>const</code> 左值 <code>p</code> 来说，<code>Person&amp;</code> 比 <code>const Person&amp;</code> 匹配度更高！所以 <code>cloneOfP(p)</code> 调用了完美转发构造函数，试图用一个 <code>Person</code> 对象去初始化 <code>std::string name</code>，编译报错。</p>
+<p>如果对象本身是 <code>const</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> Person <span class="title">cp</span><span class="params">(<span class="string">&quot;Nancy&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">cloneOfP</span><span class="params">(cp)</span></span>;  <span class="comment">// 正常调用拷贝构造函数</span></span><br></pre></td></tr></table></figure>
+
+<p>此时模板实例化出 <code>Person(const Person&amp;)</code>，和拷贝构造函数签名完全一致。C++ 重载规则规定：<strong>当模板实例化函数和普通函数匹配度相同时，优先选普通函数</strong>，所以这里才会调拷贝构造。</p>
+<h2 id="4-对继承体系的破坏"><a href="#4-对继承体系的破坏" class="headerlink" title="4. 对继承体系的破坏"></a>4. 对继承体系的破坏</h2><p>如果有子类继承了带完美转发构造函数的 <code>Person</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpecialPerson</span> : <span class="keyword">public</span> Person &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">SpecialPerson</span>(<span class="type">const</span> SpecialPerson&amp; rhs)</span><br><span class="line">  : <span class="built_in">Person</span>(rhs)                 <span class="comment">//调的是基类的完美转发构造函数！</span></span><br><span class="line">  &#123; ... &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">SpecialPerson</span>(SpecialPerson&amp;&amp; rhs)</span><br><span class="line">  : <span class="built_in">Person</span>(std::<span class="built_in">move</span>(rhs))      <span class="comment">// 同样调的是基类的完美转发构造函数！</span></span><br><span class="line">  &#123; ... &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>子类在拷贝&#x2F;移动构造函数里把 <code>rhs</code> 传给基类 <code>Person</code>，但 <code>rhs</code> 的类型是 <code>SpecialPerson</code>（或 <code>SpecialPerson&amp;&amp;</code>）。</p>
+<ul>
+<li>调基类的拷贝&#x2F;移动构造：需要派生类到基类的隐式转换。</li>
+<li>调基类的模板构造 <code>Person(T&amp;&amp;)</code>：<code>T</code> 直接推导为 <code>SpecialPerson&amp;</code> 或 <code>SpecialPerson</code>，精确匹配！</li>
+</ul>
+<p>结果子类的拷贝和移动构造函数全部无法编译。</p>
+<h2 id="5-记住"><a href="#5-记住" class="headerlink" title="5. 记住"></a>5. 记住</h2><ul>
+<li>在万能引用上重载，几乎总会让万能引用重载被调用的频率远超你的预期。</li>
+<li>完美转发构造函数问题尤其严重：对于非 <code>const</code> 左值，它通常比拷贝构造函数匹配得更好；而且它还会劫持派生类对基类拷贝和移动构造函数的调用。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-5-27/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款27 熟悉万能引用重载的替代方案</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-5-25/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款25 move 与 forward 的使用场景</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
