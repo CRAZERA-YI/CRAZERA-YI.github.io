@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款29 假定移动操作不存在、不廉价且未被使用 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款29：假定移动操作不存在、不廉价且未被使用移动语义虽好，但并不是所有类型都有移动操作，不是所有移动操作都比拷贝快，也不是有移动操作就一定会被调用。写泛型模板代码时，不要盲目假设移动是零成本的。 1. 很多类型根本没有移动操作C++11 确实会为满足条件的类自动生成移动构造和移动赋值函数，但限制非常严格(default关键字可以解决)：只要类显式声明了自定义拷贝操作、移动操作或析构函数中的任何一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款29 假定移动操作不存在、不廉价且未被使用">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-29/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款29：假定移动操作不存在、不廉价且未被使用移动语义虽好，但并不是所有类型都有移动操作，不是所有移动操作都比拷贝快，也不是有移动操作就一定会被调用。写泛型模板代码时，不要盲目假设移动是零成本的。 1. 很多类型根本没有移动操作C++11 确实会为满足条件的类自动生成移动构造和移动赋值函数，但限制非常严格(default关键字可以解决)：只要类显式声明了自定义拷贝操作、移动操作或析构函数中的任何一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-24T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-24T14:29:48.131Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-24T18:00:00+08:00">
+      November 24, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款29 假定移动操作不存在、不廉价且未被使用</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款29：假定移动操作不存在、不廉价且未被使用"><a href="#条款29：假定移动操作不存在、不廉价且未被使用" class="headerlink" title="条款29：假定移动操作不存在、不廉价且未被使用"></a>条款29：假定移动操作不存在、不廉价且未被使用</h1><p>移动语义虽好，但并不是所有类型都有移动操作，不是所有移动操作都比拷贝快，也不是有移动操作就一定会被调用。写泛型模板代码时，不要盲目假设移动是零成本的。</p>
+<h2 id="1-很多类型根本没有移动操作"><a href="#1-很多类型根本没有移动操作" class="headerlink" title="1. 很多类型根本没有移动操作"></a>1. 很多类型根本没有移动操作</h2><p>C++11 确实会为满足条件的类自动生成移动构造和移动赋值函数，但限制非常严格(default关键字可以解决)：只要类显式声明了自定义拷贝操作、移动操作或析构函数中的任何一个，编译器就不会自动生成移动操作。</p>
+<p>此外，大量 C++98 遗留代码和库根本没针对移动语义做过改造。对这些没有移动操作的类型来说，把它们当右值去“移动”，编译器只会悄悄退化成调用拷贝构造函数。</p>
+<h2 id="2-移动操作不一定廉价：std-array-与-std-string"><a href="#2-移动操作不一定廉价：std-array-与-std-string" class="headerlink" title="2. 移动操作不一定廉价：std::array 与 std::string"></a>2. 移动操作不一定廉价：<code>std::array</code> 与 <code>std::string</code></h2><p>为什么 <code>std::vector</code> 移动很快？因为 <code>std::vector</code> 对象本身只存了指向堆内存的几个指针，移动只是把指针拷过去再把源指针置空，时间复杂度是 <code>O(1)</code>。但是<code>std::vector</code>的拷贝操作如果使用移动其实很危险的操作</p>
+<h3 id="2-1-std-array-的移动是-O-n"><a href="#2-1-std-array-的移动是-O-n" class="headerlink" title="2.1 std::array 的移动是 O(n)"></a>2.1 <code>std::array</code> 的移动是 <code>O(n)</code></h3><p><code>std::array</code> 和内置数组一样，把所有元素直接存放在对象内部，没有堆指针可偷：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;Widget&gt; vw1;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">auto</span> vw2 = std::<span class="built_in">move</span>(vw1);   <span class="comment">// O(1) 常数时间：只改几个指针</span></span><br><span class="line"></span><br><span class="line">std::array&lt;Widget, 10000&gt; aw1;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">auto</span> aw2 = std::<span class="built_in">move</span>(aw1);   <span class="comment">// O(n) 线性时间：要把 10000 个元素逐个移动一遍！</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然移动每个 <code>Widget</code> 可能比拷贝每个 <code>Widget</code> 快，但移动整个 <code>std::array</code> 依然是线性时间的遍历操作,最后所用的时间可能差不了很多</p>
+<h3 id="2-2-std-string-的小字符串优化（SSO）"><a href="#2-2-std-string-的小字符串优化（SSO）" class="headerlink" title="2.2 std::string 的小字符串优化（SSO）"></a>2.2 <code>std::string</code> 的小字符串优化（SSO）</h3><p>现代标准库的 <code>std::string</code> 普遍实现了<strong>小字符串优化</strong>（Small String Optimization，SSO）：当字符串较短（例如不超过 15 个字符）时，直接存在 <code>std::string</code> 对象内部的固定缓冲区里，根本不分配堆内存。</p>
+<p>对于使用 SSO 的短字符串，移动操作和拷贝操作一样，都得把缓冲区里的字符拷过去，<strong>移动并不比拷贝快</strong>。</p>
+<h2 id="3-即使有廉价的移动操作，也可能不被使用"><a href="#3-即使有廉价的移动操作，也可能不被使用" class="headerlink" title="3. 即使有廉价的移动操作，也可能不被使用"></a>3. 即使有廉价的移动操作，也可能不被使用</h2><p>条款14讲过，很多标准库容器操作（例如 <code>std::vector::push_back</code> 触发扩容搬迁元素）需要提供<strong>强异常安全保证</strong>。</p>
+<p>为了防止搬迁到一半抛异常导致原容器损坏，只有在元素的移动构造函数声明了 <code>noexcept</code> 时，容器才敢用移动；如果移动构造函数没有标 <code>noexcept</code>，容器即使面对右值也会强制退回使用拷贝构造函数。<br>这个其实前面的章节有说过,大概意思就是,push_back函数有两种方式进行扩容,一种是移动,一种是拷贝.拷贝不用多说,对于移动的话,假如那个移动扩容的函数没有<code>noexcept</code>关键字,那么函数错误了,原vector因为移动的关系就变得未定义了,导致数据丢失</p>
+<h2 id="4-移动语义帮不上忙的四种情况"><a href="#4-移动语义帮不上忙的四种情况" class="headerlink" title="4. 移动语义帮不上忙的四种情况"></a>4. 移动语义帮不上忙的四种情况</h2><p>总结起来，在以下四种场景里，C++11 的移动语义不会带来任何性能提升：</p>
+<ol>
+<li><strong>没有移动操作</strong>：要移动的对象没有提供移动操作，移动请求退化为拷贝。</li>
+<li><strong>移动不够快</strong>：要移动的对象有移动操作，但并不比拷贝操作快（如 <code>std::array</code> 或触发 SSO 的短 <code>std::string</code>）。</li>
+<li><strong>移动不可用</strong>：发生移动的上下文要求移动操作不抛异常，但该移动操作未声明为 <code>noexcept</code>。</li>
+<li><strong>源对象是左值</strong>：除极少数情况（如条款25的返回值）外，只有右值才能作为移动操作的源。</li>
+</ol>
+<h2 id="5-什么时候需要做这个悲观假设？"><a href="#5-什么时候需要做这个悲观假设？" class="headerlink" title="5. 什么时候需要做这个悲观假设？"></a>5. 什么时候需要做这个悲观假设？</h2><ul>
+<li><strong>写模板代码或通用代码时</strong>：因为你根本不知道类型参数 <code>T</code> 到底是什么类型，也不知道它有没有廉价且 <code>noexcept</code> 的移动操作，这时候必须像在 C++98 里一样保守，假定移动不存在、不廉价、未被使用。</li>
+<li><strong>频繁修改的不稳定代码</strong>：如果一个类的成员经常变动（比如某天加了个不支持快速移动的成员，或者加了个析构函数导致默认移动被禁用），它的移动性能也会跟着变。</li>
+<li><strong>反过来，如果具体类型已知且稳定</strong>：比如你明确知道手里拿的是 <code>std::vector</code> 或 <code>std::unique_ptr</code>，那就放心大胆地依赖它的廉价移动，不需要做这种假设。</li>
+</ul>
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li>假定移动操作不存在、不廉价且未被使用。</li>
+<li>在明确知道具体类型，且确定其支持廉价移动语义的代码中，无需作此假定。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-5-30/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款30 熟悉完美转发的失败情形</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/reading/emc-5-28/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款28 理解引用折叠</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>

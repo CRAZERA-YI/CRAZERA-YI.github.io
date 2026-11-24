@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Effective Modern C++(五)：条款28 理解引用折叠 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="条款28：理解引用折叠1. 万能引用的模板参数 T 到底推导成了什么当把实参传给万能引用形参时，左值和右值会推导出不同的 T： 12345678template&lt;typename T&gt;void func(T&amp;&amp; param);Widget widgetFactory();   &#x2F;&#x2F; 返回右值的函数Widget w;                 &#x2F;&#x2F; 变量（左值）fu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Effective Modern C++(五)：条款28 理解引用折叠">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/emc-5-28/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="条款28：理解引用折叠1. 万能引用的模板参数 T 到底推导成了什么当把实参传给万能引用形参时，左值和右值会推导出不同的 T： 12345678template&lt;typename T&gt;void func(T&amp;&amp; param);Widget widgetFactory();   &#x2F;&#x2F; 返回右值的函数Widget w;                 &#x2F;&#x2F; 变量（左值）fu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-24T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-24T14:20:56.663Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/reading/">阅读</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-24T12:00:00+08:00">
+      November 24, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Effective Modern C++(五)：条款28 理解引用折叠</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="条款28：理解引用折叠"><a href="#条款28：理解引用折叠" class="headerlink" title="条款28：理解引用折叠"></a>条款28：理解引用折叠</h1><h2 id="1-万能引用的模板参数-T-到底推导成了什么"><a href="#1-万能引用的模板参数-T-到底推导成了什么" class="headerlink" title="1. 万能引用的模板参数 T 到底推导成了什么"></a>1. 万能引用的模板参数 <code>T</code> 到底推导成了什么</h2><p>当把实参传给万能引用形参时，左值和右值会推导出不同的 <code>T</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">widgetFactory</span><span class="params">()</span></span>;   <span class="comment">// 返回右值的函数</span></span><br><span class="line">Widget w;                 <span class="comment">// 变量（左值）</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">func</span>(w);                  <span class="comment">// 传左值：T 被推导为 Widget&amp;</span></span><br><span class="line"><span class="built_in">func</span>(<span class="built_in">widgetFactory</span>());    <span class="comment">// 传右值：T 被推导为 Widget</span></span><br></pre></td></tr></table></figure>
+
+<p>把推导出来的 <code>T</code> 代回形参 <code>T&amp;&amp;</code>：</p>
+<ul>
+<li>传右值时：<code>T</code> 是 <code>Widget</code>，<code>param</code> 的类型直接就是 <code>Widget&amp;&amp;</code>。</li>
+<li>传左值时：<code>T</code> 是 <code>Widget&amp;</code>，代进去就变成了 <code>Widget&amp; &amp;&amp;</code>——“引用的引用”！</li>
+</ul>
+<p>在 C++ 里，如果你自己手写引用的引用，编译器会直接报错：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x;</span><br><span class="line"><span class="keyword">auto</span>&amp; &amp; rx = x;   <span class="comment">// 错误：不能声明引用的引用</span></span><br></pre></td></tr></table></figure>
+
+<p>那为什么编译器把 <code>T = Widget&amp;</code> 代入 <code>T&amp;&amp;</code> 之后不仅没报错，反而让 <code>param</code> 变成了 <code>Widget&amp;</code>？因为编译器对它执行了<strong>引用折叠</strong>（reference collapsing）。</p>
+<h2 id="2-引用折叠规则"><a href="#2-引用折叠规则" class="headerlink" title="2. 引用折叠规则"></a>2. 引用折叠规则</h2><p>C++ 有两种引用（左值引用 <code>&amp;</code>、右值引用 <code>&amp;&amp;</code>），所以“引用的引用”一共有 4 种组合：</p>
+<ul>
+<li><code>&amp;</code> + <code>&amp;</code> → <code>&amp;</code></li>
+<li><code>&amp;</code> + <code>&amp;&amp;</code> → <code>&amp;</code></li>
+<li><code>&amp;&amp;</code> + <code>&amp;</code> → <code>&amp;</code></li>
+<li><code>&amp;&amp;</code> + <code>&amp;&amp;</code> → <code>&amp;&amp;</code></li>
+</ul>
+<p><strong>如果任一引用是左值引用，结果就是左值引用；否则（两个都是右值引用），结果是右值引用。</strong></p>
+<p>所以 <code>Widget&amp; &amp;&amp;</code> 折叠后就是 <code>Widget&amp;</code>。这就是为什么万能引用遇到左值实参时，形参类型会变成左值引用。</p>
+<h2 id="3-std-forward-是怎么靠引用折叠工作的"><a href="#3-std-forward-是怎么靠引用折叠工作的" class="headerlink" title="3. std::forward 是怎么靠引用折叠工作的"></a>3. <code>std::forward</code> 是怎么靠引用折叠工作的</h2><p>理解了引用折叠，再看 <code>std::forward</code> 的实现就一目了然了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; fParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">someFunc</span>(std::forward&lt;T&gt;(fParam));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::forward</code> 的核心实现（C++14 简化版）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">T&amp;&amp; <span class="title">forward</span><span class="params">(<span class="type">remove_reference_t</span>&lt;T&gt;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;T&amp;&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分两种情况代入看看：</p>
+<h3 id="3-1-传入左值-Widget"><a href="#3-1-传入左值-Widget" class="headerlink" title="3.1 传入左值 Widget"></a>3.1 传入左值 <code>Widget</code></h3><p>此时 <code>T</code> 被推导为 <code>Widget&amp;</code>，代入 <code>std::forward&lt;Widget&amp;&gt;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget&amp; &amp;&amp; <span class="title">forward</span><span class="params">(<span class="type">remove_reference_t</span>&lt;Widget&amp;&gt;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;Widget&amp; &amp;&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过 <code>remove_reference_t</code> 和引用折叠（<code>Widget&amp; &amp;&amp;</code> → <code>Widget&amp;</code>），实际等价于：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget&amp; <span class="title">forward</span><span class="params">(Widget&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;Widget&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把左值 <code>param</code> 转成左值引用返回，什么都没变，依然是左值。</p>
+<h3 id="3-2-传入右值-Widget"><a href="#3-2-传入右值-Widget" class="headerlink" title="3.2 传入右值 Widget"></a>3.2 传入右值 <code>Widget</code></h3><p>此时 <code>T</code> 被推导为非引用类型 <code>Widget</code>，代入 <code>std::forward&lt;Widget&gt;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget&amp;&amp; <span class="title">forward</span><span class="params">(<span class="type">remove_reference_t</span>&lt;Widget&gt;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;Widget&amp;&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget&amp;&amp; <span class="title">forward</span><span class="params">(Widget&amp; param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;Widget&amp;&amp;&gt;(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把左值形参 <code>param</code> 强转成右值引用 <code>Widget&amp;&amp;</code> 返回，返回结果变成右值！</p>
+<h2 id="4-引用折叠发生的四种语境"><a href="#4-引用折叠发生的四种语境" class="headerlink" title="4. 引用折叠发生的四种语境"></a>4. 引用折叠发生的四种语境</h2><p>引用折叠只会在以下四种语境中发生：</p>
+<h3 id="4-1-模板实例化"><a href="#4-1-模板实例化" class="headerlink" title="4.1 模板实例化"></a>4.1 模板实例化</h3><p>即上面讲的 <code>template&lt;typename T&gt; void func(T&amp;&amp; param)</code>。</p>
+<h3 id="4-2-auto-类型推导"><a href="#4-2-auto-类型推导" class="headerlink" title="4.2 auto 类型推导"></a>4.2 <code>auto</code> 类型推导</h3><p><code>auto</code> 的推导规则和模板本质相同：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget w;</span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; w1 = w;                <span class="comment">// w 是左值，auto 推导为 Widget&amp;</span></span><br><span class="line">                              <span class="comment">// Widget&amp; &amp;&amp; 折叠成 Widget&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; w2 = <span class="built_in">widgetFactory</span>();  <span class="comment">// 右值，auto 推导为 Widget</span></span><br><span class="line">                              <span class="comment">// w2 类型是 Widget&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-typedef-和别名声明（using）"><a href="#4-3-typedef-和别名声明（using）" class="headerlink" title="4.3 typedef 和别名声明（using）"></a>4.3 <code>typedef</code> 和别名声明（<code>using</code>）</h3><p>在类型别名的生成和替换过程中如果出现引用的引用，也会发生引用折叠：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">typedef</span> T&amp;&amp; RvalueRefToT;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Widget&lt;<span class="type">int</span>&amp;&gt; w;</span><br></pre></td></tr></table></figure>
+
+<p>把 <code>T = int&amp;</code> 代入 <code>typedef int&amp; &amp;&amp; RvalueRefToT;</code>，折叠后变成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span>&amp; RvalueRefToT;   <span class="comment">// 名字叫 RvalueRefToT，实际在 T 为左值引用时是左值引用！</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-decltype"><a href="#4-4-decltype" class="headerlink" title="4.4 decltype"></a>4.4 <code>decltype</code></h3><p>如果编译器在分析 <code>decltype</code> 表达式时产生了引用的引用，同样会通过引用折叠消解。</p>
+<h2 id="5-万能引用的本质定义"><a href="#5-万能引用的本质定义" class="headerlink" title="5. 万能引用的本质定义"></a>5. 万能引用的本质定义</h2><p>学完引用折叠就会明白，“万能引用”其实不是一种独立于左值引用和右值引用的第三种引用类型。它本质上<strong>就是一个满足以下两个条件的右值引用</strong>：</p>
+<ol>
+<li>类型推导会区分左值和右值：类型 <code>T</code> 的左值推导为 <code>T&amp;</code>，右值推导为 <code>T</code>。</li>
+<li>会发生引用折叠。</li>
+</ol>
+<h2 id="6-记住"><a href="#6-记住" class="headerlink" title="6. 记住"></a>6. 记住</h2><ul>
+<li>引用折叠发生在四种语境中：模板实例化、<code>auto</code> 类型生成、<code>typedef</code> 与别名声明的创建和使用，以及 <code>decltype</code>。</li>
+<li>当编译器在引用折叠语境中生成引用的引用时，结果会变成单个引用：只要原始引用中有一个是左值引用，结果就是左值引用；否则结果是右值引用。</li>
+<li>万能引用本质上就是处在“类型推导区分左值&#x2F;右值，并且会发生引用折叠”语境中的右值引用。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/moderncpp/" class="tag">#现代C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    
+    <a href="/reading/emc-5-29/" class="next">
+      <div class="text">
+        <p class="label">Next</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款29 假定移动操作不存在、不廉价且未被使用</h3>
+      </div>
+    </a>
+    
+    
+    <a href="/python/tutorial-8/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">python教程(八)---类</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
