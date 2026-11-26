@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Qwt教程(一):Qwt环境搭建 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="概览、核心理念与环境搭建引言Qwt（Qt Widgets for Technical Applications）是一套面向科学计算与工程技术的开源 Qt 控件库，最早由 Josef Wilgen 于 1997 年创建，自 2002 年起由 Uwe Rathmann 长期维护，目前稳定版本为 6.3.0（自 Qwt 6 起放弃 Qt3，并进行了较大的 API 演进）。 和很多“开箱即用但改不动”的图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qwt教程(一):Qwt环境搭建">
+<meta property="og:url" content="https://crazera-yi.github.io/qt/qwt/tutorial-1/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="概览、核心理念与环境搭建引言Qwt（Qt Widgets for Technical Applications）是一套面向科学计算与工程技术的开源 Qt 控件库，最早由 Josef Wilgen 于 1997 年创建，自 2002 年起由 Uwe Rathmann 长期维护，目前稳定版本为 6.3.0（自 Qwt 6 起放弃 Qt3，并进行了较大的 API 演进）。 和很多“开箱即用但改不动”的图">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-26T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-26T09:02:27.010Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="Qwt">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/Qt/">Qt</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-26T12:00:00+08:00">
+      November 26, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">Qwt教程(一):Qwt环境搭建</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="概览、核心理念与环境搭建"><a href="#概览、核心理念与环境搭建" class="headerlink" title="概览、核心理念与环境搭建"></a>概览、核心理念与环境搭建</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>Qwt</strong>（<em>Qt Widgets for Technical Applications</em>）是一套面向科学计算与工程技术的开源 Qt 控件库，最早由 Josef Wilgen 于 1997 年创建，自 2002 年起由 Uwe Rathmann 长期维护，目前稳定版本为 <strong>6.3.0</strong>（自 Qwt 6 起放弃 Qt3，并进行了较大的 API 演进）。</p>
+<p>和很多“开箱即用但改不动”的图表库不同，Qwt 的核心组件 <strong><code>QwtPlot</code></strong> 主打<strong>极高的灵活性与大数据渲染性能</strong>——它本质上是给 C++&#x2F;Qt 工程师准备的底层绘图框架。在敲下第一行代码前，必须先吃透它的三大核心设计理念。</p>
+<hr>
+<h2 id="1-Qwt-的三大核心设计理念（全书总纲）"><a href="#1-Qwt-的三大核心设计理念（全书总纲）" class="headerlink" title="1. Qwt 的三大核心设计理念（全书总纲）"></a>1. Qwt 的三大核心设计理念（全书总纲）</h2><h3 id="1-1-所有权机制（Ownership-Concept）"><a href="#1-1-所有权机制（Ownership-Concept）" class="headerlink" title="1.1 所有权机制（Ownership Concept）"></a>1.1 所有权机制（Ownership Concept）</h3><p>这是写 Qwt 代码**最容易触发崩溃（野指针 &#x2F; double free）**的地方：</p>
+<ul>
+<li><strong><code>QwtPlot</code> 接管所有添加给它的元素的所有权</strong>（曲线、网格、标记线、图例、坐标轴引擎等，概莫能外）。</li>
+<li>因此，<strong>所有图元必须用 <code>new</code> 在堆上创建</strong>，再交给 <code>QwtPlot</code>；之后<strong>绝对不要自己 <code>delete</code></strong>，也<strong>绝对不要在栈上创建图元</strong>（否则析构顺序稍有不对就会触发内存访问冲突）。</li>
+<li>已添加到 <code>QwtPlot</code> 的元素一般不再“摘下来复用”（除 <code>QwtPlotItem::detach()</code> 外，像图例这类对象甚至没有简单的 <code>release()</code> 接口）。遇到需要动态重建的图表元素，书里推荐采用**工厂模式（Factory Concept）**按需重新创建。</li>
+</ul>
+<h3 id="1-2-图元与坐标轴的强绑定（Axis-Dependency）"><a href="#1-2-图元与坐标轴的强绑定（Axis-Dependency）" class="headerlink" title="1.2 图元与坐标轴的强绑定（Axis Dependency）"></a>1.2 图元与坐标轴的强绑定（Axis Dependency）</h3><ul>
+<li><code>QwtPlot</code> 允许往画布里塞入任意绘图元素（<code>QwtPlotItem</code> 子类：曲线、柱状图、热力图、标记线、网格……）。</li>
+<li>为了让图元随缩放、范围变化自动重算屏幕位置，每个图元都必须绑定坐标轴，从而在坐标轴刻度变化时收到通知。</li>
+<li>也正因为坐标轴是整个坐标变换的枢纽，<code>QwtPlot</code> <strong>内置固定了最多 4 条坐标轴</strong>（左 Y、右 Y、底 X、顶 X），它们是牢牢锚定在 <code>QwtPlot</code> 上的，不像曲线那样可以随意增删。</li>
+</ul>
+<h3 id="1-3-彻底的多态扩展（Inheritance-Concept）"><a href="#1-3-彻底的多态扩展（Inheritance-Concept）" class="headerlink" title="1.3 彻底的多态扩展（Inheritance Concept）"></a>1.3 彻底的多态扩展（Inheritance Concept）</h3><ul>
+<li>Qwt 的类体系几乎处处支持<strong>多态（虚函数）</strong>。</li>
+<li>如果内置功能差一口气（例如：给柱状图每个柱子单独上色、把 X 轴数字换成文字、自定义图例图标、给渲染函数打耗时统计），标准做法不是魔改库源码，而是<strong>继承对应类并重写目标虚函数</strong>。</li>
+</ul>
+<hr>
+<h2 id="2-编译、安装与集成-Qwt-6-3-0"><a href="#2-编译、安装与集成-Qwt-6-3-0" class="headerlink" title="2. 编译、安装与集成 Qwt 6.3.0"></a>2. 编译、安装与集成 Qwt 6.3.0</h2><h3 id="2-1-获取与安装方式"><a href="#2-1-获取与安装方式" class="headerlink" title="2.1 获取与安装方式"></a>2.1 获取与安装方式</h3><table>
+<thead>
+<tr>
+<th align="left">平台</th>
+<th align="left">推荐方式</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Windows &#x2F; macOS</strong></td>
+<td align="left"><strong>源码编译（推荐）</strong></td>
+<td align="left">下载 <code>qwt-6.3.0.zip</code>（SourceForge）自行编译，过程很简单，且能严格匹配你本机的 Qt 与编译器 ABI</td>
+</tr>
+<tr>
+<td align="left"><strong>Linux (Debian&#x2F;Ubuntu)</strong></td>
+<td align="left">包管理器或源码</td>
+<td align="left">开发包：<code>sudo apt install libqwt-qt5-dev</code>（头文件在 <code>/usr/include/qwt</code>）；运行部署只需 <code>libqwt-qt5-6</code></td>
+</tr>
+</tbody></table>
+<h3 id="2-2-Windows-源码编译步骤"><a href="#2-2-Windows-源码编译步骤" class="headerlink" title="2.2 Windows 源码编译步骤"></a>2.2 Windows 源码编译步骤</h3><ol>
+<li>解压 <code>qwt-6.3.0.zip</code>。</li>
+<li>打开 <code>qwtconfig.pri</code>，按需开关构建选项（比如是否编译 Designer 插件、示例程序、SVG 支持，以及修改默认安装前缀 <code>QWT_INSTALL_PREFIX</code>）。</li>
+<li>打开<strong>带 Qt 与编译器环境变量的命令行</strong>（不要用普通 cmd 直接敲，确保编译器和 <code>qmake</code> 都在 <code>PATH</code> 中）：</li>
+</ol>
+<p><strong>方式 A：MinGW32&#x2F;64</strong>（从开始菜单打开如 <code>Qt 5.15.2 (MinGW 8.1.0 64-bit)</code>）：</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">:: 生成 Makefile</span><br><span class="line">qmake qwt.pro</span><br><span class="line">:: <span class="number">8</span> 线程并行编译库、插件和示例</span><br><span class="line">mingw32-make -j8</span><br><span class="line">:: 安装到默认目录（默认 C:\Qwt-<span class="number">6</span>.<span class="number">3</span>.<span class="number">0</span>）</span><br><span class="line">mingw32-make install</span><br></pre></td></tr></table></figure>
+
+<p><strong>方式 B：MSVC (Visual Studio 2017&#x2F;2019&#x2F;2022)</strong>（打开对应架构 x86&#x2F;x64 的 <code>Developer Command Prompt</code>，或手动执行 <code>VsDevCmd.bat -arch=amd64</code>）：</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">:: 可选：在普通终端里初始化 VS <span class="number">64</span>位环境</span><br><span class="line">&quot;<span class="variable">%ProgramFiles(x86)%</span>\Microsoft Visual Studio\<span class="number">2019</span>\Community\Common7\Tools\VsDevCmd.bat&quot; -arch=amd64</span><br><span class="line"></span><br><span class="line">:: 编译安装（可用 jom 替代 nmake 实现多线程加速）</span><br><span class="line">qmake qwt.pro</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
+
+<p>默认安装后的目录结构（除非你在 <code>qwtconfig.pri</code> 改过 <code>QWT_INSTALL_PREFIX</code>）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Qwt-6.3.0\include   # 头文件</span><br><span class="line">C:\Qwt-6.3.0\lib       # 静态/导入库与 DLL（Debug 版带后缀 d：qwtd）</span><br><span class="line">C:\Qwt-6.3.0\doc\html  # 离线 API 文档（直接浏览器打开 index.html）</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Windows 运行期常见坑（缺 DLL）</strong>：程序编译通过但一运行就弹窗找不到 <code>qwt.dll</code> &#x2F; <code>qwtd.dll</code>。在 Qt Creator 的 <strong>Projects → Run → Environment</strong> 中，把 <code>C:\Qwt-6.3.0\lib</code> 追加到 <code>PATH</code> 环境变量即可（部署时把对应 DLL 放到 <code>.exe</code> 同级目录）。</p>
+</blockquote>
+<h3 id="2-3-在-Qt-Designer-ui-文件中嵌入-QwtPlot"><a href="#2-3-在-Qt-Designer-ui-文件中嵌入-QwtPlot" class="headerlink" title="2.3 在 Qt Designer &#x2F; .ui 文件中嵌入 QwtPlot"></a>2.3 在 Qt Designer &#x2F; <code>.ui</code> 文件中嵌入 <code>QwtPlot</code></h3><blockquote>
+<p><strong>避坑警告（原书 1.6 节）</strong>：虽然 Qwt 自带 Qt Designer 插件，但由于新版 Qt Creator 修改了 Designer 插件 API，<strong>Qwt 的 Designer 插件在较新版本的 Qt &#x2F; Qt Creator 上往往无法加载</strong>（哪怕你用同一套工具链自己编的也不行）；而且即使能加载，也不能在 Designer 里配置曲线，真正配置全都在 C++ 代码里完成。</p>
+</blockquote>
+<p>因此，<strong>实战中最稳妥、最通用的做法是“占位符提升（Promote to…）”</strong>：</p>
+<ol>
+<li>在 Qt Designer 界面里直接拖一个普通的 <strong><code>QWidget</code></strong> 到布局中。</li>
+<li>右键该 <code>QWidget</code> → 选择 <strong>Promote to…（提升为…）</strong>。</li>
+<li>填写提升信息：<ul>
+<li><strong>Base class name（基类）</strong>：<code>QWidget</code></li>
+<li><strong>Promoted class name（提升的类名）</strong>：<code>QwtPlot</code></li>
+<li><strong>Header file（头文件）</strong>：<code>QwtPlot</code>（如果兼容旧版 Qwt 或 Linux 发行版包，填 <code>qwt_plot.h</code>）</li>
+<li>勾选 <strong>Global include（全局包含）</strong> → 点击 <strong>Add</strong> → 点击 <strong>Promote</strong>。</li>
+</ul>
+</li>
+<li>把控件 <code>objectName</code> 改为 <code>plot</code>，放进垂直布局（<code>QVBoxLayout</code>）时，若希望图表吃满剩余空间，把顶层布局的 <code>layoutStretch</code> 设为类似 <code>0,1</code>（上方工具栏 0，下方图表 1）。</li>
+</ol>
+<hr>
+<h2 id="3-除了-QwtPlot，Qwt-还提供哪些仪表-输入控件？（原书-Ch-3）"><a href="#3-除了-QwtPlot，Qwt-还提供哪些仪表-输入控件？（原书-Ch-3）" class="headerlink" title="3. 除了 QwtPlot，Qwt 还提供哪些仪表&#x2F;输入控件？（原书 Ch 3）"></a>3. 除了 <code>QwtPlot</code>，Qwt 还提供哪些仪表&#x2F;输入控件？（原书 Ch 3）</h2><p>Qwt 不仅仅是画图库，它还自带一套模仿经典科学&#x2F;工业仪器面板的输入与显示控件。它们底层复用了第 11 章的刻度计算与绘制引擎，支持<strong>非线性刻度</strong>（如对数刻度）与高度自定义配色，弥补了原生 Qt 控件在工业仪表场景下的不足。</p>
+<table>
+<thead>
+<tr>
+<th align="left">Qwt 控件类</th>
+<th align="left">对应的原生 Qt 控件</th>
+<th align="left">Qwt 的核心优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>QwtSlider</code></strong></td>
+<td align="left"><code>QSlider</code></td>
+<td align="left">支持鼠标&#x2F;方向键操作，刻度定义远比 <code>QSlider</code> 灵活，支持非线性刻度</td>
+</tr>
+<tr>
+<td align="left"><strong><code>QwtWheel</code></strong></td>
+<td align="left">无</td>
+<td align="left">水平或垂直调节滚轮（类似示波器&#x2F;调音台拨轮）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>QwtThermo</code></strong></td>
+<td align="left"><code>QProgressBar</code></td>
+<td align="left">温度计&#x2F;液位柱状显示器；不受平台原生风格限制，自带刻度，支持配置<strong>颜色表（渐变或超阈值变色报警）</strong></td>
+</tr>
+<tr>
+<td align="left"><strong><code>QwtKnob</code></strong></td>
+<td align="left"><code>QDial</code></td>
+<td align="left">工业旋钮，支持丰富的刻度单位与缩放显示</td>
+</tr>
+<tr>
+<td align="left"><strong><code>QwtDial</code></strong></td>
+<td align="left">无</td>
+<td align="left">模拟指针表盘（可开启鼠标&#x2F;键盘调节）；指针本身解耦为独立类（默认 <code>QwtDialSimpleNeedle</code>），可完全自定义任意指针样式</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>上述全部控件的直观效果都收录在 Qwt 源码自带的 <strong><code>examples/controls</code></strong> 示例工程中，编完库之后强烈建议跑一遍看效果。</p>
+</blockquote>
+<hr>
+<h2 id="补充—-CMake-配置与-Qt-6-适配要点"><a href="#补充—-CMake-配置与-Qt-6-适配要点" class="headerlink" title="补充— CMake 配置与 Qt 6 适配要点"></a>补充— CMake 配置与 Qt 6 适配要点</h2><p>原书第 2 章与第 17 章全篇使用 <code>qmake</code>（<code>.pro</code>），但现代 Qt 项目（尤其是 Qt 6）大量改用 <strong>CMake</strong>。下面给出一份对应 Windows &#x2F; Linux 的最小 <code>CMakeLists.txt</code> 参考模板：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.16</span>)</span><br><span class="line"><span class="keyword">project</span>(QwtTutorial LANGUAGES CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOMOC <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOUIC <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Qt6 或 Qt5（按本机环境二选一）</span></span><br><span class="line"><span class="keyword">find_package</span>(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets PrintSupport Svg)</span><br><span class="line"><span class="keyword">find_package</span>(Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span> REQUIRED COMPONENTS Widgets PrintSupport Svg)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(QwtTutorial main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(WIN32)</span><br><span class="line">    <span class="keyword">set</span>(QWT_ROOT <span class="string">&quot;C:/Qwt-6.3.0&quot;</span>)</span><br><span class="line">    <span class="keyword">target_include_directories</span>(QwtTutorial PRIVATE <span class="string">&quot;$&#123;QWT_ROOT&#125;/include&quot;</span>)</span><br><span class="line">    <span class="comment"># Windows 下必须区分 Debug(qwtd) 与 Release(qwt)</span></span><br><span class="line">    <span class="keyword">target_link_libraries</span>(QwtTutorial PRIVATE</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::Widgets</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::PrintSupport</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::Svg</span><br><span class="line">        $&lt;$&lt;CONFIG:Debug&gt;:<span class="variable">$&#123;QWT_ROOT&#125;</span>/lib/qwtd.lib&gt;</span><br><span class="line">        $&lt;$&lt;<span class="keyword">NOT</span>:$&lt;CONFIG:Debug&gt;&gt;:<span class="variable">$&#123;QWT_ROOT&#125;</span>/lib/qwt.lib&gt;</span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># 提示：如果是 MinGW 工具链，库文件名通常为 libqwtd.a / libqwt.a</span></span><br><span class="line">    <span class="comment"># 如果是动态链接，某些版本还需定义 QWT_DLL：</span></span><br><span class="line">    <span class="keyword">target_compile_definitions</span>(QwtTutorial PRIVATE QWT_DLL)</span><br><span class="line"><span class="keyword">else</span>()</span><br><span class="line">    <span class="comment"># Linux 源码安装到 /usr/local/qwt-6.3.0（若用 apt 安装则为 /usr/include/qwt）</span></span><br><span class="line">    <span class="keyword">target_include_directories</span>(QwtTutorial PRIVATE <span class="string">&quot;/usr/local/qwt-6.3.0/include&quot;</span>)</span><br><span class="line">    <span class="keyword">target_link_libraries</span>(QwtTutorial PRIVATE</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::Widgets</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::PrintSupport</span><br><span class="line">        Qt<span class="variable">$&#123;QT_VERSION_MAJOR&#125;</span>::Svg</span><br><span class="line">        /usr/local/qwt-<span class="number">6.3</span>.<span class="number">0</span>/lib/libqwt.so</span><br><span class="line">    )</span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>
+
+<p>另外，<strong>在 Qt 6 下使用 Qwt 6.3.0 时注意两处小差异</strong>：</p>
+<ul>
+<li>原书大量使用 <code>QVector&lt;double&gt;</code>，在 Qt 6 中 <code>QVector</code> 已是 <code>QList</code> 的类型别名，可以无缝编译；</li>
+<li>宏 <code>QWT_OVERRIDE</code> 是为了兼容古老 C++98 编译器保留的，在现代 C++11 及以上直接写标准关键字 <code>override</code> 更清晰。</li>
+</ul>
+<hr>
+<h2 id="本章结论"><a href="#本章结论" class="headerlink" title="本章结论"></a>本章结论</h2><ul>
+<li>Qwt 是面向工程&#x2F;科研的 Qt 控件库，<code>QwtPlot</code> 是核心，另有 <code>QwtSlider</code>、<code>QwtWheel</code>、<code>QwtThermo</code>、<code>QwtKnob</code>、<code>QwtDial</code> 等工业仪表控件。</li>
+<li>牢记三大铁律：<strong>所有图元必须 <code>new</code> 在堆上并由 <code>QwtPlot</code> 接管释放</strong>；<strong>图元绑定到 4 条固定坐标轴之一</strong>；<strong>定制行为优先靠继承 + 重写虚函数</strong>。</li>
+<li>Windows&#x2F;macOS 推荐从源码编译 Qwt 6.3.0，注意 Windows 下 Debug 库名带后缀 <code>d</code>（<code>qwtd</code>），运行时把 <code>lib</code> 目录加入 <code>PATH</code>。</li>
+<li>不要死磕 Qt Designer 插件，直接拖一个 <code>QWidget</code> **提升（Promote）**为 <code>QwtPlot</code> 最省心。</li>
+</ul>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+      <a href="/tags/Qwt/" class="tag">#Qwt</a>
+      
+      <a href="/tags/Qt/" class="tag">#Qt</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-5-30/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款30 熟悉完美转发的失败情形</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
