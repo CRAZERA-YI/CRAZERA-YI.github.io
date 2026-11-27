@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>读书笔记---Qwt开发手册(二)：第一个交互式图表 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="第一个交互式图表引言从这个路线开始构造一个完整图表,曲线-&gt;图例-&gt;标题-&gt;网格-&gt;坐标轴格式化-&gt;对数轴-&gt;峰值标记线-&gt;框选缩放-&gt;中键平移。  1. 最小程序骨架与头文件规范1.1 两种头文件风格（兼容性注意！）头文件支持两种风格,都可以用,但是我还是习惯蛇形写法,因为vs只支持这种的代码补写 123456789&#x2F;&#x2F; Qt&#x2F;大驼峰风格#incl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记---Qwt开发手册(二)：第一个交互式图表">
+<meta property="og:url" content="https://crazera-yi.github.io/reading/qwt-02/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="第一个交互式图表引言从这个路线开始构造一个完整图表,曲线-&gt;图例-&gt;标题-&gt;网格-&gt;坐标轴格式化-&gt;对数轴-&gt;峰值标记线-&gt;框选缩放-&gt;中键平移。  1. 最小程序骨架与头文件规范1.1 两种头文件风格（兼容性注意！）头文件支持两种风格,都可以用,但是我还是习惯蛇形写法,因为vs只支持这种的代码补写 123456789&#x2F;&#x2F; Qt&#x2F;大驼峰风格#incl">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2027-01-13T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T15:21:54.480Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="Qwt">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/Qt/">Qt</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2027-01-13T22:00:00+08:00">
+      January 13, 2027
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">读书笔记---Qwt开发手册(二)：第一个交互式图表</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="第一个交互式图表"><a href="#第一个交互式图表" class="headerlink" title="第一个交互式图表"></a>第一个交互式图表</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>从这个路线开始构造一个完整图表,<strong>曲线-&gt;图例-&gt;标题-&gt;网格-&gt;坐标轴格式化-&gt;对数轴-&gt;峰值标记线-&gt;框选缩放-&gt;中键平移</strong>。</p>
+<hr>
+<h2 id="1-最小程序骨架与头文件规范"><a href="#1-最小程序骨架与头文件规范" class="headerlink" title="1. 最小程序骨架与头文件规范"></a>1. 最小程序骨架与头文件规范</h2><h3 id="1-1-两种头文件风格（兼容性注意！）"><a href="#1-1-两种头文件风格（兼容性注意！）" class="headerlink" title="1.1 两种头文件风格（兼容性注意！）"></a>1.1 两种头文件风格（兼容性注意！）</h3><p>头文件支持两种风格,都可以用,但是我还是习惯蛇形写法,因为vs只支持这种的代码补写</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Qt/大驼峰风格</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QwtPlot&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QwtPlotCurve&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QwtLegend&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 蛇形风格</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_curve.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_legend.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-最小-main-cpp"><a href="#1-2-最小-main-cpp" class="headerlink" title="1.2 最小 main.cpp"></a>1.2 最小 <code>main.cpp</code></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    QwtPlot plot;</span><br><span class="line">    plot.<span class="built_in">resize</span>(<span class="number">800</span>, <span class="number">500</span>);</span><br><span class="line">    plot.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-逐步添加图表元素"><a href="#2-逐步添加图表元素" class="headerlink" title="2. 逐步添加图表元素"></a>2. 逐步添加图表元素</h2><h3 id="2-1-添加曲线（QwtPlotCurve）与画布基础美化"><a href="#2-1-添加曲线（QwtPlotCurve）与画布基础美化" class="headerlink" title="2.1 添加曲线（QwtPlotCurve）与画布基础美化"></a>2.1 添加曲线（<code>QwtPlotCurve</code>）与画布基础美化</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QFile&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QTextStream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plotP_curve.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    QwtPlot plot;</span><br><span class="line">    plot.<span class="built_in">resize</span>(<span class="number">500</span>, <span class="number">300</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 外边距 和 plot背景</span></span><br><span class="line">    plot.<span class="built_in">setContentsMargins</span>(<span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>); </span><br><span class="line">    plot.<span class="built_in">setCanvasBackground</span>(Qt::white);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读数据,用的qt库,和qwt没关系</span></span><br><span class="line">    QVector&lt;<span class="type">double</span>&gt; x, y;</span><br><span class="line">    <span class="function">QFile <span class="title">f</span><span class="params">(<span class="string">&quot;spektrum.tsv&quot;</span>)</span></span>;</span><br><span class="line">    f.<span class="built_in">open</span>(QFile::ReadOnly);</span><br><span class="line">    <span class="function">QTextStream <span class="title">strm</span><span class="params">(&amp;f)</span></span>;</span><br><span class="line">    strm.<span class="built_in">readLine</span>();</span><br><span class="line">    <span class="keyword">while</span> (!strm.<span class="built_in">atEnd</span>()) &#123;</span><br><span class="line">        <span class="type">double</span> xval, yval;</span><br><span class="line">        strm &gt;&gt; xval &gt;&gt; yval;</span><br><span class="line">        x.<span class="built_in">append</span>(xval);</span><br><span class="line">        y.<span class="built_in">append</span>(yval);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建曲线对象</span></span><br><span class="line">    QwtPlotCurve *curve = <span class="keyword">new</span> <span class="built_in">QwtPlotCurve</span>(); <span class="comment">//必须用new,必须把这个对象分配到堆上面</span></span><br><span class="line">    curve-&gt;<span class="built_in">setPen</span>(<span class="built_in">QColor</span>(<span class="number">180</span>, <span class="number">40</span>, <span class="number">20</span>), <span class="number">0</span>); <span class="comment">// 0表示线宽,也就是最细的线</span></span><br><span class="line">    curve-&gt;<span class="built_in">setTitle</span>(<span class="string">&quot;Gamma spectrum&quot;</span>); </span><br><span class="line">    curve-&gt;<span class="built_in">setRenderHint</span>(QwtPlotItem::RenderAntialiased, <span class="literal">true</span>); <span class="comment">// 开启抗锯齿</span></span><br><span class="line">    curve-&gt;<span class="built_in">setSamples</span>(x, y); <span class="comment">//铺点</span></span><br><span class="line">    curve-&gt;<span class="built_in">attach</span>(&amp;plot); <span class="comment">//把这个线对象绑定到plot,生存周期也由plot管理</span></span><br><span class="line"></span><br><span class="line">    plot.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>curve</code> 必须 <code>new</code> 出来，绝不能写成局部栈对象 <code>QwtPlotCurve curve; curve.attach(&amp;plot);</code>，否则 <code>plot</code> 析构时会对栈地址 <code>delete</code> 导致崩溃.<br><code>x</code>和<code>y</code>的<code>size</code>必须一样,不然会有问题</p>
+<h3 id="2-2-添加图例（QwtLegend）"><a href="#2-2-添加图例（QwtLegend）" class="headerlink" title="2.2 添加图例（QwtLegend）"></a>2.2 添加图例（<code>QwtLegend</code>）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_legend.h&gt;</span> <span class="comment">// 或&lt;QwtLegend&gt;</span></span></span><br><span class="line"></span><br><span class="line">QwtLegend *legend = <span class="keyword">new</span> <span class="built_in">QwtLegend</span>(); <span class="comment">//同理,必须new</span></span><br><span class="line">QFont legendFont;</span><br><span class="line">legendFont.<span class="built_in">setPointSize</span>(<span class="number">8</span>);</span><br><span class="line">legend-&gt;<span class="built_in">setFont</span>(legendFont);</span><br><span class="line">plot.<span class="built_in">insertLegend</span>(legend, QwtPlot::BottomLegend); </span><br></pre></td></tr></table></figure>
+
+<p>图例位置可选 <code>LeftLegend</code>、<code>RightLegend</code>、<code>TopLegend</code>、<code>BottomLegend</code>。</p>
+<h3 id="2-3-添加图表标题（QwtText）"><a href="#2-3-添加图表标题（QwtText）" class="headerlink" title="2.3 添加图表标题（QwtText）"></a>2.3 添加图表标题（<code>QwtText</code>）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_text.h&gt;</span> <span class="comment">// 或 &lt;QwtText&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">QwtText <span class="title">text</span><span class="params">(<span class="string">&quot;Gamma spectrum&quot;</span>)</span></span>;</span><br><span class="line">QFont titleFont;</span><br><span class="line">titleFont.<span class="built_in">setBold</span>(<span class="literal">true</span>);</span><br><span class="line">titleFont.<span class="built_in">setPointSize</span>(<span class="number">10</span>);</span><br><span class="line">text.<span class="built_in">setFont</span>(titleFont);</span><br><span class="line">plot.<span class="built_in">setTitle</span>(text);</span><br></pre></td></tr></table></figure>
+
+<p><code>QwtText</code> 是 <code>QString</code> 的增强包装类，自带字体&#x2F;颜色&#x2F;对齐属性，还支持富文本和MathML数学公式渲染。</p>
+<h3 id="2-4-添加主-次网格线（QwtPlotGrid）"><a href="#2-4-添加主-次网格线（QwtPlotGrid）" class="headerlink" title="2.4 添加主&#x2F;次网格线（QwtPlotGrid）"></a>2.4 添加主&#x2F;次网格线（<code>QwtPlotGrid</code>）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_grid.h&gt;</span> <span class="comment">// 或&lt;QwtPlotGrid&gt;</span></span></span><br><span class="line"></span><br><span class="line">QwtPlotGrid *grid = <span class="keyword">new</span> <span class="built_in">QwtPlotGrid</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主网格线</span></span><br><span class="line"><span class="function">QPen <span class="title">gridPen</span><span class="params">(Qt::gray)</span></span>;</span><br><span class="line">gridPen.<span class="built_in">setStyle</span>(Qt::SolidLine);</span><br><span class="line">grid-&gt;<span class="built_in">setMajorPen</span>(gridPen);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开启Y和X轴次网格线</span></span><br><span class="line">grid-&gt;<span class="built_in">enableYMin</span>(<span class="literal">true</span>); <span class="comment">//当然可以按需设置xy轴,可以只要x,或者只要y</span></span><br><span class="line">grid-&gt;<span class="built_in">enableXMin</span>(<span class="literal">true</span>);</span><br><span class="line">gridPen.<span class="built_in">setColor</span>(Qt::lightGray);</span><br><span class="line">gridPen.<span class="built_in">setStyle</span>(Qt::DotLine);</span><br><span class="line">grid-&gt;<span class="built_in">setMinorPen</span>(gridPen);</span><br><span class="line"></span><br><span class="line">grid-&gt;<span class="built_in">attach</span>(&amp;plot); <span class="comment">// 老生常谈</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-5-配置四条坐标轴"><a href="#2-5-配置四条坐标轴" class="headerlink" title="2.5 配置四条坐标轴"></a>2.5 配置四条坐标轴</h3><p><code>QwtPlot</code> 固定内置 4 条坐标轴：</p>
+<ul>
+<li><code>QwtPlot::yLeft</code>、<code>QwtPlot::yRight</code></li>
+<li><code>QwtPlot::xBottom</code>、<code>QwtPlot::xTop</code></li>
+</ul>
+<p>默认只显示 <code>xBottom</code> 和 <code>yLeft</code>，图元默认也绑定在这两条轴上。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">QFont axisFont;</span><br><span class="line">axisFont.<span class="built_in">setPointSize</span>(<span class="number">8</span>);</span><br><span class="line">axisFont.<span class="built_in">setBold</span>(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">QFont axisLabelFont;</span><br><span class="line">axisLabelFont.<span class="built_in">setPointSize</span>(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置x轴</span></span><br><span class="line"><span class="function">QwtText <span class="title">axisTitle</span><span class="params">(<span class="string">&quot;Channel&quot;</span>)</span></span>;</span><br><span class="line">axisTitle.<span class="built_in">setFont</span>(axisFont);</span><br><span class="line">plot.<span class="built_in">setAxisTitle</span>(QwtPlot::xBottom, axisTitle);      <span class="comment">// 轴标题字体     //函数名字其实很显而易懂</span></span><br><span class="line">plot.<span class="built_in">setAxisFont</span>(QwtPlot::xBottom, axisLabelFont);   <span class="comment">// 刻度数字字体</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置y轴</span></span><br><span class="line">axisTitle.<span class="built_in">setText</span>(<span class="string">&quot;Events&quot;</span>);</span><br><span class="line">plot.<span class="built_in">setAxisTitle</span>(QwtPlot::yLeft, axisTitle);</span><br><span class="line">plot.<span class="built_in">setAxisFont</span>(QwtPlot::yLeft, axisLabelFont);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-对数坐标轴（QwtLogScaleEngine）"><a href="#2-6-对数坐标轴（QwtLogScaleEngine）" class="headerlink" title="2.6 对数坐标轴（QwtLogScaleEngine）"></a>2.6 对数坐标轴（<code>QwtLogScaleEngine</code>）</h3><p>把刻度计算引擎替换为 <code>QwtLogScaleEngine</code> 即可启用对数轴,其实还有<code>QwtLinearScaleEngine</code>线性刻度轴,但是这个不如对数轴灵活,而且<code>QwtLinearScaleEngine</code>是plot默认的<code>ScaleEngine</code>,所以就以对数轴作为例子了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_scale_engine.h&gt;</span> <span class="comment">// 或 &lt;QwtLogScaleEngine&gt;</span></span></span><br><span class="line"></span><br><span class="line">QwtLogScaleEngine *logScale = <span class="keyword">new</span> <span class="built_in">QwtLogScaleEngine</span>();</span><br><span class="line">plot.<span class="built_in">setAxisScaleEngine</span>(QwtPlot::yLeft, logScale); <span class="comment">//凡是new了新对象的,生存期都由plot管理</span></span><br><span class="line">                                  <span class="comment">//min //max      </span></span><br><span class="line">plot.<span class="built_in">setAxisScale</span>(QwtPlot::yLeft, <span class="number">1e-3</span>, <span class="number">1000</span>); <span class="comment">//设置最大值最小值,其实还有第四个参数,步长,默认为0只要不设置就会自动调整</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-添加标记线（QwtPlotMarker）"><a href="#2-7-添加标记线（QwtPlotMarker）" class="headerlink" title="2.7 添加标记线（QwtPlotMarker）"></a>2.7 添加标记线（<code>QwtPlotMarker</code>）</h3><p>用于在特定坐标标出阈值线、峰值线或参考点（例如在<code>x= 36</code>处画一条蓝色垂直峰值线并标注 <code>207.50 keV</code>(因为例子是伽马能谱,所以单位是千电子伏特)）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_marker.h&gt;</span> <span class="comment">// 或&lt;QwtPlotMarker&gt; </span></span></span><br><span class="line"></span><br><span class="line">QwtPlotMarker *marker = <span class="keyword">new</span> QwtPlotMarker;</span><br><span class="line">marker-&gt;<span class="built_in">setLineStyle</span>(QwtPlotMarker::VLine);          <span class="comment">// 垂直线HLine(水平线)、Cross(十字准线,以坐标点为中心延申两条直线)、NoLine(点)</span></span><br><span class="line">marker-&gt;<span class="built_in">setValue</span>(<span class="number">36</span>, <span class="number">0</span>);                             <span class="comment">// 垂直线只需关心x坐标,y坐标随便设置</span></span><br><span class="line"></span><br><span class="line"><span class="function">QPen <span class="title">markerPen</span><span class="params">(QColor(<span class="number">40</span>, <span class="number">60</span>, <span class="number">255</span>))</span></span>;</span><br><span class="line">markerPen.<span class="built_in">setStyle</span>(Qt::SolidLine);</span><br><span class="line">marker-&gt;<span class="built_in">setLinePen</span>(markerPen);</span><br><span class="line"></span><br><span class="line"><span class="function">QwtText <span class="title">markerLabel</span><span class="params">(<span class="string">&quot;207.50 keV&quot;</span>)</span></span>;</span><br><span class="line">QFont markerFont;</span><br><span class="line">markerFont.<span class="built_in">setPointSize</span>(<span class="number">8</span>);</span><br><span class="line">markerLabel.<span class="built_in">setFont</span>(markerFont);</span><br><span class="line">marker-&gt;<span class="built_in">setLabel</span>(markerLabel);</span><br><span class="line">marker-&gt;<span class="built_in">setLabelOrientation</span>(Qt::Vertical);           <span class="comment">// 标签文字竖排</span></span><br><span class="line">marker-&gt;<span class="built_in">setLabelAlignment</span>(Qt::AlignRight | Qt::AlignBottom); <span class="comment">// 显示在线的右下方</span></span><br><span class="line"></span><br><span class="line">marker-&gt;<span class="built_in">attach</span>(&amp;plot); <span class="comment">// Plot 接管所有权</span></span><br></pre></td></tr></table></figure>
+<h2 id="所以说marker需要三个东西-QPen设置marker的颜色-形态-QwtText来设置marker需要标记的文字信息-QFont用于设置QwtText其实不要也行"><a href="#所以说marker需要三个东西-QPen设置marker的颜色-形态-QwtText来设置marker需要标记的文字信息-QFont用于设置QwtText其实不要也行" class="headerlink" title="所以说marker需要三个东西,QPen设置marker的颜色,形态,QwtText来设置marker需要标记的文字信息,QFont用于设置QwtText其实不要也行"></a>所以说marker需要三个东西,<code>QPen</code>设置marker的颜色,形态,<code>QwtText</code>来设置marker需要标记的文字信息,<code>QFont</code>用于设置<code>QwtText</code>其实不要也行</h2><h2 id="3-图表交互：缩放与平移"><a href="#3-图表交互：缩放与平移" class="headerlink" title="3. 图表交互：缩放与平移"></a>3. 图表交互：缩放与平移</h2><p>交互类与前面图元（<code>attach(&amp;plot)</code>）在<strong>挂载方式上有本质区别</strong>：它们不是 <code>QwtPlotItem</code>，而是 <strong><code>QObject</code> 事件过滤器</strong>，通过把自己设为 <strong><code>plot.canvas()</code> 的子对象</strong>来截获鼠标事件，并交由 Qt 的父子对象树管理内存。</p>
+<h3 id="3-1-框选缩放（QwtPlotZoomer）"><a href="#3-1-框选缩放（QwtPlotZoomer）" class="headerlink" title="3.1 框选缩放（QwtPlotZoomer）"></a>3.1 框选缩放（<code>QwtPlotZoomer</code>）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_zoomer.h&gt;</span> <span class="comment">// 或&lt;QwtPlotZoomer&gt;&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//plot.canvas()当前plot的画布对象指针,这下zoomer就有权限操作画布了,实现图像的重绘了</span></span><br><span class="line">QwtPlotZoomer *zoomer = <span class="keyword">new</span> <span class="built_in">QwtPlotZoomer</span>(QwtPlot::xBottom, QwtPlot::yLeft, plot.<span class="built_in">canvas</span>());</span><br><span class="line"><span class="comment">// 鼠标移动时实时在光标旁显示 (x, y)坐标值</span></span><br><span class="line">zoomer-&gt;<span class="built_in">setTrackerMode</span>(QwtPlotPicker::AlwaysOn);</span><br></pre></td></tr></table></figure>
+
+<p>默认交互行为：</p>
+<ul>
+<li><strong>左键拖拽框选</strong>：放大选中区域</li>
+<li><strong>右键单击</strong>：退回上一级缩放；</li>
+<li><strong>中键单击</strong>: 退回最外层基准视图。</li>
+</ul>
+<p><strong>两个极易踩的深坑</strong>：</p>
+<p><strong><code>setZoomBase()</code> 时机问题</strong>：<code>QwtPlotZoomer</code> 是在<strong>构造那一刻</strong>根据当前曲线的数值范围记录“最外层基准视图（ZoomBase）”的。如果你在<strong>添加曲线之前</strong>就创建了 <code>zoomer</code>，或者后续<strong>动态修改了曲线数据&#x2F;手动调用了 <code>setAxisScale()</code></strong>，一定要在更新完后调用一次：<br>   <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plot.<span class="built_in">replot</span>();</span><br><span class="line">zoomer-&gt;<span class="built_in">setZoomBase</span>(); <span class="comment">//更新当前状态</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="3-2-拖拽平移（QwtPlotPanner）"><a href="#3-2-拖拽平移（QwtPlotPanner）" class="headerlink" title="3.2 拖拽平移（QwtPlotPanner）"></a>3.2 拖拽平移（<code>QwtPlotPanner</code>）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QwtPlotPanner&gt;</span> <span class="comment">// 或 &lt;qwt_plot_panner.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样必须传入plot.canvas()</span></span><br><span class="line">QwtPlotPanner *panner = <span class="keyword">new</span> <span class="built_in">QwtPlotPanner</span>(plot.<span class="built_in">canvas</span>());</span><br><span class="line"><span class="comment">// 默认是左键，会和 Zoomer 冲突，所以通常改成鼠标中键拖拽平移</span></span><br><span class="line">panner-&gt;<span class="built_in">setMouseButton</span>(Qt::MiddleButton);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-3-滚轮缩放-QwtPlotMagnifier"><a href="#3-3-滚轮缩放-QwtPlotMagnifier" class="headerlink" title="3.3 滚轮缩放 (QwtPlotMagnifier)"></a>3.3 滚轮缩放 (<code>QwtPlotMagnifier</code>)</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_magnifier.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">QwtPlotMagnifier *magnifier = <span class="keyword">new</span> <span class="built_in">QwtPlotMagnifier</span>(plot.<span class="built_in">canvas</span>());</span><br><span class="line"><span class="comment">// 可选：如果只想滚轮缩放x轴而锁定y 轴</span></span><br><span class="line"><span class="comment">// magnifier-&gt;setAxisEnabled(QwtPlot::yLeft, false);</span></span><br></pre></td></tr></table></figure>
+
+<p>同时，如果既用了 <code>QwtPlotZoomer</code> 又把中键分配给了 <code>QwtPlotPanner</code>，可以把 Zoomer 的“一键复位”改成 <code>Shift + 右键</code> 或双击，避免中键冲突：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一个参数为按下按键后对应的行为,后面为需要按下的键                            //这是ctrl键</span></span><br><span class="line">zoomer-&gt;<span class="built_in">setMousePattern</span>(QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);</span><br><span class="line"><span class="comment">// 单击右键退回上一级</span></span><br><span class="line">zoomer-&gt;<span class="built_in">setMousePattern</span>(QwtEventPattern::MouseSelect3, Qt::RightButton);</span><br></pre></td></tr></table></figure>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/readingnote/" class="tag">#读书笔记</a>
+      
+      <a href="/tags/Qwt/" class="tag">#Qwt</a>
+      
+      <a href="/tags/Qt/" class="tag">#Qt</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/qwt/set-qwt/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">Qwt环境配置教程</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
