@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Qwt环境配置教程 - 陈某人的个人空间</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  <link rel='manifest' href='/manifest.json'>
+  
+
+  <meta name="description" content="VS2022配置 Qwt 6.3.0 全流程引言本文记录在 Windows 64 位环境下，使用 Visual Studio 2022 配合 Qt 5.12.12 配置 Qwt 6.3.0  0. 前置准备   组件 版本 &#x2F; 说明 示例路径（按本机实际路径调整）    Visual Studio Visual Studio 2022 Community本电脑使用的vs版本 D:\Vis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qwt环境配置教程">
+<meta property="og:url" content="https://crazera-yi.github.io/qwt/set-qwt/index.html">
+<meta property="og:site_name" content="陈某人的个人空间">
+<meta property="og:description" content="VS2022配置 Qwt 6.3.0 全流程引言本文记录在 Windows 64 位环境下，使用 Visual Studio 2022 配合 Qt 5.12.12 配置 Qwt 6.3.0  0. 前置准备   组件 版本 &#x2F; 说明 示例路径（按本机实际路径调整）    Visual Studio Visual Studio 2022 Community本电脑使用的vs版本 D:\Vis">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-27T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T06:26:45.239Z">
+<meta property="article:author" content="crazera">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="Qwt">
+<meta property="article:tag" content="VS2022">
+<meta property="article:tag" content="环境配置">
+<meta name="twitter:card" content="summary">
+
+  <script>window.ThemeCupertino = {}</script>
+
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/simple-icons-font@16/font/simple-icons.min.css">
+
+  
+  
+  
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1/font/bootstrap-icons.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+
+  
+  
+<link rel="stylesheet" href="/css/components/card.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/button.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/badge.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/utilities.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/components/carousel.css">
+
+  
+  
+  <script>ThemeCupertino['_calloutStyles'] = `
+<link rel="stylesheet" href="/css/components/callout.css">
+`</script>
+  
+<script src="/js/components/callout.js"></script>
+
+  
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/scroll-reveal.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/view-transition.css">
+
+  
+  
+
+  
+<script src="/js/head.js"></script>
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+  <body
+    data-color-scheme="auto"
+    data-uppercase-categories="true"
+    
+    data-config-root="/"
+    
+    data-toc="true"
+    data-toc-max-depth="2"
+    
+    
+    
+    data-scroll-reveal-disappear="false"
+    data-scroll-reveal-query=".scroll-reveal, .post-list-item, .card, .content p img, .content .block-large img"
+    
+    data-nav-blur-gradient="false"
+    
+    data-background-image
+    
+    style="--config-corner-squircle: true; --background-image: url('/images/ban_3.jpg'); --background-image-overlay-opacity: 0.6"
+  >
+    
+<script src="/js/body-top.js"></script>
+
+    <a href="#main-content" id="skip-to-content">Skip to content</a>
+    
+
+<nav id="theme-nav">
+  <div class="inner">
+    <a class="title" href="/">博客</a>
+    <div class="nav-arrow"></div>
+    <div class="nav-items">
+      <a class="nav-item nav-item-home" href="/" style="--index: 0">Home</a>
+
+      
+      <a class="nav-item" href="/archives" style="--index: 1">Archives</a>
+      
+      <a class="nav-item is-icon" href="/search" style="--index: 2"><i class="bi bi-search"></i></a>
+      
+    </div>
+  </div>
+</nav>
+
+    <main id="main-content" data-pagefind-body>
+      
+<article class="post">
+  
+  <div class="meta">
+    
+    <div class="categories text-uppercase">
+    
+      <a href="/categories/Qt/">Qt</a>
+    
+    </div>
+    
+
+    
+    <time class="date" datetime="2026-11-27T12:00:00+08:00">
+      November 27, 2026
+    </time>
+    
+
+    <h1 class="title" data-pagefind-meta="title">Qwt环境配置教程</h1>
+  </div>
+
+  <div class="content">
+    <h1 id="VS2022配置-Qwt-6-3-0-全流程"><a href="#VS2022配置-Qwt-6-3-0-全流程" class="headerlink" title="VS2022配置 Qwt 6.3.0 全流程"></a>VS2022配置 Qwt 6.3.0 全流程</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>本文记录在 Windows 64 位环境下，使用 <strong>Visual Studio 2022</strong> 配合 <strong>Qt 5.12.12</strong> 配置 <strong>Qwt 6.3.0</strong></p>
+<hr>
+<h2 id="0-前置准备"><a href="#0-前置准备" class="headerlink" title="0. 前置准备"></a>0. 前置准备</h2><table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="left">版本 &#x2F; 说明</th>
+<th align="left">示例路径（按本机实际路径调整）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Visual Studio</strong></td>
+<td align="left">Visual Studio 2022 Community本电脑使用的vs版本</td>
+<td align="left"><code>D:\Visual Studio\Visual Studio 2022\Community</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Qt 套件</strong></td>
+<td align="left">Qt 5.12.12 本电脑qt版本</td>
+<td align="left"><code>D:\Qt\Qt5.12.12\5.12.12\msvc2017_64</code></td>
+</tr>
+<tr>
+<td align="left"><strong>多线程构建器</strong></td>
+<td align="left">Qt Creator 自带 <code>jom.exe</code>（或 VS 自带 <code>nmake.exe</code>）</td>
+<td align="left"><code>D:\Qt\Qt5.12.12\Tools\QtCreator\bin\jom\jom.exe</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="1-下载并配置-Qwt-6-3-0-源码"><a href="#1-下载并配置-Qwt-6-3-0-源码" class="headerlink" title="1. 下载并配置 Qwt 6.3.0 源码"></a>1. 下载并配置 Qwt 6.3.0 源码</h2><ol>
+<li>从 SourceForge 官方发布页下载源码包 <code>qwt-6.3.0.zip</code>：<ul>
+<li>下载地址：<code>https://sourceforge.net/projects/qwt/files/qwt/6.3.0/qwt-6.3.0.zip/download</code></li>
+</ul>
+</li>
+<li>解压到一个<strong>无中文、无空格</strong>的临时构建目录，例如：<code>D:\Qt\_qwt_build\qwt-6.3.0</code>。</li>
+<li>用文本编辑器打开源码根目录下的 <strong><code>qwtconfig.pri</code></strong>，做两处修改：</li>
+</ol>
+<h3 id="1-1-修改安装目录（放到-D-Qt-下与原-Qt-同级）"><a href="#1-1-修改安装目录（放到-D-Qt-下与原-Qt-同级）" class="headerlink" title="1.1 修改安装目录（放到 D:\Qt\ 下与原 Qt 同级）"></a>1.1 修改安装目录（放到 <code>D:\Qt\</code> 下与原 Qt 同级）</h3><p>找到 <code>win32 { ... }</code> ，将默认 <code>C:/Qwt-...</code> 改为自己想要放的地方,不改也行,我这里改成我习惯放的地方：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">win32 &#123;</span><br><span class="line">    QWT_INSTALL_PREFIX    = D:/Qt/Qwt-$$QWT_VERSION</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-（可选）注释掉示例-测试以大幅缩短编译时间"><a href="#1-2-（可选）注释掉示例-测试以大幅缩短编译时间" class="headerlink" title="1.2 （可选）注释掉示例&#x2F;测试以大幅缩短编译时间"></a>1.2 （可选）注释掉示例&#x2F;测试以大幅缩短编译时间</h3><p>默认配置会同时编译 20 多个示例和测试用例，且不会随 <code>install</code> 安装。注释掉下面三行可减少编译时间：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># QWT_CONFIG     += QwtExamples</span><br><span class="line"># QWT_CONFIG     += QwtPlayground</span><br><span class="line"># QWT_CONFIG     += QwtTests</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-使用-VS-2022-x64-编译并安装"><a href="#2-使用-VS-2022-x64-编译并安装" class="headerlink" title="2. 使用 VS 2022 x64 编译并安装"></a>2. 使用 VS 2022 x64 编译并安装</h2><p>打开 <strong>cmd 命令提示符</strong>，依次执行：</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># 用于初始化vs环境</span><br><span class="line"><span class="keyword">call</span> &quot;D:\Visual Studio\Visual Studio <span class="number">2022</span>\Community\VC\Auxiliary\Build\vcvars64.bat&quot;</span><br><span class="line"></span><br><span class="line"># 进入解压好的源文件目录</span><br><span class="line"><span class="built_in">cd</span> /d D:\Qt\_qwt_build\qwt-<span class="number">6</span>.<span class="number">3</span>.<span class="number">0</span></span><br><span class="line"></span><br><span class="line"># 用qmake编译文件</span><br><span class="line">&quot;D:\Qt\Qt5.<span class="number">12</span>.<span class="number">12</span>\<span class="number">5</span>.<span class="number">12</span>.<span class="number">12</span>\msvc2017_64\bin\qmake.exe&quot; qwt.pro</span><br><span class="line"></span><br><span class="line"># 生成release库</span><br><span class="line">&quot;D:\Qt\Qt5.<span class="number">12</span>.<span class="number">12</span>\Tools\QtCreator\bin\jom\jom.exe&quot; release</span><br><span class="line"></span><br><span class="line"># 生成debug库</span><br><span class="line">&quot;D:\Qt\Qt5.<span class="number">12</span>.<span class="number">12</span>\Tools\QtCreator\bin\jom\jom.exe&quot;</span><br><span class="line"></span><br><span class="line"># 把生成的库放到对应的地方</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
+<h3 id="验证安装产出"><a href="#验证安装产出" class="headerlink" title="验证安装产出"></a>验证安装产出</h3><p>编译安装完成后，检查 <code>D:\Qt\Qwt-6.3.0\</code> 目录，应包含：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">D:\Qt\Qwt-6.3.0\</span><br><span class="line">├── doc\html\              # 离线 API 文档（打开 index.html 查阅）</span><br><span class="line">├── features\              # qwt.prf（供 qmake 使用）</span><br><span class="line">├── include\               # 头文件</span><br><span class="line">├── lib\</span><br><span class="line">│   ├── qwt.dll            # Release动态库</span><br><span class="line">│   ├── qwt.lib            # Release静态库</span><br><span class="line">│   ├── qwtd.dll           # Debug动态库    记住名字,vs2022配置时不要搞错</span><br><span class="line">│   ├── qwtd.lib           # Debug静态库</span><br><span class="line">│   └── qwtd.pdb           </span><br><span class="line">└── plugins\designer\</span><br><span class="line">    └── qwt_designer_plugin.dll</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-配置vs2022项目"><a href="#3-配置vs2022项目" class="headerlink" title="3. 配置vs2022项目"></a>3. 配置vs2022项目</h2><p>如果想逐项了解底层配置项，可以在 <strong>项目属性（平台选 <code>x64</code>）</strong> 中手动填写：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性页位置</th>
+<th align="left">Debug|x64 填写值</th>
+<th align="left">Release|x64 填写值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>C&#x2F;C++ → 常规 → 附加包含目录</strong></td>
+<td align="left"><code>D:\Qt\Qwt-6.3.0\include</code>(请填写自己电脑里面对应的路径)</td>
+<td align="left"><code>D:\Qt\Qwt-6.3.0\include</code></td>
+</tr>
+<tr>
+<td align="left"><strong>C&#x2F;C++ → 预处理器 → 预处理器定义</strong></td>
+<td align="left"><code>_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</code></td>
+<td align="left"><code>_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</code></td>
+</tr>
+<tr>
+<td align="left"><strong>链接器 → 常规 → 附加库目录</strong></td>
+<td align="left"><code>D:\Qt\Qwt-6.3.0\lib</code>(请填写自己电脑里面对应的路径)</td>
+<td align="left"><code>D:\Qt\Qwt-6.3.0\lib</code></td>
+</tr>
+<tr>
+<td align="left"><strong>链接器 → 输入 → 附加依赖项</strong></td>
+<td align="left"><code>qwtd.lib</code></td>
+<td align="left"><code>qwt.lib</code></td>
+</tr>
+</tbody></table>
+<h2 id="4-验证代码"><a href="#4-验证代码" class="headerlink" title="4. 验证代码"></a>4. 验证代码</h2><p>在<code>main.cpp</code>试试是否报错,没有报错那就是没问题了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QPen&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QVector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_legend.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_curve.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_grid.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_magnifier.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_panner.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_plot_zoomer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;qwt_text.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">app</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line"></span><br><span class="line">    QwtPlot plot;</span><br><span class="line">    plot.<span class="built_in">resize</span>(<span class="number">800</span>, <span class="number">500</span>);</span><br><span class="line">    plot.<span class="built_in">setCanvasBackground</span>(Qt::white);</span><br><span class="line">    plot.<span class="built_in">setTitle</span>(<span class="built_in">QwtText</span>(<span class="string">&quot;Qwt 6.3.0 + VS 2022 Test&quot;</span>));</span><br><span class="line">    plot.<span class="built_in">setAxisTitle</span>(QwtPlot::xBottom, <span class="built_in">QwtText</span>(<span class="string">&quot;Time [s]&quot;</span>));</span><br><span class="line">    plot.<span class="built_in">setAxisTitle</span>(QwtPlot::yLeft, <span class="built_in">QwtText</span>(<span class="string">&quot;Amplitude&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> *grid = <span class="keyword">new</span> <span class="built_in">QwtPlotGrid</span>();</span><br><span class="line">    grid-&gt;<span class="built_in">setMajorPen</span>(<span class="built_in">QPen</span>(Qt::gray, <span class="number">1</span>, Qt::DashLine));</span><br><span class="line">    grid-&gt;<span class="built_in">attach</span>(&amp;plot);</span><br><span class="line"></span><br><span class="line">    QVector&lt;<span class="type">double</span>&gt; x, y;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">500</span>; ++i) &#123;</span><br><span class="line">        <span class="type">double</span> t = i * <span class="number">0.02</span>;</span><br><span class="line">        x.<span class="built_in">append</span>(t);</span><br><span class="line">        y.<span class="built_in">append</span>(std::<span class="built_in">exp</span>(<span class="number">-0.25</span> * t) * std::<span class="built_in">sin</span>(<span class="number">3.0</span> * t));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> *curve = <span class="keyword">new</span> <span class="built_in">QwtPlotCurve</span>(<span class="string">&quot;Damped Sine&quot;</span>);</span><br><span class="line">    curve-&gt;<span class="built_in">setPen</span>(<span class="built_in">QColor</span>(<span class="number">180</span>, <span class="number">40</span>, <span class="number">20</span>), <span class="number">2.0</span>);</span><br><span class="line">    curve-&gt;<span class="built_in">setRenderHint</span>(QwtPlotItem::RenderAntialiased, <span class="literal">true</span>);</span><br><span class="line">    curve-&gt;<span class="built_in">setSamples</span>(x, y);</span><br><span class="line">    curve-&gt;<span class="built_in">attach</span>(&amp;plot);</span><br><span class="line"></span><br><span class="line">    plot.<span class="built_in">insertLegend</span>(<span class="keyword">new</span> <span class="built_in">QwtLegend</span>(), QwtPlot::BottomLegend);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> *zoomer = <span class="keyword">new</span> <span class="built_in">QwtPlotZoomer</span>(QwtPlot::xBottom, QwtPlot::yLeft, plot.<span class="built_in">canvas</span>());</span><br><span class="line">    zoomer-&gt;<span class="built_in">setTrackerMode</span>(QwtPlotPicker::AlwaysOn);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> *panner = <span class="keyword">new</span> <span class="built_in">QwtPlotPanner</span>(plot.<span class="built_in">canvas</span>());</span><br><span class="line">    panner-&gt;<span class="built_in">setMouseButton</span>(Qt::MiddleButton);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">QwtPlotMagnifier</span>(plot.<span class="built_in">canvas</span>());</span><br><span class="line"></span><br><span class="line">    plot.<span class="built_in">replot</span>();</span><br><span class="line">    zoomer-&gt;<span class="built_in">setZoomBase</span>();</span><br><span class="line">    plot.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> app.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+
+  
+  <div class="about" data-pagefind-ignore>
+    <h2>About this Post</h2>
+    <div class="details">This post is written by crazera, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</div>
+    
+    <p class="tags">
+      <i class="bi bi-tags icon"></i>
+      
+      <a href="/tags/cpp/" class="tag">#C++</a>
+      
+      <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="tag">#环境配置</a>
+      
+      <a href="/tags/Qwt/" class="tag">#Qwt</a>
+      
+      <a href="/tags/Qt/" class="tag">#Qt</a>
+      
+      <a href="/tags/VS2022/" class="tag">#VS2022</a>
+      
+    </p>
+    
+    
+  </div>
+  
+
+  <div class="container post-prev-next" data-pagefind-ignore>
+    <a class="next"></a>
+    
+    <a href="/reading/emc-5-30/" class="prev">
+      <div class="text">
+        <p class="label">Previous</p>
+        <h3 class="title">读书笔记---Effective Modern C++(五)：条款30 熟悉完美转发的失败情形</h3>
+      </div>
+    </a>
+    
+  </div>
+
+  
+    
+  
+</article>
+
+
+    </main>
+    <footer>
+  <div class="inner">
+    <div class="links">
+      
+      <div class="group">
+        <h2 class="title">Blog</h2>
+        
+        <a href="/" class="item">主页</a>
+        
+        <a href="/archives" class="item">文档</a>
+        
+        <a href="/tags" class="item">标签</a>
+        
+        <a href="/categories" class="item">分类</a>
+        
+      </div>
+      
+      <div class="group">
+        <h2 class="title">Source Code</h2>
+        
+        <a target="_blank" rel="noopener" href="https://github.com/CRAZERA-YI" class="item">GitHub</a>
+        
+      </div>
+      
+    </div>
+    <span>&copy; 2026 crazera<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+    
+    
+      <br>
+      <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+        <label>
+          <input type="radio" value="light">
+          <span>Light</span>
+        </label>
+        <label>
+          <input type="radio" value="dark">
+          <span>Dark</span>
+        </label>
+        <label>
+          <input type="radio" value="auto">
+          <span>Auto</span>
+        </label>
+      </div>
+    
+  </div>
+</footer>
+
+
+    
+<script src="/js/main.js"></script>
+
+
+    
+
+    
+    
+<script src="/js/scroll-reveal.js"></script>
+
+    
+
+    
+  <!-- hexo injector body_end start -->
+<style>
+  .mermaid { margin: 1.5em 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .mermaid:not([data-processed]) { visibility: hidden; min-height: 2em; }
+</style>
+<script>
+  (function () {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+    if (!nodes.length) return;
+
+    var isDark = document.body.dataset.currentColorScheme === 'dark';
+    var script = document.createElement('script');
+    script.src = '/vendor/mermaid.min.js';
+    script.onload = function () {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit'
+        });
+        window.mermaid.run({ nodes: nodes });
+      } catch (err) {
+        console.error('[mermaid] 渲染失败', err);
+        nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+      }
+    };
+    script.onerror = function () {
+      console.error('[mermaid] 无法加载 ' + script.src);
+      nodes.forEach(function (n) { n.style.visibility = 'visible'; });
+    };
+    document.body.appendChild(script);
+  })();
+</script>
+<!-- hexo injector body_end end --></body>
+</html>
